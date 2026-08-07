@@ -1847,48 +1847,20 @@ A02901810001203000E2806894000050035FD77070430A430A3000E2806894000050035FD7707010
         return result
 
     # ==================================================================================================================
-    def btus_read(self, max_pkgs: int | None = None, timeout: float = 25.0) -> dict:
+    def btus_read(self, mac: str | None = None, max_pkgs: int | None = None, timeout: float = 25.0) -> list[bytes] | None:
         """
         Собирает данные с UltraSonic датчика.
-
-        Returns:
-            {
-                "mac": str | None,
-                "packets": list[str],
-                "count": int,
-                "status": "OK" | "FEW_PACKETS" | "ERROR",
-                "error": str | None,
-            }
         """
-        result = {
-            "mac": None,
-            "packets": [],
-            "count": 0,
-            "status": "ERROR",
-            "error": None,
-        }
-
         output = self.cmd_timeout__write_read__payload(
             f"python3 bt__us.py {max_pkgs} {timeout}",
             timeout=timeout + 5,
             timeout_continue=timeout + 5,
         )
-
-        for line in output.split("\n"):
-            line = line.strip()
-
-            if line.startswith("DEVICE_FOUND:"):
-                result["mac"] = line.split(":", 1)[1]
-            elif line.startswith("PACKET:"):
-                result["packets"].append(line.split(":", 1)[1])
-            elif line.startswith("PACKETS_COUNT:"):
-                result["count"] = int(line.split(":", 1)[1])
-            elif line.startswith("STATUS:"):
-                result["status"] = line.split(":", 1)[1]
-            elif line.startswith("ERROR:"):
-                result["error"] = line.split(":", 1)[1]
-
-        return result
+        result_hex = re.findall(r"PACKET_HEX:\[([0-9A-F]+)\]", output)
+        print(f"{result_hex=}")
+        result_bytes = [bytes.fromhex(line_hex) for line_hex in result_hex]
+        print(f"{result_bytes=}")
+        return result_bytes
 
 
 # ======================================================================================================================

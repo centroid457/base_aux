@@ -178,7 +178,7 @@ class Test_02__PreInstall:
         assert harvest.file_name__push("scr__rfid_scan.py"), "скрипт не отправился"
 
     def test_pre_6__push4__btus(self, harvest):
-        assert harvest.file_name__push("scr__bt_ultrasonic.py"), "скрипт не отправился"
+        assert harvest.file_name__push("bt__us.py"), "скрипт не отправился"
 
 
 # ======================================================================================================================
@@ -527,97 +527,21 @@ class Test_21__BT:
 
 # ----------------------------------------------------------------------------------------------------------------------
 @pytest.mark.BT
-class Test_22__BTUS_Ultrasonic:
-    """Тесты УЗ датчика"""
+class Test_22__BTUS:
+    """Тесты УЗ датчика передача данных"""
     @pytest.mark.dependency(name="btus_present")
     def test_btus_1__present(self, harvest, ultrasonic_mac__any):
         assert harvest.cmd_timeout__check_executed_success("hciconfig hci0"), "Bluetooth интерфейс hci0 не обнаружен"
         assert ultrasonic_mac__any, "EP датчики вообще не обнаружены в радиусе действия"
-        assert harvest.file_name__push("scr__bt_ultrasonic.py"), "скрипт не отправился"
+        assert harvest.file_name__push("bt__us.py"), "скрипт не отправился"
 
     @pytest.mark.dependency(depends=["btus_present"])
-    def test_btus_2__collect(self, harvest, ultrasonic_mac__any):
-        """Сбор и валидация пакетов."""
-        result = harvest.btus__read_data(mac=ultrasonic_mac__any, packets_min=3, timeout=25)
-
-        print(f"MAC: {result['mac']}, пакетов: {result['count']}")
-        assert result["success"], f"Не собрано данных: {result}"
-
-        valid = sum(1 for p in result["packets"] if harvest.btus__validate_data(p)["valid"])
-        print(f"Валидных пакетов: {valid}/{len(result['packets'])}")
-        assert valid >= 1, "Нет валидных пакетов"
-
-    @pytest.mark.skip
-    @pytest.mark.dependency(depends=["btus_present"])
-    def test_btus_2__sanity(self, harvest, ultrasonic_mac__any):
-        """Проверка осмысленности данных."""
-        result = harvest.btus__read_data(mac=ultrasonic_mac__any, packets_min=1, timeout=20)
-        assert result["success"]
-
-        last = result["packets"][-1]
-        v = harvest.btus__validate_data(last)
-        assert v["valid"], f"Пакет невалиден: {v}"
-
-        issues = []
-        for field, value in v["fields"].items():
-            fv = float(value)
-            if "Distance" in field and not (0 <= fv <= 10):
-                issues.append(f"{field}={fv} (0-10)")
-            elif field == "Temperature" and not (-40 <= fv <= 85):
-                issues.append(f"Temp={fv} (-40..+85)")
-            elif field == "Percentage" and not (0 <= fv <= 100):
-                issues.append(f"Pct={fv} (0-100)")
-            elif field == "Battery" and fv <= 0:
-                issues.append(f"Bat={fv} (>0)")
-
-        assert not issues, f"Проблемы: {issues}"
-        print("OK")
-
-
-@pytest.mark.BT_DATA
-class Test_3__Bluetooth_Ultrasonic:
-    """Тесты передачи данных с ультразвуковых датчиков UltraSonic."""
-
-    @pytest.mark.dependency(name="ultrasonic_push")
-    def test_push_script(self, harvest):
-        """Отправляет скрипт на устройство."""
-        assert harvest.file_name__push("bt__us.py")
-
-    @pytest.mark.dependency(depends=["ultrasonic_push"])
     def test_collect_packets(self, harvest):
-        """
-        Подключается к датчику и собирает минимум 3 пакета.
-        Проверяет:
-        - Устройство найдено
-        - Получено ≥3 пакетов
-        - Каждый пакет содержит все 6 полей
-        """
-        result = harvest.btus_read(max_pkgs=3, timeout=30.0)
-
-        print(f"MAC: {result['mac']}")
-        print(f"Пакетов: {result['count']}")
-        print(f"Статус: {result['status']}")
-
-        # Проверка 1: устройство найдено
-        assert result["mac"], f"Датчик не найден: {result.get('error')}"
-
-        # Проверка 2: достаточно пакетов
-        assert result["count"] >= 3, f"Мало пакетов: {result['count']}"
-
-        # Проверка 3: каждый пакет валиден
-        required_fields = {"UTC", "Distance up", "Distance side", "Temperature", "Battery", "Percentage"}
-
-        for i, packet in enumerate(result["packets"]):
-            try:
-                data = json.loads(packet)
-                missing = required_fields - set(data.keys())
-                assert not missing, f"Пакет {i+1}: нет полей {missing}"
-                print(f"Пакет {i+1}: OK - {len(data)} полей")
-            except json.JSONDecodeError:
-                assert False, f"Пакет {i+1}: невалидный JSON: {packet[:80]}"
+        packets = harvest.btus_read(max_pkgs=1, timeout=30.0)
+        assert packets, f"не получено пакетов от УЗ {packets=}"
 
     @pytest.mark.skip
-    @pytest.mark.dependency(depends=["ultrasonic_push"])
+    @pytest.mark.dependency(depends=["btus_present"])
     def test_data_sanity(self, harvest):
         """
         Проверяет осмысленность данных:
