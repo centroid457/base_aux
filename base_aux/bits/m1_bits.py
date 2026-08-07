@@ -123,7 +123,7 @@ class Bitfield:
         """
         print(int(bytearray(2).hex(), 16))
         """
-        return int(self._field_bytearray.hex(), 16)
+        return int(self._field_bytearray.hex().upper(), 16)
 
     def _bin_str(self) -> str:
         """common bin-format (without type prefix)
@@ -138,7 +138,7 @@ class Bitfield:
         """common hex(full bytes)-format (without type prefix)
         print(bytearray(2).hex())
         """
-        return self._field_bytearray.hex()
+        return self._field_bytearray.hex().upper()
 
 
 # =====================================================================================================================

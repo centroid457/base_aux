@@ -1441,7 +1441,7 @@ root@harvest05:~#
             # Извлекаем HEX-строку --------------------
             print(f"FULL: {output}")
 
-            match = re.search(r'UBX_RESPONSE:\[([0-9a-fA-F]*)\]', output)
+            match = re.search(r'UBX_RESPONSE:\[([0-9A-F]*)\]', output)
             assert match, "Не найден корректный UBX_RESPONSE в выводе"
             output_hex_str = match.group(1)
             print(f"\t{output_hex_str=}")

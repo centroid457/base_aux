@@ -12,7 +12,7 @@ def _rules__raws_hex__understanding():
     print("data_raw=", data_raw)
     # data_raw= b'\x00EXT CORE 3.01 (107900)'
 
-    data_hex_from_raw: str = data_raw.hex()
+    data_hex_from_raw: str = data_raw.hex().upper()
     print("data_hex_from_raw=", data_hex_from_raw)
     # data_hex_from_raw= 0045585420434f524520332e3031202831303739303029
 
@@ -140,7 +140,7 @@ print()
 
 # 3.1 bytes -> hex string (для отображения)
 packet = bytes([0xAA, 0xBB, 0xCC, 0xDD])
-hex_str = packet.hex()  # 'aabbccdd'
+hex_str = packet.hex().upper()  # 'aabbccdd'
 print(data)
 hex_str = packet.hex(':')  # 'aa:bb:cc:dd'
 print(data)

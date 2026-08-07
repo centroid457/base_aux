@@ -182,7 +182,7 @@ class SerialClient_Aio:
 
 # =====================================================================================================================
 async def handle_data(data: bytes):
-    print(f"Получено: {data.hex()}")
+    print(f"Получено: {data.hex().upper()}")
 
 
 async def main():

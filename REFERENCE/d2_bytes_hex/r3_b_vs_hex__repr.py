@@ -26,7 +26,7 @@ def demonstrate_hex_vs_binary():
     binary_data = bytes([0xAA, 0xBB, 0xCC, 0xDD])
 
     # HEX представление (строка из 8 символов)
-    hex_string = binary_data.hex()  # 'aabbccdd'
+    hex_string = binary_data.hex().upper()  # 'aabbccdd'
     hex_bytes = hex_string.encode('ascii')  # 8 байт
 
     print("=" * 60)
@@ -255,7 +255,7 @@ class RealWorldScenarios:
             "rfid_tag": {
                 "type": "EM4100",
                 "id": "1234567890",
-                "raw_hex": rfid_data.hex(),  # Бинарные данные как HEX
+                "raw_hex": rfid_data.hex().upper(),  # Бинарные данные как HEX
                 "rssi": -60
             }
         }

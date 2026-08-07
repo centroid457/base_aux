@@ -17,7 +17,7 @@ print(int("29", 16))    # 41
 # ПОИСК БАЙТА -------------------------------
 print(b"123".find(2))       # -1!!!
 print(b"123".find(0x02))    # -1!!!
-print(b"2".hex())   # 32!!!
+print(b"2".hex().upper())   # 32!!!
 
 print(b"\x01\x02\x03".find(2))    # 1
 print(b"\x01\x02\x03".find(0x02))    # 1
@@ -69,12 +69,12 @@ print(f"   int.from_bytes(b'\\x12\\x34', 'little') = {number}")
 # СПОСОБ 3: Из bytes в hex-строку, потом в число
 print("\n3️⃣ BYTES -> HEX СТРОКА -> ЧИСЛО:")
 data = b'\x01'
-hex_str = data.hex()        # '01'
+hex_str = data.hex().upper()        # '01'
 number = int(hex_str, 16)   # 1
 print(f"   b'\\x01'.hex() -> '{hex_str}' -> int('{hex_str}', 16) = {number}")
 
 data = b'\xAB\xCD'
-hex_str = data.hex()        # 'abcd'
+hex_str = data.hex().upper()        # 'abcd'
 number = int(hex_str, 16)   # 43981
 print(f"   b'\\xAB\\xCD'.hex() -> '{hex_str}' -> int('{hex_str}', 16) = {number}")
 
@@ -106,7 +106,7 @@ print("\n📌 БАЙТЫ -> ЧИСЛО:")
 b = b'\x01'
 print(f"   b'\\x01'[0]                          = {b[0]}")
 print(f"   int.from_bytes(b'\\x01', 'big')      = {int.from_bytes(b, 'big')}")
-print(f"   int(b'\\x01'.hex(), 16)              = {int(b.hex(), 16)}")
+print(f"   int(b'\\x01'.hex(), 16)              = {int(b.hex().upper(), 16)}")
 
 # Несколько байтов
 b = b'\x12\x34'
@@ -141,7 +141,7 @@ bytes_data = b'\x01'
 print(f"\nИз байтов {bytes_data}:")
 print(f"   {bytes_data}[0] = {bytes_data[0]}")                    # ✅ ПРАВИЛЬНО
 print(f"   int.from_bytes({bytes_data}, 'big') = {int.from_bytes(bytes_data, 'big')}")  # ✅ ПРАВИЛЬНО
-print(f"   int({bytes_data}.hex(), 16) = {int(bytes_data.hex(), 16)}")  # ✅ ПРАВИЛЬНО (но длинно)
+print(f"   int({bytes_data}.hex(), 16) = {int(bytes_data.hex().upper(), 16)}")  # ✅ ПРАВИЛЬНО (но длинно)
 
 # Если у вас hex-литерал в коде
 print(f"\nHex-литерал в коде:")
@@ -162,12 +162,12 @@ rssi_byte = b'\x9C'  # 156 в десятичной
 # СПОСОБ 1: Индексация (простой)
 rssi_raw = rssi_byte[0]  # 156
 rssi_dbm = -rssi_raw       # -156 dBm
-print(f"RSSI byte: {rssi_byte.hex()} -> raw={rssi_raw}, dBm={rssi_dbm}")
+print(f"RSSI byte: {rssi_byte.hex().upper()} -> raw={rssi_raw}, dBm={rssi_dbm}")
 
 # СПОСОБ 2: from_bytes (для нескольких байт)
 antenna_bytes = b'\x01'  # Номер антенны
 antenna = int.from_bytes(antenna_bytes, 'big')  # 1
-print(f"Antenna byte: {antenna_bytes.hex()} -> {antenna}")
+print(f"Antenna byte: {antenna_bytes.hex().upper()} -> {antenna}")
 
 # СПОСОБ 3: Если пришла HEX-строка (например, из JSON/лога)
 hex_from_log = "9C"

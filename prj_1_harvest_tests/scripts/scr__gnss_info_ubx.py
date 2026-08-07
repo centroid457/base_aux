@@ -31,7 +31,7 @@ while True:
 
         full_msg: bytes = START_UBX + header_rest + load_with_checksum
         # send data in hex view
-        print('UBX_RESPONSE:[' + full_msg.hex() + ']')
+        print('UBX_RESPONSE:[' + full_msg.hex().upper() + ']')
         break
 
     if len(result) >= MAX_BUFFER:

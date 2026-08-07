@@ -60,7 +60,7 @@ def show_representations(data: bytes):
     if len(data) >= 4:
         chunk_be = data[:4]
         chunk_le = data[-4:] if len(data) >= 8 else data[:4]
-        print(f"  uint32 BE: {int.from_bytes(chunk_be, 'big'):10d}  (0x{chunk_be.hex()})")
+        print(f"  uint32 BE: {int.from_bytes(chunk_be, 'big'):10d}  (0x{chunk_be.hex().upper()})")
         print(f"  int32  BE: {int.from_bytes(chunk_be, 'big', signed=True):10d}")
 
     # Как float (если ровно 4 байта)
@@ -157,7 +157,7 @@ def show_representations(data: bytes):
     # ========================================================================
     print(f"\n⚡ КОД ДЛЯ ВОСПРОИЗВЕДЕНИЯ:")
     print(f"  # Скопируйте для тестирования:")
-    print(f"  data = bytes.fromhex('{data.hex()}')")
+    print(f"  data = bytes.fromhex('{data.hex().upper()}')")
     print(f"  # или")
     print(f"  data = {list(data)}")
 
