@@ -521,7 +521,6 @@ class Test_21__BT:
             <err. data report> <non-flush flag> <LSTO> <inquiry TX power>
             <EPC> <extended features>
         Features page 1: 0x03 0x00 0x00 0x00 0x00 0x00 0x00 0x00]
-
         """
         cmd = "hciconfig hci0 features"     # поддерживаемые функции
         output = harvest.cmd_timeout__write_read__payload(
@@ -536,9 +535,8 @@ class Test_22__BTUS:
     """Тесты УЗ датчика передача данных"""
     @pytest.mark.dependency(name="btus_present")
     def test_btus_1__present(self, harvest, ultrasonic_mac__any, sql_settings):
-        # TODO: use mac from DB
         assert harvest.cmd_timeout__check_executed_success("hciconfig hci0"), "Bluetooth интерфейс hci0 не обнаружен"
-        assert ultrasonic_mac__any, "EP датчики вообще не обнаружены в радиусе действия"
+        assert ultrasonic_mac__any, "EP (UltraSonic) датчики вообще не обнаружены в радиусе действия"
         assert harvest.file_name__push("scr__btus_read.py"), "скрипт не отправился"
 
     @pytest.mark.dependency(depends=["btus_present"])
@@ -546,35 +544,35 @@ class Test_22__BTUS:
         packets = harvest.btus__read(mac=ultrasonic_mac__any, max_pkgs=1, timeout=30.0)
         assert packets, f"не получено пакетов от УЗ {packets=}"
 
-    def _msg_validate__us(self, harvest, sql_settings, index) -> bool | NoReturn:
-        print(f"1={sql_settings=}")
-        assert sql_settings
+    def _msg_validate__us(self, dev, settings, index) -> bool | NoReturn:
+        print(f"1={settings=}")
+        assert settings
 
         us_mac = None
         if index == 1:
-            us_mac = sql_settings["macUz1"]
+            us_mac = settings["macUz1"]
         elif index == 2:
-            if sql_settings["uzTwo"] == "0":
+            if settings["uzTwo"] == "0":
                 pytest.skip(f"US setup only for one!")
-            us_mac = sql_settings["macUz2"]
+            us_mac = settings["macUz2"]
 
-        packets = harvest.btus__read(mac=us_mac, max_pkgs=1, timeout=30.0)
+        packets = dev.btus__read(mac=us_mac, max_pkgs=1, timeout=30.0)
         print(f"2={packets=}")
         assert packets, f"не получено пакетов от УЗ {packets=}"
 
         for packet in packets:
             print(f"3={packet=}")
-            assert harvest.btus__validate_pkg(packet), f"пакет не валидирован! {packet}"
+            assert dev.btus__validate_pkg(packet), f"пакет не валидирован! {packet}"
 
         return True
 
     @pytest.mark.dependency(depends=["btus_present"])
     def test_btus_3__msg_validate__us1(self, harvest, sql_settings):
-        assert self._msg_validate__us(harvest, sql_settings, index=1)
+        assert self._msg_validate__us(dev=harvest, settings=sql_settings, index=1)
 
     @pytest.mark.dependency(depends=["btus_present"])
     def test_btus_3__msg_validate__us2(self, harvest, sql_settings):
-        assert self._msg_validate__us(harvest, sql_settings, index=2)
+        assert self._msg_validate__us(dev=harvest, settings=sql_settings, index=2)
 
 
 # ======================================================================================================================
