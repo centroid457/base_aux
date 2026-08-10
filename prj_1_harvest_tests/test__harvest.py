@@ -350,7 +350,7 @@ class Test_21__BT:
 
     @pytest.mark.dependency(depends=["bt_present", ])
     def test_bt_2__quick__scan(self, harvest):
-        bt_scaned = harvest.bt__scan()
+        bt_scaned = harvest.bt__scan(30)
         assert bt_scaned, f"Не обнаружено ни одного Bluetooth-устройства {bt_scaned=}"
 
     @pytest.mark.dependency(depends=["bt_present", ])
@@ -541,10 +541,9 @@ class Test_22__BTUS:
         assert ultrasonic_mac__any, "EP датчики вообще не обнаружены в радиусе действия"
         assert harvest.file_name__push("scr__btus_read.py"), "скрипт не отправился"
 
-    @pytest.mark.skip
     @pytest.mark.dependency(depends=["btus_present"])
-    def test_btus_2__msg_get__from_any(self, harvest):
-        packets = harvest.btus__read(max_pkgs=1, timeout=30.0)
+    def test_btus_2__msg_get__from_any(self, harvest, ultrasonic_mac__any):
+        packets = harvest.btus__read(mac=ultrasonic_mac__any, max_pkgs=1, timeout=30.0)
         assert packets, f"не получено пакетов от УЗ {packets=}"
 
     def _msg_validate__us(self, harvest, sql_settings, index) -> bool | NoReturn:

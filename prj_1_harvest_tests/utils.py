@@ -1603,7 +1603,12 @@ A02901810001203000E2806894000050035FD77070430A430A3000E2806894000050035FD7707010
         return result
 
     # ==================================================================================================================
-    def bt__scan(self, timeout: float = 1) -> dict[str, str] | NoReturn:   # {mac: name}
+    def bt__scan(
+            self,
+            timeout: float = 1,
+            timeout_continue: float = 1,
+            **r_kwargs,
+    ) -> dict[str, dict[str, str | int | None]] | NoReturn:   # {mac: {name, rssi}}
         """
         ---- Sent utf8 encoded message: "bluetoothctl -- scan on & sleep 2; bluetoothctl -- scan off\r\n" ----
         bluetoothctl -- scan on & sleep 2; bluetoothctl -- scan off
@@ -1651,15 +1656,37 @@ A02901810001203000E2806894000050035FD77070430A430A3000E2806894000050035FD7707010
         root@harvest05:~#
         root@harvest05:~#
         """
-        output = self.cmd_timeout__write_read__payload("bluetoothctl -- scan on", timeout=timeout, timeout_continue=1)
+        output = self.cmd_timeout__write_read__payload("bluetoothctl -- scan on", timeout=timeout, timeout_continue=timeout_continue, **r_kwargs)
         if "Discovery started" not in output:
             raise Exception("Bluetooth поиск не запустился")
 
         # пример строки: [NEW] Device 68:4E:05:DA:46:2C 403
         result = dict()
-        for mac, name in re.findall(r'Device\s+([0-9A-F:]{17})\s+(.+)', output):
-            result[mac] = name.strip()
-        return result
+        for mac, name in re.findall(r'\[NEW\]\sDevice\s+([0-9A-F:]{17})\s+(.+)', output):
+            if mac not in result:
+                result[mac] = dict(name=None, rssi=None)
+            result[mac]["name"] = name.strip()
+
+        for mac, rssi_str in re.findall(r'Device\s+([0-9A-F:]{17})\s+RSSI:\s+(-\d+)', output):
+            if mac not in result:
+                result[mac] = dict(name=None, rssi=None)
+            result[mac]["rssi"] = int(rssi_str.strip())
+
+        # Сортируем result по RSSI: чем выше значение (ближе к 0), тем ближе устройство
+        sorted_result: dict[str, dict[str, str | int | None]] = dict()
+
+        # Сначала добавляем устройства с известным RSSI, отсортированные по убыванию (ближайшие первыми)
+        devices_with_rssi = {mac: data for mac, data in result.items() if data["rssi"] is not None}
+        for mac, _ in sorted(devices_with_rssi.items(), key=lambda x: x[1]["rssi"], reverse=True):
+            sorted_result[mac] = result[mac]
+
+        # Затем добавляем остальные устройства без данных о RSSI
+        for mac, data in result.items():
+            if mac not in sorted_result:
+                sorted_result[mac] = data
+
+        print(json.dumps(sorted_result, indent=2))
+        return sorted_result
 
     def bt__get_dev_info(self, mac: str) -> dict[str, Any]:
         """
