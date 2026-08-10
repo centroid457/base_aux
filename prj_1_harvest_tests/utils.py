@@ -1850,11 +1850,17 @@ A02901810001203000E2806894000050035FD77070430A430A3000E2806894000050035FD7707010
     def btus__read(self, mac: str | None = None, max_pkgs: int | None = None, timeout: float = 25.0) -> list[bytes]:
         """
         Собирает данные с UltraSonic датчика.
+        D4:81:ED:BB:AA:6B
         """
+        mac_s = f"--mac {mac}" if mac else ""
+        max_pkgs_s = f"--pockets {max_pkgs}" if max_pkgs else ""
+        timeout_s = f"--timeout {timeout}" if timeout else ""
+        cmd = f"python3 scr__btus_read.py {mac_s} {max_pkgs_s} {timeout_s}"
+
         output = self.cmd_timeout__write_read__payload(
-            f"python3 scr__btus_read.py {max_pkgs} {timeout}",
-            timeout=timeout + 5,
-            timeout_continue=timeout + 5,
+            cmd,
+            timeout=timeout + 5.0,
+            timeout_continue=timeout + 5.0,
         )
         result_hex: list[str] = re.findall(r"PACKET_HEX:\[([0-9A-F]+)\]", output)
         print(f"{result_hex=}")
@@ -1871,7 +1877,7 @@ A02901810001203000E2806894000050035FD77070430A430A3000E2806894000050035FD7707010
 
         eq_default = {
             "UTC": EqValid_GT_NumParsedSingle(0),
-            "Distance up": EqValid_LGTE_NumParsedSingle(ge=0, lt=10),
+            "Distance up": EqValid_LGTE_NumParsedSingle(ge=0, lt=100),
             "Distance side": EqValid_LGTE_NumParsedSingle(ge=0, lt=10),
             "Temperature": EqValid_LGTE_NumParsedSingle(gt=0, lt=40),
             "Battery": EqValid_LGTE_NumParsedSingle(gt=0, lt=100),

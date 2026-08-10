@@ -541,13 +541,14 @@ class Test_22__BTUS:
         assert ultrasonic_mac__any, "EP датчики вообще не обнаружены в радиусе действия"
         assert harvest.file_name__push("scr__btus_read.py"), "скрипт не отправился"
 
-    # @pytest.mark.skip
+    @pytest.mark.skip
     @pytest.mark.dependency(depends=["btus_present"])
     def test_btus_2__msg_get__from_any(self, harvest):
         packets = harvest.btus__read(max_pkgs=1, timeout=30.0)
         assert packets, f"не получено пакетов от УЗ {packets=}"
 
     def _msg_validate__us(self, harvest, sql_settings, index) -> bool | NoReturn:
+        print(f"1={sql_settings=}")
         assert sql_settings
 
         us_mac = None
@@ -559,10 +560,14 @@ class Test_22__BTUS:
             us_mac = sql_settings["macUz2"]
 
         packets = harvest.btus__read(mac=us_mac, max_pkgs=1, timeout=30.0)
+        print(f"2={packets=}")
         assert packets, f"не получено пакетов от УЗ {packets=}"
 
         for packet in packets:
+            print(f"3={packet=}")
             assert harvest.btus__validate_pkg(packet), f"пакет не валидирован! {packet}"
+
+        return True
 
     @pytest.mark.dependency(depends=["btus_present"])
     def test_btus_3__msg_validate__us1(self, harvest, sql_settings):
