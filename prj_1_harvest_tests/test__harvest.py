@@ -350,7 +350,7 @@ class Test_21__BT:
 
     @pytest.mark.dependency(depends=["bt_present", ])
     def test_bt_2__quick__scan(self, harvest):
-        bt_scaned = harvest.bt__scan(30)
+        bt_scaned = harvest.bt__scan(5)
         assert bt_scaned, f"Не обнаружено ни одного Bluetooth-устройства {bt_scaned=}"
 
     @pytest.mark.dependency(depends=["bt_present", ])
