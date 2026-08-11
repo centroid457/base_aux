@@ -225,6 +225,15 @@ class SerialClient2:
         return data.encode(self.encoding)
 
     @staticmethod
+    def _replace_chars__blank_lines(text: str) -> str:
+        """
+        GOAL
+
+        """
+        result = re.sub(r'\s*[\r\n]+\s*', "\n", text)
+        return result
+
+    @staticmethod
     def _replace_chars__ansi(text: str) -> str:
         """
         GOAL
@@ -294,6 +303,8 @@ class SerialClient2:
         result = data.decode(self.encoding, errors="replace")
         result = self._replace_chars__ansi(result)
         result = self._replace_chars__service(result)
+        result = self._replace_chars__blank_lines(result)
+        result = result.strip()
         return result
 
     def _to_str(self, data: AnyStr) -> str | NoReturn:
@@ -347,17 +358,6 @@ class SerialClient2:
                 break
             result = data_new
 
-        return result
-
-    def _split_lines(self, data: bytes) -> list[str]:
-        """
-        GOAL
-        separate lines for read
-        """
-        data_str = self._to_str(data)
-        data_list = re.split(r'[\r\n]+', data_str)
-        result = [*filter(lambda x: x != "", data_list)]
-        result = result or ["", ]
         return result
 
     # BUFFERS ----------------------------------------------------------------------------------------------------------
@@ -520,19 +520,15 @@ class SerialClient2:
             if self.history_enable:
                 self.history.append(msg)
 
-            return result
+            return result.strip()
 
-    def read_lines(self, return_str: bool | None = True, **r_kwargs) -> Union[str, list[str]]:
+    def read_text(self, **r_kwargs) -> str:
         """
-        Прочитать данные и разбить на строки.
-        Если получена одна строка – возвращает str, иначе список строк.
+        просто преобразовать полученное в читаемый текст
         """
         raw = self.read_bytes(**r_kwargs)
-        lines = self._split_lines(raw)
-        if return_str:
-            return "\n".join(lines)
-        else:
-            return lines
+        text = self._to_str(raw)
+        return text
 
     # W ================================================================================================================
     def write_bytes(
@@ -556,9 +552,14 @@ class SerialClient2:
 
             if clear_input_first:
                 time.sleep(0.1)     # на всякий случай!!! 0.1 может не хватать!
-                line = self._to_bytes(f"in_waiting={self._conn.in_waiting}")
+                line = self._to_bytes(f"in_waiting__bytes_count={self._conn.in_waiting}")
                 self._print_line(process="reset_input", line=line)
-                self._conn.reset_input_buffer()
+                if self._conn.in_waiting:
+                    _new_bytes = self._conn.read(self._conn.in_waiting)
+                    self._print_line(process="in_waiting__bytes_data", line=_new_bytes)
+
+                    self._print_line(process="reset_input")
+                    self._conn.reset_input_buffer()
 
             raw = self._to_bytes(data)
             raw = self._eol_ensure(raw, eol)
@@ -625,24 +626,24 @@ class SerialClient2:
             time.sleep(0.2)
             return self.read_bytes(**read_kwargs)
 
-    def write_read_lines(
+    def write_read_text(
             self,
             data: AnyStr | None = None,
             eol: Optional[bytes] = None,
             clear_input_first: bool = True,
             **r_kwargs
-    ) -> str | list[str]:
+    ) -> str:
         """Записать (с автоматическим преобразованием) и прочитать строки."""
         with self._lock_wr:
             self.write_bytes(data=data, eol=eol, clear_input_first=clear_input_first)
-            return self.read_lines(**r_kwargs)
+            return self.read_text(**r_kwargs)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def get__wr_responses(self, lines: list[AnyStr]) -> dict[AnyStr, list[str]]:
+    def get__wr_responses(self, lines: list[AnyStr]) -> dict[AnyStr, str]:
         result = {}
         for line in lines:
             try:
-                responce = self.write_read_lines(line)
+                responce = self.write_read_text(line)
             except Exception as exc:
                 responce = f"{exc!r}"
 
@@ -651,7 +652,7 @@ class SerialClient2:
 
     def validate__wr_schema(self, schema: TYPING__WR_SCHEMA_VALIDATE) -> bool:
         for (request, response_expected) in schema:
-            response_actual = self.write_read_lines(request)
+            response_actual = self.write_read_text(request)
             if response_actual != response_expected:
                 msg = f"{request!r}:{response_actual=}/{response_expected=}"
                 print(msg)

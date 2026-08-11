@@ -19,7 +19,6 @@ logger = logging.getLogger(__name__)
 
 # ======================================================================================================================
 class Harvest:
-    COMPILE_EOF__STR = re.compile(r".+@.+:.*#\s*")
     AT_CMD__DUMP: list[str] = [
         # =========================================================================
         "AT",  # ответ эхо - проверка функционирования модема на канал
@@ -111,6 +110,8 @@ class Harvest:
         "AT+CEER",  # Extended Error Report — причина последнего сбоя/разъединения
     ]
 
+    COMPILE_EOF__STR = re.compile(r".+@.+:.*#\s*")
+
     def __init__(self, conn: SerialClient2):
         self.conn = conn
         self.hostname = None
@@ -169,6 +170,9 @@ class Harvest:
         Last login: Tue Aug  4 14:39:52 MSK 2026 on ttyS0
         root@harvest05:~#
         """
+        # stop all previous
+        self.conn.send__ctrl_c()
+
         data = self.conn.write_read_bytes(data="root", timeout_start=3, timeout_continue=0.9)
         if b"command not found" in data:
             # already logged in!
@@ -182,7 +186,7 @@ class Harvest:
         return False
 
     def login_check(self) -> bool:
-        data = self.cmd_timeout__write_read_lines(cmd="hostname")
+        data = self.cmd_timeout__write_read_text(cmd="hostname")
         result = bool(self.COMPILE_EOF__STR.search(data))
         return result
 
@@ -317,34 +321,43 @@ root@harvest05:~#
         cmd = self._cmd_cover_timeout(cmd, timeout)
         return self.conn.write_read_bytes(cmd, **wr_kwargs)
 
-    def cmd_timeout__write_read_lines(
+    @property
+    def stopline_prompt__eq(self) -> Base_EqValid:
+        if self.hostname:
+            stopline_prompt__eq = rb".*root@" + self.hostname.encode() + rb":~#.*"
+        else:
+            stopline_prompt__eq = rb".*root@.+:.+#.*"
+        stop_line = EqValid_Regexp(stopline_prompt__eq)
+        return stop_line
+
+    def cmd_timeout__write_read_text(
             self,
             cmd: str,
             timeout: float | None = None,
             payload_only: bool | None = None,
             **wr_kwargs,
-    ) -> str | list[str]:
+    ) -> str:
         cmd = self._cmd_cover_timeout(cmd, timeout)
 
+        # ---------------------------------------
         if wr_kwargs.get("stop_line") is None:
-            if self.hostname:
-                pattern = rb".*root@" + self.hostname.encode() + rb":~#.*"
-            else:
-                pattern = rb".*root@.+:.+#.*"
-            stop_line = EqValid_Regexp(pattern)
-            wr_kwargs["stop_line"] = stop_line
+            wr_kwargs["stop_line"] = self.stopline_prompt__eq
 
-        result = self.conn.write_read_lines(cmd, **wr_kwargs)
+        output = self.conn.write_read_text(cmd, **wr_kwargs)
+        if output.splitlines()[-1] != self.stopline_prompt__eq:
+            self.conn.send__ctrl_c()
+            time.sleep(0.2)
+
         if payload_only:
-            result = self._stdout__parce_payload(cmd=cmd, data=result)
+            output = self._stdout__parce_payload(cmd=cmd, data=output)
 
         print(f"[{self.conn.ADDRESS}.WRITEREAD]")
         print(f"\twrite=[", cmd, "]", sep="")
-        print("\tread=[", result, "]", sep="")
+        print("\tread=[", output, "]", sep="")
 
-        return result
+        return output
 
-    def _stdout__parce_payload(self, cmd: str, data: str | list[str]) -> str | list[str]:
+    def _stdout__parce_payload(self, cmd: str, data: str) -> str:
         """
 
         пример когда появился еще вариант странный уникальный!!!
@@ -367,17 +380,12 @@ output='/dev/ttyS2'
 output='[33]-  Exit 124                timeout 2.0 cat /dev/ttyUSB2'
 PASSED
         """
-        # 0=split -----------------------
-        return_str = False
-        if isinstance(data, str):
-            return_str = True
-            result = data.splitlines()
-        else:
-            result = data
-
         # === ЗАЩИТА ОТ ПУСТОГО ОТВЕТА ===
-        if not result:
-            return "" if return_str else []
+        if not data:
+            return ""
+
+        # 0=split -----------------------
+        result = data.splitlines()
 
         # 1=CMD ECHO --------------------
         if result[0].strip() == cmd.strip():
@@ -402,10 +410,7 @@ PASSED
         result = result_clear_service
 
         # 4=EXIT ------------------------
-        if return_str:
-            return "\n".join(result)
-        else:
-            return result
+        return "\n".join(result)
 
     # ------------------------------------------------------------------------------------------------------------------
     def cmd_timeout__write_read__payload(
@@ -418,7 +423,7 @@ PASSED
         Выполняет команду на устройстве и возвращает stdout в виде строки.
         При ошибке возвращает пустую строку.
         """
-        return self.cmd_timeout__write_read_lines(
+        return self.cmd_timeout__write_read_text(
             cmd,
             payload_only=True,
             timeout_continue=timeout_continue,
@@ -2083,9 +2088,8 @@ A02901810001203000E2806894000050035FD77070430A430A3000E2806894000050035FD7707010
             cmd,
             timeout=2,
             timeout_continue=1,
-            return_str=False,
         )
-        for index, line in enumerate(output):
+        for index, line in enumerate(output.splitlines()):
             print(f"{index=}/{line=}")
             identsettings, keyname, valuename, flagactual, levelacs = line.split("|")
             result[keyname] = valuename

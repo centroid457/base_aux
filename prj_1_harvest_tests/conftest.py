@@ -20,8 +20,9 @@ def harvest(request) -> Harvest:
     for conn in SerialManager().make__not_occupied(can_open=True, baudrate=115200):
         print(f"try {conn=}")
         with conn:
-            if Harvest(conn).validate_conn():
-                dev_id = Harvest(conn).get_hostname_and_occupy()
+            dev_new = Harvest(conn)
+            if dev_new.validate_conn():
+                dev_id = dev_new.get_hostname_and_occupy()
                 print(f"\n[HARVEST_FOUND]{conn}/{dev_id=}")
                 found.append(Harvest(conn))
 
