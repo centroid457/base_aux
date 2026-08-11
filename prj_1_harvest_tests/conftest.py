@@ -14,16 +14,16 @@ from base_aux.aux_eq.m3_eq_valid3_derivatives import *
 
 # ======================================================================================================================
 @pytest.fixture(scope="session")
-def harvest(request) -> HarvestDevice:
+def harvest(request) -> Harvest:
     """Находит устройство Harvest и возвращает авторизованный клиент."""
-    found: list[HarvestDevice] = []
+    found: list[Harvest] = []
     for conn in SerialManager().make__not_occupied(can_open=True, baudrate=115200):
         print(f"try {conn=}")
         with conn:
-            if HarvestDevice(conn).validate_conn():
-                dev_id = HarvestDevice(conn).get_hostname_and_occupy()
+            if Harvest(conn).validate_conn():
+                dev_id = Harvest(conn).get_hostname_and_occupy()
                 print(f"\n[HARVEST_FOUND]{conn}/{dev_id=}")
-                found.append(HarvestDevice(conn))
+                found.append(Harvest(conn))
 
     if len(found) == 0:
         pytest.exit("Устройств Harvest не обнаружено.")
