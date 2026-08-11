@@ -869,7 +869,11 @@ PASSED
         result: bool = True
         # Останавливаем ModemManager, если он может мешать порту - обычно занимает порты с устройствами ttyUSB*!!!
         # mm_active = self.cmd_timeout__check_executed_success("systemctl is-active ModemManager")
-        for service in ["ModemManager", ]:
+        for service in [
+            "ModemManager",         #
+            "harvester.service",    # не будет работать BTUS! не соединится
+            "urozhai",              # вроде без него все работает! но просто так за компанию! потому что был в инструкции!
+        ]:
             result &= self.cmd_timeout__check_executed_success(f"systemctl stop {service}")
         return result
 
@@ -2077,14 +2081,16 @@ A02901810001203000E2806894000050035FD77070430A430A3000E2806894000050035FD7707010
         cmd = f'sqlite3 /srv/publish/Harvester.db "SELECT * FROM Service_settings"'
         output = self.cmd_timeout__write_read__payload(
             cmd,
+            timeout=2,
             timeout_continue=1,
             return_str=False,
         )
-        for line in output:
+        for index, line in enumerate(output):
+            print(f"{index=}/{line=}")
             identsettings, keyname, valuename, flagactual, levelacs = line.split("|")
             result[keyname] = valuename
 
-        print(json.dumps(result, indent=2))
+        print("sql_settings__get_all=", json.dumps(result, indent=2))
         return result
 
 

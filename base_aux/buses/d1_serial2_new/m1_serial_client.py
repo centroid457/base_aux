@@ -434,6 +434,8 @@ class SerialClient2:
             timeout_full_min: Optional[float] = None,
     ) -> bytes:
         """
+        MAIN METH!!!
+
         Прочитать все доступные данные из порта.
         Сначала ждём появления данных в течение timeout_start.
         Как только появились – читаем с паузами timeout_continue, пока данные не кончатся.
