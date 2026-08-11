@@ -329,11 +329,16 @@ $GNVTG,,,,,,,,,N*2E]
         """
         gnss_collected: dict[str, set[str]] = dict.fromkeys(self.MNEA_VALIDATE)
 
-        output = harvest.cmd_timeout__write_read__payload("cat /dev/ttyUSB0", timeout=3, timeout_continue=3)
-        output = output.splitlines()
+        output_collected = list()
+        for step in range(3):
+            output = harvest.cmd_timeout__write_read__payload("cat /dev/ttyUSB0", timeout=3, timeout_continue=3)
+            output = output.splitlines()
+            output_collected.extend(output)
+            if len(output_collected) > 10:
+                break
 
         for msg_type, data in gnss_collected.items():
-            lines = set(filter(lambda line: line.startswith(msg_type), output))
+            lines = set(filter(lambda line: line.startswith(msg_type), output_collected))
             gnss_collected[msg_type] = lines
             if lines:
                 return
