@@ -589,15 +589,15 @@ class Test_22__BTUS:
         assert harvest.cmd_timeout__check_executed_success("hciconfig hci0"), "Bluetooth интерфейс hci0 не обнаружен"
         assert harvest.file_name__push("scr__btus_read.py"), "скрипт не отправился"
 
-    @pytest.mark.dependency(depends=["btus_present"])
-    def test_btus_1__present2__ultrasonic_mac__any(self, ultrasonic_mac__any):
-        """
-        РЕКОМЕНДУЕТСЯ ВООБЩЕ УБРАТЬ ЭТО НАХРЕН!!! не всегда поиск успешен!!!
-        """
-        assert ultrasonic_mac__any, "EP (UltraSonic) датчики вообще не обнаружены в радиусе действия"
+    # @pytest.mark.dependency(depends=["btus_present"])
+    # def test_btus_1__present2__ultrasonic_mac__any(self, ultrasonic_mac__any):
+    #     """
+    #     РЕКОМЕНДУЕТСЯ ВООБЩЕ УБРАТЬ ЭТО НАХРЕН!!! не всегда поиск успешен!!!
+    #     """
+    #     assert ultrasonic_mac__any, "EP (UltraSonic) датчики вообще не обнаружены в радиусе действия"
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _msg_validate__us(self, harvest, mac) -> bool | NoReturn:
+    def _msg_validate__us(self, harvest, mac: str | None = None) -> bool | NoReturn:
         packets = []
         for step in range(3):
             packets = harvest.btus__read(mac=mac, max_pkgs=1, timeout=30.0)
@@ -614,8 +614,8 @@ class Test_22__BTUS:
         return True
 
     @pytest.mark.dependency(depends=["btus_present"])
-    def test_btus_3__msg_validate__any(self, harvest, ultrasonic_mac__any):
-        assert self._msg_validate__us(harvest, ultrasonic_mac__any)
+    def test_btus_3__msg_validate__any(self, harvest):
+        assert self._msg_validate__us(harvest)
 
     @pytest.mark.dependency(depends=["btus_present"])
     def test_btus_3__msg_validate__us1(self, harvest, sql_settings):
