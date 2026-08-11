@@ -597,9 +597,10 @@ class SerialClient2:
         """Send a BREAK condition."""
         self._conn.send_break(duration)
 
-    def send__ctrl_c(self) -> bool:
+    def send__ctrl_c(self) -> None:
         """Send the Ctrl+C character (0x03)."""
-        return self.write_bytes(b'\x03', eol=b"")
+        self.write_bytes(b'\x03', eol=b"")
+        time.sleep(0.2)
 
     def send__ctrl(self, char: Union[str, int]) -> bool:
         """

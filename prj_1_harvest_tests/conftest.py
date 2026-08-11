@@ -567,6 +567,17 @@ def internet_access(harvest) -> bool:
 @pytest.fixture(scope="session")
 def ultrasonic_mac__any(harvest) -> str | None:
     """Находит MAC-адрес UltraSonic датчика."""
+    script = "scr__bt_find.py"
+    assert harvest.file_name__push(script), "скрипт не отправился"
+    output = harvest.cmd_timeout__write_read__payload(
+        f"python3 {script}",
+        timeout=20,
+    )
+    mac_match = re.search(r'[0-9A-F:]{17}', output)
+    if mac_match:
+        return mac_match.group()
+
+    # плохо работает через bash!!!
     for step in range(3):
         bt_devs = harvest.bt__scan(timeout=20, timeout_continue=5)
         for mac, values in bt_devs.items():
