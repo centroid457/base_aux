@@ -567,10 +567,11 @@ def internet_access(harvest) -> bool:
 @pytest.fixture(scope="module")
 def ultrasonic_mac__any(harvest) -> str | None:
     """Находит MAC-адрес UltraSonic датчика."""
-    bt_devs = harvest.bt__scan(timeout=20, timeout_continue=5)
-    for mac, values in bt_devs.items():
-        if str(values.get("name", "")).lower() == "UltraSonic".lower():
-            return mac
+    for step in range(3):
+        bt_devs = harvest.bt__scan(timeout=20, timeout_continue=5)
+        for mac, values in bt_devs.items():
+            if str(values.get("name", "")).lower() == "UltraSonic".lower():
+                return mac
 
 
 @pytest.fixture(scope="module")

@@ -219,6 +219,36 @@ class Test_1__GNSS:
     @pytest.mark.dependency(depends=["gnss_present", ])
     def test_gnss_2__quick__nmea_flow(self, harvest):
         """
+
+        IF IT STOPS STREAMING - REBOOT!!!
+        ==================================
+        ---- Opened the serial port COM16 ----
+        ---- Sent utf8 encoded message: "cat /dev/ttyUSB0\r\n" ----
+        cat /dev/ttyUSB0
+        6,,,N*6C
+        $GNVTG,,,,,,,,,N*2E
+        $GNGGA,114456.00,,,,,0,00,99.99,,root@harvest05:~#
+        root@harvest05:~#
+        ---- Sent utf8 encoded message: "cat /dev/ttyUSB0\r\n" ----
+        cat /dev/ttyUSB0
+        $GNRMC,114740.00,V,,,,,,,110826,,,N*68
+        $GNVTG,,,,,,,,,N*2E
+        $GNroot@harvest05:~#
+        root@harvest05:~#
+        ---- Sent utf8 encoded message: "cat /dev/ttyUSB0\r\n" ----
+        cat /dev/ttyUSB0
+        $GNRMC,114743.00,V,,,,,,,110826,,,N*6B
+        $GNVTG,,,,,,,,,N*2E
+        $GNroot@harvest05:~#
+        root@harvest05:~#
+        ---- Sent utf8 encoded message: "cat /dev/ttyUSB0\r\n" ----
+        cat /dev/ttyUSB0
+        $GNRMC,114746.00,V,,,,,,,110826,,,N*6E
+        $GNVTG,,,,,,,,,N*2E
+        $GNroot@harvest05:~#
+        root@harvest05:~#
+
+
         1=BLOCK STAY LONG TIME on table
         ==================================
         ---- Sent utf8 encoded message: "cat /dev/ttyUSB0 & sleep 1.0; kill %1\r\n" ----
@@ -278,7 +308,8 @@ class Test_1__GNSS:
         """
         gnss_collected: dict[str, set[str]] = dict.fromkeys(self.MNEA_VALIDATE)
 
-        output = harvest.cmd_timeout__write_read_lines("cat /dev/ttyUSB0", timeout=1, timeout_continue=1, return_str=False)
+        output = harvest.cmd_timeout__write_read__payload("cat /dev/ttyUSB0", timeout=3, timeout_continue=3)
+        output = output.splitlines()
 
         for msg_type, data in gnss_collected.items():
             gnss_collected[msg_type] = set(filter(lambda line: line.startswith(msg_type), output))
@@ -534,45 +565,53 @@ class Test_21__BT:
 class Test_22__BTUS:
     """Тесты УЗ датчика передача данных"""
     @pytest.mark.dependency(name="btus_present")
-    def test_btus_1__present(self, harvest, ultrasonic_mac__any, sql_settings):
+    def test_btus_1__present(self, harvest, sql_settings):
         assert harvest.cmd_timeout__check_executed_success("hciconfig hci0"), "Bluetooth интерфейс hci0 не обнаружен"
-        assert ultrasonic_mac__any, "EP (UltraSonic) датчики вообще не обнаружены в радиусе действия"
         assert harvest.file_name__push("scr__btus_read.py"), "скрипт не отправился"
 
     @pytest.mark.dependency(depends=["btus_present"])
-    def test_btus_2__msg_get__from_any(self, harvest, ultrasonic_mac__any):
-        packets = harvest.btus__read(mac=ultrasonic_mac__any, max_pkgs=1, timeout=30.0)
-        assert packets, f"не получено пакетов от УЗ {packets=}"
+    def test_btus_1__present2__ultrasonic_mac__any(self, ultrasonic_mac__any):
+        """
+        РЕКОМЕНДУЕТСЯ ВООБЩЕ УБРАТЬ ЭТО НАХРЕН!!! не всегда поиск успешен!!!
+        """
+        assert ultrasonic_mac__any, "EP (UltraSonic) датчики вообще не обнаружены в радиусе действия"
 
-    def _msg_validate__us(self, dev, settings, index) -> bool | NoReturn:
-        print(f"1={settings=}")
-        assert settings
-
-        us_mac = None
-        if index == 1:
-            us_mac = settings["macUz1"]
-        elif index == 2:
-            if settings["uzTwo"] == "0":
-                pytest.skip(f"US setup only for one!")
-            us_mac = settings["macUz2"]
-
-        packets = dev.btus__read(mac=us_mac, max_pkgs=1, timeout=30.0)
-        print(f"2={packets=}")
-        assert packets, f"не получено пакетов от УЗ {packets=}"
+    # ------------------------------------------------------------------------------------------------------------------
+    def _msg_validate__us(self, harvest, mac) -> bool | NoReturn:
+        packets = []
+        for step in range(3):
+            packets = harvest.btus__read(mac=mac, max_pkgs=1, timeout=30.0)
+            print(f"2={step=}={packets=}")
+            if packets:
+                break
+        print(f"2=FINAL={packets=}")
+        assert packets, f"не получено пакетов от {mac=} {packets=}"
 
         for packet in packets:
             print(f"3={packet=}")
-            assert dev.btus__validate_pkg(packet), f"пакет не валидирован! {packet}"
+            assert harvest.btus__validate_pkg(packet), f"пакет не валидирован! {packet}"
 
         return True
 
     @pytest.mark.dependency(depends=["btus_present"])
+    def test_btus_3__msg_validate__any(self, harvest, ultrasonic_mac__any):
+        assert self._msg_validate__us(harvest, ultrasonic_mac__any)
+
+    @pytest.mark.dependency(depends=["btus_present"])
     def test_btus_3__msg_validate__us1(self, harvest, sql_settings):
-        assert self._msg_validate__us(dev=harvest, settings=sql_settings, index=1)
+        print(f"1={sql_settings=}")
+        assert sql_settings
+        mac = sql_settings["macUz1"]
+        assert self._msg_validate__us(harvest, mac)
 
     @pytest.mark.dependency(depends=["btus_present"])
     def test_btus_3__msg_validate__us2(self, harvest, sql_settings):
-        assert self._msg_validate__us(dev=harvest, settings=sql_settings, index=2)
+        print(f"1={sql_settings=}")
+        assert sql_settings
+        if sql_settings["uzTwo"] == "0":
+            pytest.skip(f"US setup only for one!")
+        mac = sql_settings["macUz2"]
+        assert self._msg_validate__us(harvest, mac)
 
 
 # ======================================================================================================================
