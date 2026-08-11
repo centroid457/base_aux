@@ -1540,12 +1540,44 @@ PASSED
         }
 
     # ==================================================================================================================
-    def rfid_scan(self, steps: int | None = None) -> set[str]:
+    def rfid__check_working(self) -> bool:
+        # Убиваем возможные зависшие процессы на порту
+        self.conn.write_read_bytes(f"fuser -k /dev/ttyS2 2>/dev/null", timeout_continue=0.5)
+        time.sleep(0.2)
+
+        command_line = f"python3 scr__rfid_scan.py"
+
+        output = self.cmd_timeout__write_read__payload(
+            command_line,
+            timeout=2,
+            timeout_continue=2,
+        )
+        result = f"RawData(0bytes):" not in output
+        return result
+
+    def rfid__scan(self, steps: int | None = None) -> set[str]:
         """
         Ридер получает команду инвентаризации (01).
         Он начинает сканировать. Если меток нет, он сразу формирует и отправляет короткий ответ A0 04 01 81 [CRC].
         Если метки есть, он не тратит время на отправку отдельной квитанции. Он сразу формирует один расширенный пакет, в заголовке которого дублируется статус операции, и следом идут данные о найденных метках.
 
+        ----------------------------------------------------
+[15:56:32.073646]COM16.write[OK]= b'python3 scr__rfid_scan.py\r\n'
+[15:56:32.093334]COM16.readEOL[OK]= b'python3 scr__rfid_scan.py'
+[15:56:32.097352]COM16.readEOL[OK]= b'\x1b[?2004l'
+[15:56:33.539228]COM16.readEOL[OK]= b'RawData(0bytes):[]'
+[15:56:33.548883]COM16.readEOL[OK]= b'found=0epc'
+[15:56:33.600955]COM16.readEOL[OK]= b'\x1b[?2004hroot@harvest05:~# '
+[15:56:33.600955]COM16.stop_line[OK]= b'' [extra=EqValid_Regexp(v_args=(b'.*root@.+:.+#.*',)/v_kwargs={}/_iresult_reverse=None/_iresult_cumulate=<EnumAdj_BoolCumulate.ALL_TRUE: <built-in function all>>/_other_final__resolve=True)]
+[15:56:33.600955]COM16.readNoEOL[OK]= b'\x1b[?2004hroot@harvest05:~# '
+[15:56:33.702284]COM16.reset_input[OK]= b'in_waiting__bytes_count=36'
+[15:56:33.702284]COM16.in_waiting__bytes_data[OK]= b'\n\x1b[?2004l\r\x1b[?2004hroot@harvest05:~# '
+[15:56:33.702284]COM16.reset_input[OK]= b''
+[15:56:33.702284]COM16.write[OK]= b'\x03'
+[COM16.WRITEREAD]
+	write=[python3 scr__rfid_scan.py]
+	read=[RawData(0bytes):[]
+found=0epc]
         ----------------------------------------------------
         ТКАНЬ ФАРАДЕЯ
         [COM16.WRITEREAD]
@@ -1613,8 +1645,7 @@ A02901810001203000E2806894000050035FD77070430A430A3000E2806894000050035FD7707010
         found=4epc]
         """
         result = set()
-        scriptname = "scr__rfid_scan.py"
-        command_line = f"python3 {scriptname}"
+        command_line = f"python3 scr__rfid_scan.py"
 
         steps = steps or 1
         for step in range(steps):

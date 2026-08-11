@@ -1024,6 +1024,7 @@ class Test_41__GSM:
         )
         assert ping_ok, f"[8.8.8.8] недоступен через {self.INTERFACE_NAME}"
 
+    @pytest.mark.flaky(reruns=3, reruns_delay=1)
     @pytest.mark.dependency(depends=["gsm_present"])
     def test_gsm_3__deep__ping3_dns(self, harvest):
         """Разрешение DNS и доступность внешнего ресурса (ya.ru)."""
@@ -1109,17 +1110,12 @@ class Test_5__RFID:
         assert harvest.cmd_timeout__check_executed_success("ls /dev/ttyS2"), \
             "Порт RFID (/dev/ttyS2) не обнаружен!"
         assert harvest.file_name__push("scr__rfid_scan.py"), "скрипт не отправился"
-        pass
+        assert harvest.rfid__check_working(), "устройство не отвечает на порту!!! вероятно отключено!"
 
     @pytest.mark.dependency(depends=["rfid_present"])
     def test_rfid_2__scan(self, harvest):
-        epcs = None
-        for step in range(3):
-            epcs = harvest.rfid_scan(3)
-            print(f"{step=} detected {epcs=}")
-            if epcs:
-                break
-        assert epcs, "rfid метки не найдены"
+        epcs = harvest.rfid__scan(3)
+        assert epcs, f"rfid метки не найдены {epcs=}"
 
 
 # ======================================================================================================================
