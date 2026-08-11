@@ -564,7 +564,7 @@ def internet_access(harvest) -> bool:
 
 
 # ======================================================================================================================
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="session")
 def ultrasonic_mac__any(harvest) -> str | None:
     """Находит MAC-адрес UltraSonic датчика."""
     for step in range(3):
@@ -574,7 +574,7 @@ def ultrasonic_mac__any(harvest) -> str | None:
                 return mac
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="session")
 def sql_settings(harvest) -> dict[str, str]:
     """Находит MAC-адрес UltraSonic датчика."""
     return harvest.sql_settings__get_all()
