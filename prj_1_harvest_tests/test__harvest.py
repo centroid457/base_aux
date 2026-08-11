@@ -248,6 +248,23 @@ class Test_1__GNSS:
         $GNroot@harvest05:~#
         root@harvest05:~#
 
+[15:39:03.948819]COM16.write[OK]= b'timeout 3 cat /dev/ttyUSB0\r\n'
+[15:39:03.974066]COM16.readEOL[OK]= b'timeout 3 cat /dev/ttyUSB0'
+[15:39:03.977072]COM16.readEOL[OK]= b'\x1b[?2004l'
+[15:39:04.015178]COM16.readEOL[OK]= b'$GNRMC,123527.00,V,,,,,,,110826,,,N*6F'
+[15:39:04.023177]COM16.readEOL[OK]= b'$GNVTG,,,,,,,,,N*2E'
+[15:39:04.035514]COM16.readEOL[OK]= b'$GN\x1b[?2004hroot@harvest05:~# '
+[15:39:04.035514]COM16.stop_line[OK]= b'' [extra=EqValid_Regexp(v_args=(b'.*root@.+:.+#.*',)/v_kwargs={}/_iresult_reverse=None/_iresult_cumulate=<EnumAdj_BoolCumulate.ALL_TRUE: <built-in function all>>/_other_final__resolve=True)]
+[15:39:04.035514]COM16.readNoEOL[OK]= b'$GN\x1b[?2004hroot@harvest05:~# '
+[15:39:04.136724]COM16.reset_input[OK]= b'in_waiting__bytes_count=36'
+[15:39:04.136724]COM16.in_waiting__bytes_data[OK]= b'\n\x1b[?2004l\r\x1b[?2004hroot@harvest05:~# '
+[15:39:04.136724]COM16.reset_input[OK]= b''
+[15:39:04.136724]COM16.write[OK]= b'\x03'
+[COM16.WRITEREAD]
+	write=[timeout 3 cat /dev/ttyUSB0]
+	read=[$GNRMC,123527.00,V,,,,,,,110826,,,N*6F
+$GNVTG,,,,,,,,,N*2E]
+
 
         1=BLOCK STAY LONG TIME on table
         ==================================
@@ -312,7 +329,10 @@ class Test_1__GNSS:
         output = output.splitlines()
 
         for msg_type, data in gnss_collected.items():
-            gnss_collected[msg_type] = set(filter(lambda line: line.startswith(msg_type), output))
+            lines = set(filter(lambda line: line.startswith(msg_type), output))
+            gnss_collected[msg_type] = lines
+            if lines:
+                return
 
         for msg_type, data in gnss_collected.items():
             assert data, f"NMEA-предложения {msg_type=} не получены {data=}"

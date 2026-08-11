@@ -571,6 +571,7 @@ def ultrasonic_mac__any(harvest) -> str | None:
         bt_devs = harvest.bt__scan(timeout=20, timeout_continue=5)
         for mac, values in bt_devs.items():
             if str(values.get("name", "")).lower() == "UltraSonic".lower():
+                print(f"SUCCESS ultrasonic_mac__any/{mac=}")
                 return mac
 
 
