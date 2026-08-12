@@ -16,6 +16,9 @@ from base_aux.aux_eq.m3_eq_valid3_derivatives import *
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+MAC_HV05 = "D4:81:ED:BB:AA:6B"
+PATTERN_MAC = r"[0-9A-F:]{17}"
+
 
 # ======================================================================================================================
 class Harvest:
@@ -1673,6 +1676,89 @@ A02901810001203000E2806894000050035FD77070430A430A3000E2806894000050035FD7707010
         return result
 
     # ==================================================================================================================
+    def bt__connections__get_active(
+            self,
+            **r_kwargs,
+    ) -> list[str]:
+        """
+        get MACs for active BT connections
+        ==================================
+        1=СОЕДИНЕНИЕ УДЕРЖИВАЕТСЯ!!
+        ---- Sent utf8 encoded message: "hcitool con\r\n" ----
+        hcitool con
+        Connections:
+                < LE D4:81:ED:BB:AA:6B handle 64 state 1 lm CENTRAL
+        root@harvest05:~#
+
+        ==================================
+        2=СОЕДИНЕНИЕ РАЗОРВАНО
+        ---- Sent utf8 encoded message: "hcitool con\r\n" ----
+        hcitool con
+        Connections:
+        root@harvest05:~#
+        """
+        cmd = "hcitool con"
+        output = self.cmd_timeout__write_read__payload(
+            cmd,
+            timeout_continue=1,
+            **r_kwargs,
+        )
+        macs = re.findall(PATTERN_MAC, output)
+        return macs or []
+
+    def bt__connection__close_mac(
+            self,
+            mac: str,
+            **r_kwargs,
+    ) -> bool:
+        """
+    КОМАНДА РАЗРЫВА
+    ==================================
+
+    УСПЕШНАЯ
+    ----------------------------------
+    root@harvest05:~#
+    ---- Sent utf8 encoded message: "bluetoothctl disconnect D4:81:ED:BB:AA:6B\r\n" ----
+    bluetoothctl disconnect D4:81:ED:BB:AA:6B
+    Attempting to disconnect from D4:81:ED:BB:AA:6B
+    Successful disconnected
+    root@harvest05:~#
+
+    УЖЕ ОСТАНОВЛЕННОГО - повторный запуск
+    ----------------------------------
+    ---- Sent utf8 encoded message: "bluetoothctl disconnect D4:81:ED:BB:AA:6B\r\n" ----
+    bluetoothctl disconnect D4:81:ED:BB:AA:6B
+    Device D4:81:ED:BB:AA:6B not available
+    root@harvest05:~#
+    root@harvest05:~#
+
+    ОТКЛЮЧЕНИЕ ПРИ РАБОТЕ ОТ HARVESTER сервиса!!!
+    ----------------------------------
+    bluetoothctl disconnect D4:81:ED:BB:AA:6B 2>/dev/null || echo ERROR_MSG
+    Attempting to disconnect from D4:81:ED:BB:AA:6B
+    [CHG] Device D4:81:ED:BB:AA:6B ServicesResolved: no
+    Successful disconnected
+    root@harvest05:~#
+        """
+        cmd = f"bluetoothctl disconnect {mac}"
+        return self.cmd_timeout__check_executed_success(
+            cmd,
+            timeout_continue=1,
+            **r_kwargs,
+        )
+
+    def bt__connections__clear_all(self) -> bool:
+        """
+        SPECIALLY CREATED FOR
+        close BTUS fade connection
+        """
+        active_macs = self.bt__connections__get_active()
+        for mac in active_macs:
+            if not self.bt__connection__close_mac(mac):
+                return False
+        return True
+
+    # ------------------------------------------------------------------------------------------------------------------
     def bt__scan(
             self,
             timeout: float = 20,

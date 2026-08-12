@@ -188,7 +188,6 @@ class Test_02__PreInstall:
         assert harvest.file_name__push("scr__btus_read.py"), "скрипт не отправился"
 
 
-
 # ======================================================================================================================
 @pytest.mark.GNSS
 class Test_1__GNSS:
@@ -437,7 +436,22 @@ class Test_21__BT:
             LMP Version: 4.0 (0x6)  Subversion: 0x2209
             Manufacturer: Broadcom Corporation (15)
         
-        root@harvest05:~#      
+        root@harvest05:~#
+
+        ПРИМЕР ОСТАНОВЛЕНОГО КОНТРОЛЛЕРА BT!!!
+        ---- Sent utf8 encoded message: "hciconfig hci0 -a\r\n" ----
+        hciconfig hci0 -a
+        hci0:   Type: Primary  Bus: UART
+                BD Address: A6:20:96:B6:A9:5E  ACL MTU: 1021:8  SCO MTU: 64:1
+                DOWN
+                RX bytes:53561 acl:79 sco:0 events:1511 errors:0
+                TX bytes:3006 acl:33 sco:0 commands:113 errors:0
+                Features: 0xbf 0xfe 0xcf 0xfe 0xdb 0xff 0x7b 0x87
+                Packet type: DM1 DM3 DM5 DH1 DH3 DH5 HV1 HV2 HV3
+                Link policy: RSWITCH SNIFF
+                Link mode: PERIPHERAL ACCEPT
+
+        root@harvest05:~#
         """
         cmd = "hciconfig hci0 -a"
         output = harvest.cmd_timeout__write_read__payload(
@@ -595,8 +609,12 @@ class Test_22__BTUS:
     @pytest.mark.dependency(name="btus_present")
     def test_btus_1__present(self, harvest, sql_settings):
         assert harvest.cmd_timeout__check_executed_success("hciconfig hci0"), "Bluetooth интерфейс hci0 не обнаружен"
-        assert harvest.file_name__push("scr__btus_read.py"), "скрипт не отправился"
 
+        # PREPARE
+        assert harvest.file_name__push("scr__btus_read.py"), "скрипт не отправился"
+        assert harvest.bt__connections__clear_all()
+
+    # @pytest.mark.skip
     @pytest.mark.dependency(depends=["btus_present"])
     def test_btus_1__present2__ultrasonic_mac__any(self, ultrasonic_mac__any):
         assert ultrasonic_mac__any, "EP (UltraSonic) датчики вообще не обнаружены в радиусе действия"
@@ -618,6 +636,7 @@ class Test_22__BTUS:
 
         return True
 
+    # @pytest.mark.skip
     @pytest.mark.dependency(depends=["btus_present"])
     def test_btus_3__msg_validate__any(self, harvest):
         assert self._msg_validate__us(harvest)

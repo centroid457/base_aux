@@ -41,7 +41,7 @@ def harvest(request) -> Harvest:
 
 
 @pytest.fixture(scope="session")
-def harvest_info(harvest, request):
+def harvest_info(harvest, request) -> dict[str, Any]:
     info = harvest.get_info__system()
     request.config.stash["device_info"] = info
     print(json.dumps(info, indent=2, ensure_ascii=False))
@@ -50,7 +50,7 @@ def harvest_info(harvest, request):
 
 # ======================================================================================================================
 @pytest.fixture(scope="session")
-def gsm_at__port(harvest):
+def gsm_at__port(harvest) -> str | None:
     """Возвращает первый порт, ответивший OK на AT, или None.
 
             Для SIMcom 7682 требуется предварительная инициализация драйвера option.
@@ -552,7 +552,7 @@ root@harvest05:~#
 
 # ----------------------------------------------------------------------------------------------------------------------
 @pytest.fixture(scope="session")
-def gsm_at__dump(harvest, gsm_at__port):
+def gsm_at__dump(harvest, gsm_at__port) -> dict[str, str]:
     dump = harvest.at_cmd__dump(port=gsm_at__port, method_simple=True)
     print(json.dumps(dump, indent=2, ensure_ascii=False))
     return dump
