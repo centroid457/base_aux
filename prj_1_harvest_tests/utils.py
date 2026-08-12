@@ -866,7 +866,7 @@ PASSED
         print("не удалось изменить режим логгирования сообщений ядра Linux в консоль")
         return self.cmd_timeout__check_executed_success(f'dmesg -n 3')
 
-    def prepare__stop__services(self) -> bool:
+    def prepare__services(self, start: bool | None = True) -> bool:
         """
         GOAL
         stop all services which could interfere with tests
@@ -882,7 +882,8 @@ PASSED
             "harvester.service",    # не будет работать BTUS! не соединится
             "urozhai",              # вроде без него все работает! но просто так за компанию! потому что был в инструкции!
         ]:
-            result &= self.cmd_timeout__check_executed_success(f"systemctl stop {service}")
+            process = "start" if start else "stop"
+            result &= self.cmd_timeout__check_executed_success(f"systemctl {process} {service}")
         return result
 
     # ------------------------------------------------------------------------------------------------------------------

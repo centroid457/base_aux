@@ -34,9 +34,10 @@ def harvest(request) -> Harvest:
     device = found[0]
     with device.conn:
         device.prepare__stop__kernel_terminal_logs()
-        device.prepare__stop__services()
+        device.prepare__services(start=False)
         request.config.stash["device_id"] = dev_id
         yield device
+        device.prepare__services(start=True)
 
 
 @pytest.fixture(scope="session")
