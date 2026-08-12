@@ -169,6 +169,9 @@ class Harvest:
         permitted by applicable law.
         Last login: Tue Aug  4 14:39:52 MSK 2026 on ttyS0
         root@harvest05:~#
+
+        ПОЛНЫЙ ЛОГ ЗАГРУЗКИ
+
         """
         # stop all previous
         self.conn.send__ctrl_c()
