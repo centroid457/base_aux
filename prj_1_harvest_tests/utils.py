@@ -908,6 +908,58 @@ PASSED
         1 packets transmitted, 0 received, 100% packet loss, time 0ms
 
         root@harvest05:~#
+
+
+        ЧЕРЕЗ ДРУГОЙ ИНТЕРФЕЙС
+        ---- Sent utf8 encoded message: "ifconfig\r\n" ----
+        ifconfig
+        lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
+                inet 127.0.0.1  netmask 255.0.0.0
+                inet6 ::1  prefixlen 128  scopeid 0x10<host>
+                loop  txqueuelen 1000  (Local Loopback)
+                RX packets 10110  bytes 5066130 (4.8 MiB)
+                RX errors 0  dropped 0  overruns 0  frame 0
+                TX packets 10110  bytes 5066130 (4.8 MiB)
+                TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+        usb0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+                inet 192.168.0.100  netmask 255.255.255.0  broadcast 192.168.0.255
+                inet6 fe80::97a8:216f:d5f4:fd0  prefixlen 64  scopeid 0x20<link>
+                ether 46:d1:74:50:fa:0f  txqueuelen 1000  (Ethernet)
+                RX packets 237  bytes 11802 (11.5 KiB)
+                RX errors 0  dropped 0  overruns 0  frame 0
+                TX packets 554  bytes 53510 (52.2 KiB)
+                TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+        wlan0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+                inet 192.168.137.57  netmask 255.255.255.0  broadcast 192.168.137.255
+                inet6 fe80::eeca:37c1:3b57:2a47  prefixlen 64  scopeid 0x20<link>
+                ether 54:78:c9:02:22:b0  txqueuelen 1000  (Ethernet)
+                RX packets 8403  bytes 967076 (944.4 KiB)
+                RX errors 0  dropped 0  overruns 0  frame 0
+                TX packets 8937  bytes 5020645 (4.7 MiB)
+                TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+        root@harvest05:~#
+
+        ---- Sent utf8 encoded message: "ping -c 1 -W 1 -I wlan0 8.8.8.8\r\n" ----
+ping -c 1 -W 1 -I wlan0 8.8.8.8
+PING 8.8.8.8 (8.8.8.8) from 192.168.137.57 wlan0: 56(84) bytes of data.
+64 bytes from 8.8.8.8: icmp_seq=1 ttl=101 time=173 ms
+
+--- 8.8.8.8 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 172.762/172.762/172.762/0.000 ms
+root@harvest05:~#
+root@harvest05:~#
+---- Sent utf8 encoded message: "ping -c 1 -W 1 -I usb0 8.8.8.8\r\n" ----
+ping -c 1 -W 1 -I usb0 8.8.8.8
+PING 8.8.8.8 (8.8.8.8) from 192.168.0.100 usb0: 56(84) bytes of data.
+
+--- 8.8.8.8 ping statistics ---
+1 packets transmitted, 0 received, 100% packet loss, time 0ms
+
+root@harvest05:~#
         """
         return self.cmd_timeout__check_executed_success(
             "ping -c 1 -W 1 8.8.8.8",
