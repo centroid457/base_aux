@@ -422,7 +422,7 @@ PASSED
     def cmd_timeout__write_read__payload(
             self,
             cmd: str,
-            timeout_continue: float = 2.0,  # ОБЯЗАТЕЛЬНО!!!
+            timeout_continue: float = 2.0,  # ОБЯЗАТЕЛЬНО!!! лучше больше сделать потому что есть корректный STOPLINE!
             **wr_kwargs,
     ) -> str:
         """
@@ -522,7 +522,6 @@ PASSED
         output = self.cmd_timeout__write_read__payload(
             f"ls {path}",
             timeout=3,
-            timeout_continue=1.0,
             **wr_kwargs,
         )
 
@@ -911,10 +910,10 @@ PASSED
         root@harvest05:~#
         """
         return self.cmd_timeout__check_executed_success(
-                "ping -c 1 -W 1 8.8.8.8",
-                timeout_continue=2,
-                timeout=3,
-            )
+            "ping -c 1 -W 1 8.8.8.8",
+            timeout=3,
+            timeout_continue=2,
+        )
 
     # INFO =============================================================================================================
     def get_info__system(self) -> dict[str, Any]:
@@ -1090,8 +1089,8 @@ PASSED
         # Отключаем пейджер, чтобы получить полный вывод без интерактива
         output = self.cmd_timeout__write_read__payload(
             f"SYSTEMD_PAGER=cat udevadm info -q property -n {port} 2>/dev/null",
-            timeout_continue=0.5,
             timeout=4,
+            timeout_continue=0.5,
         ).split("\n")
 
         result = {}

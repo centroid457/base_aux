@@ -838,7 +838,7 @@ root@harvest05:~#
 
     # ------------------------------------------------------------------------------------------------------------------
     @pytest.mark.dependency(depends=["wifi_present"])
-    def test_wf_3__deep__scan(self, harvest):
+    def test_wf_4__deep__scan(self, harvest):
         """
         Выполняет сканирование и оценивает количество видимых сетей,
         уровни сигнала от ближайших точек доступа.
@@ -953,7 +953,7 @@ root@harvest05:~#
         assert max_db > self.RSSI_MIN_OK, "уровень сигнала слишком мал! проверьте антенну!"
 
     @pytest.mark.dependency(depends=["wifi_present"])
-    def test_wf_3__deep__info(self, harvest):
+    def test_wf_4__deep__info(self, harvest):
         """
         Собирает максимальную информацию об адаптере:
         - версия прошивки/драйвера
