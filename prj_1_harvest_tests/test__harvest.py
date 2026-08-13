@@ -704,6 +704,20 @@ class Test_3__WiFi:
         ), "Wi-Fi интерфейс wlan0 не обнаружен"
 
         # Дополнительная проверка, что это именно беспроводной интерфейс
+        """
+        СОЕДИНЕННЫЙ К VEST
+        [COM16.WRITEREAD]
+        write=[iw dev wlan0 info]
+        read=[Interface wlan0
+            ifindex 2
+            wdev 0x1
+            addr 54:78:c9:02:22:b0
+            ssid Vest
+            type managed
+            wiphy 0
+            channel 6 (2437 MHz), width: 20 MHz, center1: 2437 MHz
+            txpower 31.00 dBm]
+        """
         output = harvest.cmd_timeout__write_read__payload("iw dev wlan0 info")
         assert "wlan0" in output, "iw dev не видит wlan0"
         assert "type managed" in output.lower() or "type ap" in output.lower(), \
@@ -726,6 +740,32 @@ class Test_3__WiFi:
 
     @pytest.mark.dependency(depends=["wifi_connected"])
     def test_wf_3__connected2__station_dump(self, harvest):
+        """
+        ---- Sent utf8 encoded message: "iw dev wlan0 station dump\r\n" ----
+iw dev wlan0 station dump
+Station ea:4f:a4:27:39:98 (on wlan0)
+        inactive time:  0 ms
+        rx bytes:       5479
+        rx packets:     34
+        tx bytes:       1873
+        tx packets:     20
+        tx failed:      0
+        signal:         -51 [-51] dBm
+        tx bitrate:     24.0 MBit/s
+        rx bitrate:     6.0 MBit/s
+        authorized:     yes
+        authenticated:  yes
+        associated:     yes
+        WMM/WME:        yes
+        TDLS peer:      no
+        DTIM period:    1
+        beacon interval:100
+        short preamble: yes
+        short slot time:yes
+        connected time: 1429 seconds
+        current time:   1786619989041 ms
+root@harvest05:~#
+        """
         # Извлекаем основные параметры через station dump (более информативно)
         station_output = harvest.cmd_timeout__write_read__payload("iw dev wlan0 station dump")
         print(f"Station dump:\n{station_output}")
@@ -838,7 +878,7 @@ root@harvest05:~#
 
     # ------------------------------------------------------------------------------------------------------------------
     @pytest.mark.dependency(depends=["wifi_present"])
-    def test_wf_4__deep__scan(self, harvest):
+    def test_wf_4__deep__scan_ssids(self, harvest):
         """
         Выполняет сканирование и оценивает количество видимых сетей,
         уровни сигнала от ближайших точек доступа.
@@ -927,18 +967,13 @@ root@harvest05:~#
         root@harvest05:~#
         root@harvest05:~#
         """
-        scan_output = harvest.cmd_timeout__write_read__payload(
-            "iw dev wlan0 scan | grep SSID",
-            timeout=10,
-            timeout_continue=2
-        )
-        ssids = re.findall(r'\s*SSID:\s(.+)\s*\n*', scan_output)
-        print(f"Wi-Fi scan {ssids=}")
+        ssids = harvest.wf__scan()
         assert ssids, "сети не обнаружены"
-
         assert len(ssids) >= self.MIN_SCAN_NETWORKS, \
             f"Обнаружено мало сетей ({len(ssids)}), минимально ожидается {self.MIN_SCAN_NETWORKS}."
 
+    @pytest.mark.dependency(depends=["wifi_present"])
+    def test_wf_4__deep__scan_signal(self, harvest):
         # Собираем BSSID и уровни сигнала -----------------------------
         scan_output = harvest.cmd_timeout__write_read__payload(
             "iw dev wlan0 scan | grep signal",
@@ -977,7 +1012,7 @@ root@harvest05:~#
         assert info.get('driver', ''), "Не удалось определить драйвер Wi-Fi (ethtool -i)"
         assert info.get('firmware-version', ''), "Не удалось получить версию прошивки Wi-Fi"
 
-        # 2. Информация о беспроводном интерфейсе (iw dev wlan0 info)
+        # 2. Информация о беспроводном интерфейсе
         iw_info = harvest.cmd_timeout__write_read__payload("iw dev wlan0 info")
         print(f"iw info:\n{iw_info}")
 

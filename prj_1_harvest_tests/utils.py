@@ -1546,6 +1546,17 @@ PASSED
         }
 
     # ==================================================================================================================
+    def wf__scan(self) -> list[str]:
+        output = self.cmd_timeout__write_read__payload(
+            "iw dev wlan0 scan | grep SSID:",
+            timeout=10,
+            timeout_continue=2
+        )
+        ssids = re.findall(r'\s*SSID:\s(.+)\s*\n*', output)
+        print(f"Wi-Fi scan {ssids=}")
+        return ssids
+
+    # ==================================================================================================================
     def rfid__check_working(self) -> bool:
         # Убиваем возможные зависшие процессы на порту
         self.conn.write_read_bytes(f"fuser -k /dev/ttyS2 2>/dev/null", timeout_continue=0.5)
