@@ -5,7 +5,6 @@ import pytest
 from .utils import *
 
 from base_aux.buses.d1_serial2_new.m2_manager import SerialManager
-from base_aux.buses.d1_serial2_new.m1_serial_client import SerialClient2
 from base_aux.aux_eq.m3_eq_valid3_derivatives import *
 
 

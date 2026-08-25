@@ -8,7 +8,7 @@ import logging
 import base64
 import pathlib
 
-from base_aux.buses.d1_serial2_new.m1_serial_client import SerialClient2
+from .client import BaseClient
 from base_aux.aux_eq.m3_eq_valid3_derivatives import *
 
 
@@ -28,7 +28,7 @@ class Harvest:
 
         # =========================================================================
         # попытка определить номер телефона
-        "AT+CNUM",                # Основной запрос номера - НЕДОСТУПЕН НА M2M SIM!!!
+        "AT+CNUM",  # Основной запрос номера - НЕДОСТУПЕН НА M2M SIM!!!
         # "AT+CPBS=\"ON\"; +CPBR=1",  # Чтение своего номера из книги
         # "AT+CPBS=\'ON\'; +CPBR=1",  # Чтение своего номера из книги
         # "AT+CIMI",                # IMSI (для идентификации)
@@ -54,7 +54,7 @@ class Harvest:
         "AT+CPIN?",  # Статус SIM: READY, SIM PIN, SIM PUK, SIM PIN2...
         # "AT+CPINR=\"SIM PIN\"",  # Остаток попыток ввода PIN
         # "AT+CPINR=\"SIM PUK\"",  # Остаток попыток ввода PUK
-        "AT+CCID",      # ICCID (серийный номер SIM-карты)
+        "AT+CCID",  # ICCID (серийный номер SIM-карты)
         "AT+ICCID",  # ICCID (серийный номер SIM-карты)
 
         # =========================================================================
@@ -115,7 +115,22 @@ class Harvest:
 
     COMPILE_EOF__STR = re.compile(r".+@.+:.*#\s*")
 
-    def __init__(self, conn: SerialClient2):
+    def __init__(self, conn: BaseClient):
+        """
+        REASON (refactor note)
+        -----------------------
+        Раньше было `conn: SerialClient2` - типизация по конкретному транспорту,
+        хотя Harvest использует только протокольные методы (write_read_bytes,
+        write_read_text, send__ctrl_c, occupy, ADDRESS, conn как контекстный
+        менеджер и т.п.), которые одинаково доступны что через Serial, что
+        через SSH. Теперь conn типизирован по интерфейсу BaseClient, поэтому
+        Harvest можно передать любой BaseClient независимо от транспорта:
+
+            harvest_over_serial = Harvest(SerialClient2(address="COM16", baudrate=115200))
+            harvest_over_ssh    = Harvest(SshClient(address="192.168.0.100", username="root", password="1"))
+
+        Сам класс Harvest при этом не поменялся ни на строчку ниже.
+        """
         self.conn = conn
         self.hostname = None
 
@@ -408,9 +423,9 @@ PASSED
         result_clear_service = [
             line for line in result
             if not (
-                re.match(r'\s*\[\d+\]\s+(?:Exit|Terminated|Done)?\s*\d*\s*', line)
-                or
-                re.match(r'\s*\[\d+\]-?\s+(?:Exit|Terminated|Done)?\s*\d*\s*.*', line)
+                    re.match(r'\s*\[\d+\]\s+(?:Exit|Terminated|Done)?\s*\d*\s*', line)
+                    or
+                    re.match(r'\s*\[\d+\]-?\s+(?:Exit|Terminated|Done)?\s*\d*\s*.*', line)
             )
         ]
         result = result_clear_service
@@ -844,7 +859,7 @@ PASSED
                 resp = method_send(cmd, port=port, timeout=timeout)
                 results[cmd] = resp.strip()
             except Exception as exc:
-                results[cmd] = f"PYERROR:{exc!r}"   # нет таких!
+                results[cmd] = f"PYERROR:{exc!r}"  # нет таких!
         return results
 
     # CMDS =============================================================================================================
@@ -880,9 +895,9 @@ PASSED
         # Останавливаем ModemManager, если он может мешать порту - обычно занимает порты с устройствами ttyUSB*!!!
         # mm_active = self.cmd_timeout__check_executed_success("systemctl is-active ModemManager")
         for service in [
-            "ModemManager",         #
-            "harvester.service",    # не будет работать BTUS! не соединится
-            "urozhai",              # вроде без него все работает! но просто так за компанию! потому что был в инструкции!
+            "ModemManager",  #
+            "harvester.service",  # не будет работать BTUS! не соединится
+            "urozhai",  # вроде без него все работает! но просто так за компанию! потому что был в инструкции!
         ]:
             process = "start" if start else "stop"
             result &= self.cmd_timeout__check_executed_success(f"systemctl {process} {service}")
@@ -894,7 +909,8 @@ PASSED
         if need DELETE
             sudo apt remove picocom
         """
-        result = self.cmd_timeout__check_executed_success(f"apt install -y {module}", timeout_continue=timeout_continue, **wr_kwargs)
+        result = self.cmd_timeout__check_executed_success(f"apt install -y {module}", timeout_continue=timeout_continue,
+                                                          **wr_kwargs)
         return result
 
     def check__has_internet(self) -> bool:
@@ -1050,7 +1066,8 @@ root@harvest05:~#
             iface = iface.strip()
             if not iface or iface == 'lo':
                 continue
-            mac = self.cmd_timeout__write_read__payload(f"cat /sys/class/net/{iface}/address 2>/dev/null", timeout=3).strip()
+            mac = self.cmd_timeout__write_read__payload(f"cat /sys/class/net/{iface}/address 2>/dev/null",
+                                                        timeout=3).strip()
             ip_addr = self.cmd_timeout__write_read__payload(
                 f"ip -4 addr show {iface} 2>/dev/null | grep inet | head -1")
             net[iface] = {
@@ -1063,7 +1080,7 @@ root@harvest05:~#
         # Используем timeout_continue=2 для гарантированного чтения вывода
         usb_raw = self.cmd_timeout__write_read__payload(
             "lsusb",
-            timeout = 3,
+            timeout=3,
             timeout_continue=2.0  # ждём до 2 секунд после эхо
         )
         result['usb_devices'] = [line.strip() for line in usb_raw.split('\n') if line.strip() and 'lsusb' not in line]
@@ -1181,9 +1198,9 @@ root@harvest05:~#
             snd/* — звуковые устройства
             input/* — устройства ввода
             spidev* — SPI устройства
-            
-            
-        
+
+
+
         some other devices no USB 
 {
   "/dev/adsp1": {
@@ -1440,8 +1457,8 @@ root@harvest05:~#
             SKIP = [
                 EqValid_RegexpAnyTrue(
                     r"ttyS\d",  # tty console
-                    r"tty\d*",         # virtual tty
-                    r"mmcblk.*", r"nbd.*", r"loop.*",   # блочные устройства
+                    r"tty\d*",  # virtual tty
+                    r"mmcblk.*", r"nbd.*", r"loop.*",  # блочные устройства
                     r"vcs\d+", "vcsa\d+",  # виртуальные консоли
                     r"watchdog\d*",
                     r"rtc\d*",
@@ -1733,7 +1750,7 @@ A02901810001203000E2806894000050035FD77070430A430A3000E2806894000050035FD7707010
                 if re.match(r'^[0-9A-F]{24}', line.strip()):
                     result.add(line.strip())
 
-            if step != steps-1:
+            if step != steps - 1:
                 time.sleep(0.3)
         return result
 
@@ -1826,7 +1843,7 @@ A02901810001203000E2806894000050035FD77070430A430A3000E2806894000050035FD7707010
             timeout: float = 20,
             timeout_continue: float = 4,
             **r_kwargs,
-    ) -> dict[str, dict[str, str | int | None]] | NoReturn:   # {mac: {name, rssi}}
+    ) -> dict[str, dict[str, str | int | None]] | NoReturn:  # {mac: {name, rssi}}
         """
         ---- Sent utf8 encoded message: "bluetoothctl -- scan on & sleep 2; bluetoothctl -- scan off\r\n" ----
         bluetoothctl -- scan on & sleep 2; bluetoothctl -- scan off
@@ -2023,7 +2040,7 @@ A02901810001203000E2806894000050035FD77070430A430A3000E2806894000050035FD7707010
 
         result: dict[str, bool | str | Any | None] = {
             "mac": mac,
-            "random": None,     # random/public
+            "random": None,  # random/public
             "name": None,
             "alias": None,
             "paired": None,
@@ -2279,7 +2296,6 @@ A02901810001203000E2806894000050035FD77070430A430A3000E2806894000050035FD7707010
 
         print("sql_settings__get_all=", json.dumps(result, indent=2))
         return result
-
 
 # ======================================================================================================================
 # def test__():
