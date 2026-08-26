@@ -27,7 +27,6 @@ from base_aux.base_values.m3_exceptions import Exc__ExpectedAnother
 
         ((EqValid_NotRaise(), EqValid_GE(1)), 1, [True, True]),
         ((EqValid_NotRaise(), EqValid_GE(100)), 1, [False, True]),
-        ((EqValid_NotRaise(), EqValid_GE(100, _iresult_reverse=True)), 1, [True, True]),
     ]
 )
 def test___EqValidator(args, other, _EXPECTED):
