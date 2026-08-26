@@ -2,6 +2,9 @@ from base_aux.base_types.m0_static_typing import *
 from base_aux.base_lambdas.m1_lambda import *
 
 
+_NO_VARIANT = object()
+
+
 # =====================================================================================================================
 class Base_EqValid(NestCall_Resolve):
     """
@@ -155,38 +158,34 @@ class Base_EqValid(NestCall_Resolve):
         # OTHER_FINAL --------------------
         self._other_resolve(other_draft)
 
-        # VALIDATION --------------------
-        if not self.V_ARGS:
-            # 1=ARGS BLANK --------------
-            validator_result = Lambda(self.VALIDATOR, self.OTHER_FINAL, **self.V_KWARGS).resolve__bool()
-            result = validator_result
-            return result
+        # VALIDATE -----------------------
+        for v_arg in (self.V_ARGS or (_NO_VARIANT,)):
+            try:
+                if v_arg is _NO_VARIANT:
+                    # 1=ARGS BLANK --------------
+                    result = bool(self.VALIDATOR(self.OTHER_FINAL, **self.V_KWARGS))
+                else:
+                    # 2=ARGS one or MORE --------------
+                    result = bool(self.VALIDATOR(self.OTHER_FINAL, v_arg, **self.V_KWARGS))
+            except Exception:
+                result = False
 
-        else:
-            # 2=ARGS one or MORE --------------
-            for v_arg in self.V_ARGS:
-                validator_result = Lambda(self.VALIDATOR, self.OTHER_FINAL, v_arg, **self.V_KWARGS).resolve__bool()
-                result = validator_result
+            # CUMULATE --------
+            if self.CUMULATE_MODE == EnumAdj_BoolCumulate.ALL_TRUE:
+                if not result:
+                    return False
+            elif self.CUMULATE_MODE == EnumAdj_BoolCumulate.ANY_TRUE:
+                if result:
+                    return True
+            elif self.CUMULATE_MODE == EnumAdj_BoolCumulate.ALL_FALSE:
+                if result:
+                    return False
+            elif self.CUMULATE_MODE == EnumAdj_BoolCumulate.ANY_FALSE:
+                if not result:
+                    return True
 
-                # CUMULATE --------
-                if self.CUMULATE_MODE == EnumAdj_BoolCumulate.ALL_TRUE:
-                    if not result:
-                        return False
-                elif self.CUMULATE_MODE == EnumAdj_BoolCumulate.ANY_TRUE:
-                    if result:
-                        return True
-                elif self.CUMULATE_MODE == EnumAdj_BoolCumulate.ALL_FALSE:
-                    if result:
-                        return False
-                elif self.CUMULATE_MODE == EnumAdj_BoolCumulate.ANY_FALSE:
-                    if not result:
-                        return True
-
-            # FINAL - if not returned before ------------
-            if self.CUMULATE_MODE in [EnumAdj_BoolCumulate.ALL_TRUE, EnumAdj_BoolCumulate.ALL_FALSE]:
-                return True
-            else:
-                return False
+        # FINAL - if not returned before ------------
+        return self.CUMULATE_MODE in [EnumAdj_BoolCumulate.ALL_TRUE, EnumAdj_BoolCumulate.ALL_FALSE]
 
 
 # =====================================================================================================================
