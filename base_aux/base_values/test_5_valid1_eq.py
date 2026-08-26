@@ -39,7 +39,7 @@ def test__1_init(source, eq, _EXPECTED):
         (1, EqValid_GE(1), 0, Exception),
 
         (1, EqValid_EQ(1), 10, Exception),
-        (1, EqValid_EQ(1, 10), 10, True),
+        (1, EqValid_EQ_AnyTrue(1, 10), 10, True),
     ]
 )
 def test__2_reset(source, eq, new, _EXPECTED):
@@ -59,7 +59,7 @@ def test__2_reset(source, eq, new, _EXPECTED):
         (1, EqValid_GE(1), 0, False),
 
         (1, EqValid_EQ(1), 10, False),
-        (1, EqValid_EQ(1, 10), 10, False),
+        (1, EqValid_EQ_AnyTrue(1, 10), 10, False),
     ]
 )
 def test__3_eq(source, eq, other, _EXPECTED):
