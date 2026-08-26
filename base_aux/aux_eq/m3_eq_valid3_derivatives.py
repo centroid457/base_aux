@@ -18,89 +18,39 @@ class EqValid_JsonPartialKwargs(Base_EqValid): ...
 # --------------------------------------------
 
 
-# =====================================================================================================================
-@final
-class EqValid_IsinstanceSameinstance(Base_EqValid):
-    CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ANY_TRUE
-    VALIDATOR = Validators.IsinstanceSameinstance
-
-
-# =====================================================================================================================
-@final
-class EqValid_Contain(Base_EqValid):
-    CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ANY_TRUE
-    VALIDATOR = Validators.Contain
-
-
-# ---------------------------------------------------------------------------------------------------------------------
-@final
-class EqValid_ContainStrIc(Base_EqValid):
-    CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ANY_TRUE
-    VALIDATOR = Validators.ContainStrIc
-
-
-# =====================================================================================================================
-@final
-class EqValid_Startswith(Base_EqValid):
-    CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ANY_TRUE
-    VALIDATOR = Validators.Startswith
-
-
-@final
-class EqValid_StartswithIc(Base_EqValid):
-    CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ANY_TRUE
-    VALIDATOR = Validators.StartswithIc
-
-
-# ---------------------------------------------------------------------------------------------------------------------
-@final
-class EqValid_Endswith(Base_EqValid):
-    CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ANY_TRUE
-    VALIDATOR = Validators.Endswith
-
-
-@final
-class EqValid_EndswithIc(Base_EqValid):
-    CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ANY_TRUE
-    VALIDATOR = Validators.EndswithIc
-
-
-# =====================================================================================================================
-@final
-class EqValid_BoolTrue(Base_EqValid):
-    VALIDATOR = Validators.BoolTrue
-
-
-# ---------------------------------------------------------------------------------------------------------------------
-@final
-class EqValid_Raise(Base_EqValid):
-    VALIDATOR = Validators.Raise
-
-
-# ---------------------------------------------------------------------------------------------------------------------
-@final
-class EqValid_NotRaise(Base_EqValid):
-    VALIDATOR = Validators.NotRaise
-
-
-# ---------------------------------------------------------------------------------------------------------------------
-@final
-class EqValid_Exc(Base_EqValid):
-    VALIDATOR = Validators.Exc
-
-
-# ---------------------------------------------------------------------------------------------------------------------
-@final
-class EqValid_ExcRaise(Base_EqValid):
-    VALIDATOR = Validators.ExcRaise
-
-
-# =====================================================================================================================
-# @final    # DONT USE FINAL!!! need next in - CHAIN!!!
+# ======================================================================================================================
+# @final    # DONT USE FINAL!!! need next
 class EqValid_EQ(Base_EqValid):
+    CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ALL_TRUE
+    VALIDATOR = Validators.CMP_EQ
+
+
+# ----------------------------------------------------------------------------------------------------------------------
+@final
+class EqValid_EQ_AllTrue(EqValid_EQ):
+    CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ALL_TRUE
+    VALIDATOR = Validators.CMP_EQ
+
+
+@final
+class EqValid_EQ_AnyTrue(EqValid_EQ):
     CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ANY_TRUE
     VALIDATOR = Validators.CMP_EQ
 
+
+@final
+class EqValid_EQ_AllFalse(EqValid_EQ):
+    CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ALL_FALSE
+    VALIDATOR = Validators.CMP_EQ
+
+
+@final
+class EqValid_EQ_AnyFalse(EqValid_EQ):
+    CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ANY_FALSE
+    VALIDATOR = Validators.CMP_EQ
+
+
+# ======================================================================================================================
 @final
 class EqValid_EQ_StrIc(Base_EqValid):
     CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ANY_TRUE
@@ -113,7 +63,84 @@ class EqValid_EQ_NumParsedSingle(Base_EqValid):
     VALIDATOR = Validators.CMP_EQ__NumParsedSingle
 
 
-# =====================================================================================================================
+# ======================================================================================================================
+@final
+class EqValid_IsinstanceSameinstance(Base_EqValid):
+    CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ANY_TRUE
+    VALIDATOR = Validators.IsinstanceSameinstance
+
+
+# ======================================================================================================================
+@final
+class EqValid_Contain(Base_EqValid):
+    CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ANY_TRUE
+    VALIDATOR = Validators.Contain
+
+
+# ----------------------------------------------------------------------------------------------------------------------
+@final
+class EqValid_ContainStrIc(Base_EqValid):
+    CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ANY_TRUE
+    VALIDATOR = Validators.ContainStrIc
+
+
+# ======================================================================================================================
+@final
+class EqValid_Startswith(Base_EqValid):
+    CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ANY_TRUE
+    VALIDATOR = Validators.Startswith
+
+
+@final
+class EqValid_StartswithIc(Base_EqValid):
+    CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ANY_TRUE
+    VALIDATOR = Validators.StartswithIc
+
+
+# ----------------------------------------------------------------------------------------------------------------------
+@final
+class EqValid_Endswith(Base_EqValid):
+    CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ANY_TRUE
+    VALIDATOR = Validators.Endswith
+
+
+@final
+class EqValid_EndswithIc(Base_EqValid):
+    CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ANY_TRUE
+    VALIDATOR = Validators.EndswithIc
+
+
+# ======================================================================================================================
+@final
+class EqValid_BoolTrue(Base_EqValid):
+    VALIDATOR = Validators.BoolTrue
+
+
+# ----------------------------------------------------------------------------------------------------------------------
+@final
+class EqValid_Raise(Base_EqValid):
+    VALIDATOR = Validators.Raise
+
+
+# ----------------------------------------------------------------------------------------------------------------------
+@final
+class EqValid_NotRaise(Base_EqValid):
+    VALIDATOR = Validators.NotRaise
+
+
+# ----------------------------------------------------------------------------------------------------------------------
+@final
+class EqValid_Exc(Base_EqValid):
+    VALIDATOR = Validators.Exc
+
+
+# ----------------------------------------------------------------------------------------------------------------------
+@final
+class EqValid_ExcRaise(Base_EqValid):
+    VALIDATOR = Validators.ExcRaise
+
+
+# ======================================================================================================================
 @final
 class EqValid_LT(Base_EqValid):
     CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ALL_TRUE
@@ -140,7 +167,7 @@ class EqValid_LGTE(Base_EqValid):
     CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ALL_TRUE
     VALIDATOR = Validators.CMP_LGTE
 
-# ---------------------------------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------------------------
 @final
 class EqValid_LT_NumParsedSingle(Base_EqValid):
     CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ALL_TRUE
@@ -166,7 +193,7 @@ class EqValid_GE_NumParsedSingle(Base_EqValid):
 class EqValid_LGTE_NumParsedSingle(Base_EqValid):
     VALIDATOR = Validators.CMP_LGTE_NumParsedSingle
 
-# ---------------------------------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------------------------
 @final
 class EqValid_NumParsedSingle_Success(Base_EqValid):
     VALIDATOR = Validators.NumParsedSingle_Success
@@ -189,7 +216,7 @@ class EqValid_NumParsedSingle_EQ(EqValid_EQ_NumParsedSingle):
     pass
 
 
-# =====================================================================================================================
+# ======================================================================================================================
 class EqValid_Regexp(Base_EqValid):
     """
     NOTE
@@ -200,7 +227,7 @@ class EqValid_Regexp(Base_EqValid):
     VALIDATOR = Validators.Regexp
     CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ALL_TRUE
 
-# ---------------------------------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------------------------
 @final
 class EqValid_RegexpAllTrue(EqValid_Regexp):
     CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ALL_TRUE
@@ -221,13 +248,13 @@ class EqValid_RegexpAnyFalse(EqValid_Regexp):
     CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ANY_FALSE
 
 
-# =====================================================================================================================
+# ======================================================================================================================
 @final
 class EqValid_AttrsByKwargs(Base_EqValid):
     VALIDATOR = Validators.AttrsByKwargs
 
 
-# ---------------------------------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------------------------
 # @final
 # class EqValid_AttrsByObj(Base_EqValid):
 #     VALIDATOR = Validators.AttrsByObj
@@ -259,15 +286,15 @@ def _explore():
     print(f"{ev == other}")
 
 
-# ---------------------------------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------------------------
 @final
 class EqValid_AnnotsAllExists(Base_EqValid):
     VALIDATOR = Validators.AnnotsAllExists
 
 
-# =====================================================================================================================
+# ======================================================================================================================
 if __name__ == "__main__":
     _explore()
 
 
-# =====================================================================================================================
+# ======================================================================================================================

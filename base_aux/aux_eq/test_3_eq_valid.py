@@ -186,14 +186,15 @@ def test__bool_exc_raise(other, _EXPECTED):
 @pytest.mark.parametrize(
     argnames="args, other, _EXPECTED",
     argvalues=[
-        ([1, 2], 1, (True, True, True)),
+        ([1, 2], 1, (False, True, True)),
         ([1, 2], "1", (False, True, True)),
         ([1, 2], 10, (False, False, False)),
-        ([*"12"], "1", (True, True, False)),
+
+        ([*"12"], "1", (False, True, False)),
         ([*"12"], "10", (False, False, False)),
         ([*"12"], "hello", (False, False, False)),
 
-        ([*"ABC"], "A", (True, True, False)),
+        ([*"ABC"], "A", (False, True, False)),
         ([*"ABC"], "a", (False, True, False)),
         ([*"ABC"], "f", (False, False, False)),
     ]
