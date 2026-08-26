@@ -1,10 +1,9 @@
 from base_aux.aux_eq.m3_eq_valid3_derivatives import *
 from base_aux.base_values.m3_exceptions import Exc__ExpectedAnother
-from base_aux.aux_eq.m4_eq_valid_chain import *
 
 
 # =====================================================================================================================
-class Base_EqRaiseIf(Base_EqValidChain):
+class Base_EqRaiseIf(EqValid_EQ):
     """
     GOAL
     ----
@@ -23,7 +22,7 @@ class Base_EqRaiseIf(Base_EqValidChain):
         super().__init__(*args, **kwargs)
 
     def resolve(self, other_draft: Any, *other_args, **other_kwargs) -> None | NoReturn:
-        validated = super().resolve(other_draft, *other_args, **other_kwargs)
+        validated = super().resolve(other_draft)
         if validated:
             if self.MSG is not None:
                 msg = str(self.MSG)

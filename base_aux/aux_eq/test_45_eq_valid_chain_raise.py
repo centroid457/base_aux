@@ -2,10 +2,8 @@ import pytest
 
 from base_aux.base_lambdas.m1_lambda import *
 from base_aux.base_values.m4_primitives import *
-from base_aux.aux_eq.m3_eq_valid3_derivatives import *
-from base_aux.aux_eq.m4_eq_valid_chain import *
 
-from base_aux.aux_eq.m5_eq_raise_if import *
+from base_aux.aux_eq.m4_eq_raise_if import *
 from base_aux.base_values.m3_exceptions import Exc__ExpectedAnother
 
 
@@ -30,8 +28,8 @@ from base_aux.base_values.m3_exceptions import Exc__ExpectedAnother
     ]
 )
 def test___EqValidator(args, other, _EXPECTED):
-    Lambda(EqValidChain_All(*args) == other).check_expected__assert(_EXPECTED[0])
-    Lambda(EqValidChain_Any(*args) == other).check_expected__assert(_EXPECTED[1])
+    Lambda(EqValid_EQ_AllTrue(*args) == other).check_expected__assert(_EXPECTED[0])
+    Lambda(EqValid_EQ_AnyTrue(*args) == other).check_expected__assert(_EXPECTED[1])
 
     Lambda(lambda: EqRaiseIf_All(*args) == other).check_expected__assert(Exc__ExpectedAnother if _EXPECTED[0] else None)
     Lambda(lambda: EqRaiseIf_Any(*args) == other).check_expected__assert(Exc__ExpectedAnother if _EXPECTED[1] else None)

@@ -33,7 +33,7 @@ class VersionBlock(NestCmp_GLET_Any, NestRepr__ClsName_SelfStr):
     SOURCE: TYPE__VERSION_BLOCK_ELEMENTS_DRAFT
     ELEMENTS: TYPE__VERSION_BLOCK_ELEMENTS_FINAL = ()
     RAISE: bool = True
-    EQ_VALID: Base_EqValid = EqValidChain_All(
+    EQ_VALID: Base_EqValid = EqValid_EQ_AllTrue(
         # EqValid_RegexpAnyTrue(*Pat_VersionBlock.VALID),
         EqValid_RegexpAllFalse(*Pat_VersionBlock.VALID_REVERSE),
     )
