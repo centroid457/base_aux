@@ -51,7 +51,7 @@ class Base_EqValid(NestCall_Resolve):
     V_ARGS: TYPING.ARGS_FINAL       # as variant for validation! can be blank!
     V_KWARGS: TYPING.KWARGS_FINAL   # as settings!
 
-    IRESULT_CUMULATE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ALL_TRUE
+    CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ALL_TRUE
 
     OTHER_FINAL__RESOLVE: bool = True   # goal: create chains with no ReCalculation inside
     OTHER_RAISED: bool = None   # RAISE ON CALCULATION OTHER_FINAL! not on equation!!!
@@ -74,7 +74,7 @@ class Base_EqValid(NestCall_Resolve):
             self.VALIDATOR = _validator
 
         if _cumulate_mode is not None:
-            self.IRESULT_CUMULATE = _cumulate_mode
+            self.CUMULATE_MODE = _cumulate_mode
 
         if _other_final__resolve is not None:
             self.OTHER_FINAL__RESOLVE = _other_final__resolve
@@ -89,7 +89,7 @@ class Base_EqValid(NestCall_Resolve):
     def __str__(self):
         v_args = self.V_ARGS
         v_kwargs = self.V_KWARGS
-        _cumulate_mode = self.IRESULT_CUMULATE
+        _cumulate_mode = self.CUMULATE_MODE
         _other_final__resolve = self.OTHER_FINAL__RESOLVE
         return f"{self.__class__.__name__}({v_args=}/{v_kwargs=}/{_cumulate_mode=}/{_other_final__resolve=})"
 
@@ -112,11 +112,11 @@ class Base_EqValid(NestCall_Resolve):
         yield from self.V_ARGS
 
     # PREPARES --------------------------------------------------------------------------------------------------------
-    def _other_final__resolve(self, other_draft: Any, *other_args, **other_kwargs) -> None:
+    def _other_final__resolve(self, other_draft: Any) -> None:
         # TODO: decide use or not callable other??? = USE! it is really need to validate callable!!!
         if self.OTHER_FINAL__RESOLVE:
             try:
-                self.OTHER_FINAL = Lambda(other_draft, *other_args, **other_kwargs).resolve__raise()
+                self.OTHER_FINAL = Lambda(other_draft).resolve__raise()
                 self.OTHER_RAISED = False
             except Exception as exc:
                 self.OTHER_RAISED = True
@@ -146,14 +146,14 @@ class Base_EqValid(NestCall_Resolve):
         return self.resolve(item)
 
     # VALIDATE-2=VALUE with argsKwrgs----------------------------------------------------------------------------------
-    def resolve(self, other_draft: Any, *other_args, **other_kwargs) -> bool:
+    def resolve(self, other_draft: Any) -> bool:
         """
         GOAL
         ----
         validate smth with special logic
         """
         # OTHER_FINAL --------------------
-        self._other_final__resolve(other_draft, *other_args, **other_kwargs)
+        self._other_final__resolve(other_draft)
 
         # VALIDATION --------------------
         if not self.V_ARGS:
@@ -169,21 +169,21 @@ class Base_EqValid(NestCall_Resolve):
                 result = validator_result
 
                 # CUMULATE --------
-                if self.IRESULT_CUMULATE == EnumAdj_BoolCumulate.ALL_TRUE:
+                if self.CUMULATE_MODE == EnumAdj_BoolCumulate.ALL_TRUE:
                     if not result:
                         return False
-                elif self.IRESULT_CUMULATE == EnumAdj_BoolCumulate.ANY_TRUE:
+                elif self.CUMULATE_MODE == EnumAdj_BoolCumulate.ANY_TRUE:
                     if result:
                         return True
-                elif self.IRESULT_CUMULATE == EnumAdj_BoolCumulate.ALL_FALSE:
+                elif self.CUMULATE_MODE == EnumAdj_BoolCumulate.ALL_FALSE:
                     if result:
                         return False
-                elif self.IRESULT_CUMULATE == EnumAdj_BoolCumulate.ANY_FALSE:
+                elif self.CUMULATE_MODE == EnumAdj_BoolCumulate.ANY_FALSE:
                     if not result:
                         return True
 
             # FINAL - if not returned before ------------
-            if self.IRESULT_CUMULATE in [EnumAdj_BoolCumulate.ALL_TRUE, EnumAdj_BoolCumulate.ALL_FALSE]:
+            if self.CUMULATE_MODE in [EnumAdj_BoolCumulate.ALL_TRUE, EnumAdj_BoolCumulate.ALL_FALSE]:
                 return True
             else:
                 return False

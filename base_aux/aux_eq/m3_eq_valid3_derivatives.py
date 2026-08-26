@@ -21,47 +21,47 @@ class EqValid_JsonPartialKwargs(Base_EqValid): ...
 # =====================================================================================================================
 @final
 class EqValid_IsinstanceSameinstance(Base_EqValid):
-    IRESULT_CUMULATE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ANY_TRUE
+    CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ANY_TRUE
     VALIDATOR = Validators.IsinstanceSameinstance
 
 
 # =====================================================================================================================
 @final
 class EqValid_Contain(Base_EqValid):
-    IRESULT_CUMULATE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ANY_TRUE
+    CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ANY_TRUE
     VALIDATOR = Validators.Contain
 
 
 # ---------------------------------------------------------------------------------------------------------------------
 @final
 class EqValid_ContainStrIc(Base_EqValid):
-    IRESULT_CUMULATE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ANY_TRUE
+    CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ANY_TRUE
     VALIDATOR = Validators.ContainStrIc
 
 
 # =====================================================================================================================
 @final
 class EqValid_Startswith(Base_EqValid):
-    IRESULT_CUMULATE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ANY_TRUE
+    CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ANY_TRUE
     VALIDATOR = Validators.Startswith
 
 
 @final
 class EqValid_StartswithIc(Base_EqValid):
-    IRESULT_CUMULATE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ANY_TRUE
+    CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ANY_TRUE
     VALIDATOR = Validators.StartswithIc
 
 
 # ---------------------------------------------------------------------------------------------------------------------
 @final
 class EqValid_Endswith(Base_EqValid):
-    IRESULT_CUMULATE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ANY_TRUE
+    CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ANY_TRUE
     VALIDATOR = Validators.Endswith
 
 
 @final
 class EqValid_EndswithIc(Base_EqValid):
-    IRESULT_CUMULATE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ANY_TRUE
+    CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ANY_TRUE
     VALIDATOR = Validators.EndswithIc
 
 
@@ -98,67 +98,67 @@ class EqValid_ExcRaise(Base_EqValid):
 # =====================================================================================================================
 # @final    # DONT USE FINAL!!! need next in - CHAIN!!!
 class EqValid_EQ(Base_EqValid):
-    IRESULT_CUMULATE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ANY_TRUE
+    CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ANY_TRUE
     VALIDATOR = Validators.CMP_EQ
 
 @final
 class EqValid_EQ_StrIc(Base_EqValid):
-    IRESULT_CUMULATE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ANY_TRUE
+    CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ANY_TRUE
     VALIDATOR = Validators.CMP_EQ__StrIc
 
 
 # @final    # DONT USE FINAL!!! need next in - EqValid_NumParsedSingle_EQ!!!
 class EqValid_EQ_NumParsedSingle(Base_EqValid):
-    IRESULT_CUMULATE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ANY_TRUE
+    CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ANY_TRUE
     VALIDATOR = Validators.CMP_EQ__NumParsedSingle
 
 
 # =====================================================================================================================
 @final
 class EqValid_LT(Base_EqValid):
-    IRESULT_CUMULATE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ALL_TRUE
+    CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ALL_TRUE
     VALIDATOR = Validators.CMP_LT
 
 @final
 class EqValid_LE(Base_EqValid):
-    IRESULT_CUMULATE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ALL_TRUE
+    CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ALL_TRUE
     VALIDATOR = Validators.CMP_LE
 
 @final
 class EqValid_GT(Base_EqValid):
-    IRESULT_CUMULATE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ALL_TRUE
+    CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ALL_TRUE
     VALIDATOR = Validators.CMP_GT
 
 @final
 class EqValid_GE(Base_EqValid):
-    IRESULT_CUMULATE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ALL_TRUE
+    CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ALL_TRUE
     VALIDATOR = Validators.CMP_GE
 
 # --------------------------------
 @final
 class EqValid_LGTE(Base_EqValid):
-    IRESULT_CUMULATE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ALL_TRUE
+    CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ALL_TRUE
     VALIDATOR = Validators.CMP_LGTE
 
 # ---------------------------------------------------------------------------------------------------------------------
 @final
 class EqValid_LT_NumParsedSingle(Base_EqValid):
-    IRESULT_CUMULATE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ALL_TRUE
+    CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ALL_TRUE
     VALIDATOR = Validators.CMP_LT_NumParsedSingle
 
 @final
 class EqValid_LE_NumParsedSingle(Base_EqValid):
-    IRESULT_CUMULATE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ALL_TRUE
+    CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ALL_TRUE
     VALIDATOR = Validators.CMP_LE_NumParsedSingle
 
 @final
 class EqValid_GT_NumParsedSingle(Base_EqValid):
-    IRESULT_CUMULATE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ALL_TRUE
+    CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ALL_TRUE
     VALIDATOR = Validators.CMP_GT_NumParsedSingle
 
 @final
 class EqValid_GE_NumParsedSingle(Base_EqValid):
-    IRESULT_CUMULATE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ALL_TRUE
+    CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ALL_TRUE
     VALIDATOR = Validators.CMP_GE_NumParsedSingle
 
 # --------------------------------
@@ -198,27 +198,27 @@ class EqValid_Regexp(Base_EqValid):
     for several patterns - use other classes for clarification!
     """
     VALIDATOR = Validators.Regexp
-    IRESULT_CUMULATE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ALL_TRUE
+    CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ALL_TRUE
 
 # ---------------------------------------------------------------------------------------------------------------------
 @final
 class EqValid_RegexpAllTrue(EqValid_Regexp):
-    IRESULT_CUMULATE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ALL_TRUE
+    CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ALL_TRUE
 
 
 @final
 class EqValid_RegexpAnyTrue(EqValid_Regexp):
-    IRESULT_CUMULATE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ANY_TRUE
+    CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ANY_TRUE
 
 
 @final
 class EqValid_RegexpAllFalse(EqValid_Regexp):
-    IRESULT_CUMULATE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ALL_FALSE
+    CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ALL_FALSE
 
 
 @final
 class EqValid_RegexpAnyFalse(EqValid_Regexp):
-    IRESULT_CUMULATE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ANY_FALSE
+    CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ANY_FALSE
 
 
 # =====================================================================================================================

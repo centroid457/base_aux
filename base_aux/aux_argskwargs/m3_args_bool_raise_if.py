@@ -71,7 +71,7 @@ class Base_ArgsBoolIf(NestInit_Args_Implicit, NestCall_Resolve):
         # FINAL ---------
         if self.IRESULT_CUMULATE == EnumAdj_BoolCumulate.ANY_TRUE or self.IRESULT_CUMULATE == EnumAdj_BoolCumulate.ANY_FALSE:
             return False
-        else:   # self.IRESULT_CUMULATE == EnumAdj_BoolCumulate.ALL_TRUE or self.IRESULT_CUMULATE == EnumAdj_BoolCumulate.ALL_FALSE
+        else:   # self.CUMULATE_MODE == EnumAdj_BoolCumulate.ALL_TRUE or self.CUMULATE_MODE == EnumAdj_BoolCumulate.ALL_FALSE
             if self.RAISE_INSTEAD_TRUE:
                 msg = f"{results_all=}"
                 raise Exc__ExpectedAnother(msg)
