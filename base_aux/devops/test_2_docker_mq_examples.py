@@ -8,7 +8,8 @@ from base_aux.devops.m2_docker import DockerMan
 # =====================================================================================================================
 @pytest.mark.dependency()
 def test__0_check_could_start_tests():
-    assert DockerMan.docker__check_ready_os()
+    if not DockerMan.docker__check_ready_os():
+        pytest.skip()
 
 
 # =====================================================================================================================
