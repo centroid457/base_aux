@@ -116,7 +116,6 @@ class Base_EqValid(NestCall_Resolve):
 
     # PREPARES --------------------------------------------------------------------------------------------------------
     def _other_resolve(self, other_draft: Any) -> None:
-        # TODO: decide use or not callable other??? = USE! it is really need to validate callable!!!
         if self.OTHER_RESOLVE:
             try:
                 self.OTHER_FINAL = Lambda(other_draft).resolve__raise()

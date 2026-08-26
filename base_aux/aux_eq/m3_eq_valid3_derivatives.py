@@ -5,17 +5,24 @@ from base_aux.base_enums.m2_enum1_adj import *
 
 
 # =====================================================================================================================
+class EqValid_DictFull(Base_EqValid):
+    # use direct cmp!!!
+    CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ALL_TRUE
+    VALIDATOR = Validators.DictFull
+
+
+class EqValid_DictPart(Base_EqValid):
+    CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ALL_TRUE
+    VALIDATOR = Validators.DictPart
+
+
 # TODO: add
-# --------------------------------------------
-class EqValid_Dict(Base_EqValid): ...
-class EqValid_DictPartial(Base_EqValid): ...
-# --------------------------------------------
+# ----------------------------------------------------------------------------------------------------------------------
 class EqValid_Json(Base_EqValid): ...
 class EqValid_JsonPartial(Base_EqValid): ...
 # --------------------------------------------
 class EqValid_JsonKwargs(Base_EqValid): ...
 class EqValid_JsonPartialKwargs(Base_EqValid): ...
-# --------------------------------------------
 
 
 # ======================================================================================================================

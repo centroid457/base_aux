@@ -142,7 +142,7 @@ class Validators:
         """
         return self.OTHER_RAISED or TypeAux(other_final).check__exception()
 
-    # -----------------------------------------------------------------------------------------------------------------
+    # ==================================================================================================================
     @staticmethod
     def CMP_EQ(self, other_final: Any, variant: Any) -> bool | NoReturn:
         print(f"CMP_EQ={other_final=}/{variant=}")
@@ -158,7 +158,7 @@ class Validators:
         print(f"CMP_EQ__NumParsedSingle={other_final=}/{variant=}")
         return Validators.CMP_EQ(self, other_final, variant)
 
-    # -----------------------------------------------------------------------------------------------------------------
+    # ==================================================================================================================
     @staticmethod
     def CMP_LT(self, other_final: Any, variant: Any, parse__number_single: bool = None) -> bool | NoReturn:
         if parse__number_single:
@@ -307,7 +307,7 @@ class Validators:
     ) -> bool | NoReturn:
         return Validators.CMP_GL(self, other_final, variant, edges, parse__number_single=True)
 
-    # -----------------------------------------------------------------------------------------------------------------
+    # ==================================================================================================================
     @staticmethod
     def NumParsedSingle_Success(self, other_final) -> bool:
         other_final = TextAux(other_final).parse__number_single()
@@ -336,6 +336,36 @@ class Validators:
         #   you can use directly match_link in Base_EqValid!!!!??? - no you need use it at least over LAMBDA!
         result = match_link(pattern=str(pattern), string=str(other_final), flags=re.RegexFlag.IGNORECASE if ignorecase else 0)
         return result is not None
+
+    @staticmethod
+    def RegexpFM(
+            self,
+            other_final,
+            pattern: str,
+            ignorecase: bool = True,
+    ) -> bool | NoReturn:
+        return Validators.Regexp(
+            self=self,
+            other_final=other_final,
+            pattern=pattern,
+            ignorecase=ignorecase,
+            match_link=re.fullmatch,
+        )
+
+    @staticmethod
+    def RegexpSearch(
+            self,
+            other_final,
+            pattern: str,
+            ignorecase: bool = True,
+    ) -> bool | NoReturn:
+        return Validators.Regexp(
+            self=self,
+            other_final=other_final,
+            pattern=pattern,
+            ignorecase=ignorecase,
+            match_link=re.search,
+        )
 
     # -----------------------------------------------------------------------------------------------------------------
     @staticmethod
@@ -394,6 +424,34 @@ class Validators:
             other_final,
     ) -> bool | NoReturn:
         return AttrAux_AnnotsAll(other_final).annots__check_all_defined()
+
+    # -----------------------------------------------------------------------------------------------------------------
+    @staticmethod
+    def DictFull(
+            self,
+            other_final,
+            dictfull: dict[Any, Any | Base_EqValid],
+    ) -> bool | NoReturn:
+        # use direct cmp!!!
+        if not isinstance(other_final, dict):
+            return False
+
+        return dictfull == other_final
+
+    @staticmethod
+    def DictPart(
+            self,
+            other_final,
+            dictpart: dict[Any, Any | Base_EqValid],
+    ) -> bool | NoReturn:
+        if not isinstance(other_final, dict):
+            return False
+
+        for key, value in dictpart.items():
+            if value != other_final[key]:   # KEEP VALUE FIRTS!!!   # could raise
+                return False                # on any fail return false
+
+        return True
 
 
 # =====================================================================================================================
