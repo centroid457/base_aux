@@ -19,11 +19,11 @@ class Base_ArgsBoolIf(NestInit_Args_Implicit, NestCall_Resolve):
     RAISE_INSTEAD_TRUE: bool = None  # RAISE_INSTEAD_TRUE
     RAISE_ON_INIT: bool = None
 
-    def __init__(self, *args, _iresult_cumulate: EnumAdj_BoolCumulate = None, _raise_instead_true: bool = None, raise_on_init: bool = None, **kwargs) -> None | NoReturn:
+    def __init__(self, *args, _cumulate_mode: EnumAdj_BoolCumulate = None, _raise_instead_true: bool = None, raise_on_init: bool = None, **kwargs) -> None | NoReturn:
         super().__init__(*args, **kwargs)
 
-        if _iresult_cumulate is not None:
-            self.IRESULT_CUMULATE = _iresult_cumulate
+        if _cumulate_mode is not None:
+            self.IRESULT_CUMULATE = _cumulate_mode
 
         if _raise_instead_true is not None:
             self.RAISE_INSTEAD_TRUE = bool(_raise_instead_true)

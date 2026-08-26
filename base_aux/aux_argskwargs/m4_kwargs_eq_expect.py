@@ -98,7 +98,7 @@ class Base_KwargsEqExpect:
     def _check_if__(
             self,
             _raise_instead_true: bool = None,
-            _iresult_cumulate: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ALL_TRUE,
+            _cumulate_mode: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ALL_TRUE,
             **eq_axpects: bool | None | Any,
     ) -> bool | NoReturn:
         results: list[bool] = []
@@ -120,21 +120,21 @@ class Base_KwargsEqExpect:
         msg = f"{eq_axpects=}/{results=}"
         print(msg)
 
-        result = Base_ArgsBoolIf(*results, _iresult_cumulate=_iresult_cumulate, _raise_instead_true=_raise_instead_true).resolve()
+        result = Base_ArgsBoolIf(*results, _cumulate_mode=_cumulate_mode, _raise_instead_true=_raise_instead_true).resolve()
         return result
 
     # -----------------------------------------------------------------------------------------------------------------
     def bool_if__all_true(self, **eq_axpects: bool | None | Any) -> bool | NoReturn:
-        return self._check_if__(_raise_instead_true=False, _iresult_cumulate=EnumAdj_BoolCumulate.ALL_TRUE, **eq_axpects)
+        return self._check_if__(_raise_instead_true=False, _cumulate_mode=EnumAdj_BoolCumulate.ALL_TRUE, **eq_axpects)
 
     def bool_if__any_true(self, **eq_axpects: bool | None | Any) -> bool | NoReturn:
-        return self._check_if__(_raise_instead_true=False, _iresult_cumulate=EnumAdj_BoolCumulate.ANY_TRUE, **eq_axpects)
+        return self._check_if__(_raise_instead_true=False, _cumulate_mode=EnumAdj_BoolCumulate.ANY_TRUE, **eq_axpects)
 
     def bool_if__all_false(self, **eq_axpects: bool | None | Any) -> bool | NoReturn:
-        return self._check_if__(_raise_instead_true=False, _iresult_cumulate=EnumAdj_BoolCumulate.ALL_FALSE, **eq_axpects)
+        return self._check_if__(_raise_instead_true=False, _cumulate_mode=EnumAdj_BoolCumulate.ALL_FALSE, **eq_axpects)
 
     def bool_if__any_false(self, **eq_axpects: bool | None | Any) -> bool | NoReturn:
-        return self._check_if__(_raise_instead_true=False, _iresult_cumulate=EnumAdj_BoolCumulate.ANY_FALSE, **eq_axpects)
+        return self._check_if__(_raise_instead_true=False, _cumulate_mode=EnumAdj_BoolCumulate.ANY_FALSE, **eq_axpects)
 
     # -----------------------------------------------------------------------------------------------------------------
     def raise_if__all_false(self, **eq_axpects: bool | None) -> None | NoReturn:
@@ -146,7 +146,7 @@ class Base_KwargsEqExpect:
         like
             (linux=True, windows=True)
         """
-        return self._check_if__(_raise_instead_true=True, _iresult_cumulate=EnumAdj_BoolCumulate.ALL_FALSE, **eq_axpects)
+        return self._check_if__(_raise_instead_true=True, _cumulate_mode=EnumAdj_BoolCumulate.ALL_FALSE, **eq_axpects)
 
     def raise_if__any_false(self, **eq_axpects: bool | None | Any) -> None | NoReturn:
         """
@@ -155,13 +155,13 @@ class Base_KwargsEqExpect:
         seems like common usage for exact eq-results for special state
             (val1=True, val2=False, val3=True)
         """
-        return self._check_if__(_raise_instead_true=True, _iresult_cumulate=EnumAdj_BoolCumulate.ANY_FALSE, **eq_axpects)
+        return self._check_if__(_raise_instead_true=True, _cumulate_mode=EnumAdj_BoolCumulate.ANY_FALSE, **eq_axpects)
 
     def raise_if__all_true(self, **eq_axpects: bool | None | Any) -> None | NoReturn:
-        return self._check_if__(_raise_instead_true=True, _iresult_cumulate=EnumAdj_BoolCumulate.ALL_TRUE, **eq_axpects)
+        return self._check_if__(_raise_instead_true=True, _cumulate_mode=EnumAdj_BoolCumulate.ALL_TRUE, **eq_axpects)
 
     def raise_if__any_true(self, **eq_axpects: bool | None | Any) -> None | NoReturn:
-        return self._check_if__(_raise_instead_true=True, _iresult_cumulate=EnumAdj_BoolCumulate.ANY_TRUE, **eq_axpects)
+        return self._check_if__(_raise_instead_true=True, _cumulate_mode=EnumAdj_BoolCumulate.ANY_TRUE, **eq_axpects)
 
     # -----------------------------------------------------------------------------------------------------------------
     def __getattr__(self, item: str) -> bool | NoReturn:

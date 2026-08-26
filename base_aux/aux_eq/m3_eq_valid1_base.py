@@ -62,7 +62,7 @@ class Base_EqValid(NestCall_Resolve):
             self,
             *v_args,
             _validator: TYPING.VALID_VALIDATOR = None,
-            _iresult_cumulate: EnumAdj_BoolCumulate = None,
+            _cumulate_mode: EnumAdj_BoolCumulate = None,
             _other_final__resolve: bool = None,
             # _other_druft: Any = None,     # DONT USE HERE! if need checking - create obj and use obj.validate(_other_druft)
             **v_kwargs,
@@ -73,8 +73,8 @@ class Base_EqValid(NestCall_Resolve):
         if _validator is not None:
             self.VALIDATOR = _validator
 
-        if _iresult_cumulate is not None:
-            self.IRESULT_CUMULATE = _iresult_cumulate
+        if _cumulate_mode is not None:
+            self.IRESULT_CUMULATE = _cumulate_mode
 
         if _other_final__resolve is not None:
             self.OTHER_FINAL__RESOLVE = _other_final__resolve
@@ -89,9 +89,9 @@ class Base_EqValid(NestCall_Resolve):
     def __str__(self):
         v_args = self.V_ARGS
         v_kwargs = self.V_KWARGS
-        _iresult_cumulate = self.IRESULT_CUMULATE
+        _cumulate_mode = self.IRESULT_CUMULATE
         _other_final__resolve = self.OTHER_FINAL__RESOLVE
-        return f"{self.__class__.__name__}({v_args=}/{v_kwargs=}/{_iresult_cumulate=}/{_other_final__resolve=})"
+        return f"{self.__class__.__name__}({v_args=}/{v_kwargs=}/{_cumulate_mode=}/{_other_final__resolve=})"
 
     def __repr__(self):
         return str(self)

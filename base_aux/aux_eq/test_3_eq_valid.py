@@ -66,15 +66,15 @@ def _victim_validator(source, arg) -> bool:
     ]
 )
 def test__0_Base_EqValid__args_cumulate_1__ALL(_validator, other, args, _EXPECTED):
-    for index, _iresult_cumulate in enumerate(EnumAdj_BoolCumulate):
+    for index, _cumulate_mode in enumerate(EnumAdj_BoolCumulate):
         print()
-        print(index, _iresult_cumulate)
-        Lambda(Base_EqValid(*args, _validator=_validator, _iresult_cumulate=_iresult_cumulate) == other).check_expected__assert(_EXPECTED[index])
-        Lambda(other in Base_EqValid(*args, _validator=_validator, _iresult_cumulate=_iresult_cumulate)).check_expected__assert(_EXPECTED[index])
+        print(index, _cumulate_mode)
+        Lambda(Base_EqValid(*args, _validator=_validator, _cumulate_mode=_cumulate_mode) == other).check_expected__assert(_EXPECTED[index])
+        Lambda(other in Base_EqValid(*args, _validator=_validator, _cumulate_mode=_cumulate_mode)).check_expected__assert(_EXPECTED[index])
 
 
 @pytest.mark.parametrize(
-    argnames="_validator, other, args, _iresult_cumulate, _EXPECTED",
+    argnames="_validator, other, args, _cumulate_mode, _EXPECTED",
     argvalues=[
         # [direct, reverse]
         # ALL True ----
@@ -90,9 +90,9 @@ def test__0_Base_EqValid__args_cumulate_1__ALL(_validator, other, args, _EXPECTE
         (_victim_validator, 1, [0, 1], EnumAdj_BoolCumulate.ANY_FALSE, [True, True]),
     ]
 )
-def test__0_Base_EqValid__args_cumulate_2__ANY(_validator, other, args, _iresult_cumulate, _EXPECTED):
-    Lambda(Base_EqValid(*args, _validator=_validator, _iresult_cumulate=_iresult_cumulate) == other).check_expected__assert(_EXPECTED[0])
-    Lambda(other in Base_EqValid(*args, _validator=_validator, _iresult_cumulate=_iresult_cumulate)).check_expected__assert(_EXPECTED[0])
+def test__0_Base_EqValid__args_cumulate_2__ANY(_validator, other, args, _cumulate_mode, _EXPECTED):
+    Lambda(Base_EqValid(*args, _validator=_validator, _cumulate_mode=_cumulate_mode) == other).check_expected__assert(_EXPECTED[0])
+    Lambda(other in Base_EqValid(*args, _validator=_validator, _cumulate_mode=_cumulate_mode)).check_expected__assert(_EXPECTED[0])
 
 
 # =====================================================================================================================
@@ -377,10 +377,10 @@ def test__EqValid_NumParsedSingle(other, value, _EXPECTED):
     ]
 )
 def test__regexp(args, other, _EXPECTED):
-    Lambda(EqValid_Regexp(*args, _iresult_cumulate=EnumAdj_BoolCumulate.ALL_TRUE) == other).check_expected__assert(_EXPECTED[0])
-    Lambda(EqValid_Regexp(*args, _iresult_cumulate=EnumAdj_BoolCumulate.ANY_TRUE) == other).check_expected__assert(_EXPECTED[1])
-    Lambda(EqValid_Regexp(*args, _iresult_cumulate=EnumAdj_BoolCumulate.ALL_FALSE) == other).check_expected__assert(_EXPECTED[2])
-    Lambda(EqValid_Regexp(*args, _iresult_cumulate=EnumAdj_BoolCumulate.ANY_FALSE) == other).check_expected__assert(_EXPECTED[3])
+    Lambda(EqValid_Regexp(*args, _cumulate_mode=EnumAdj_BoolCumulate.ALL_TRUE) == other).check_expected__assert(_EXPECTED[0])
+    Lambda(EqValid_Regexp(*args, _cumulate_mode=EnumAdj_BoolCumulate.ANY_TRUE) == other).check_expected__assert(_EXPECTED[1])
+    Lambda(EqValid_Regexp(*args, _cumulate_mode=EnumAdj_BoolCumulate.ALL_FALSE) == other).check_expected__assert(_EXPECTED[2])
+    Lambda(EqValid_Regexp(*args, _cumulate_mode=EnumAdj_BoolCumulate.ANY_FALSE) == other).check_expected__assert(_EXPECTED[3])
 
     # ---------
     _ExpectAux__eq_in__all_operators(EqValid_RegexpAllTrue, other, _EXPECTED[0], *args)
