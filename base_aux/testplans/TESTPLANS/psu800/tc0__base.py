@@ -190,7 +190,7 @@ class Base_TcAtcPtb(_Base_TcAtc):
                 ValidNoCum(
                     value_link=self.DEV_COLUMN.DUT.GET,
                     args__value="VIN",
-                    validate_link=EqValid_LGTE_NumParsedSingle(
+                    validate_link=EqValid_GL_NumParsedSingle(
                         **(dict(ge=210, le=230)
                         if self.expect__psu_may_start__hv()
                         else
@@ -203,7 +203,7 @@ class Base_TcAtcPtb(_Base_TcAtc):
                 ValidFailContinue(
                     value_link=self.DEV_COLUMN.DUT.GET,
                     args__value="V12S",
-                    validate_link=EqValid_LGTE_NumParsedSingle(
+                    validate_link=EqValid_GL_NumParsedSingle(
                         **(dict(ge=11, le=13)
                         if self.expect__psu_may_start__hv_or_ext()
                         else
@@ -214,7 +214,7 @@ class Base_TcAtcPtb(_Base_TcAtc):
                 ValidFailContinue(
                     value_link=self.DEV_COLUMN.DUT.GET,
                     args__value="V12M",
-                    validate_link=EqValid_LGTE_NumParsedSingle(
+                    validate_link=EqValid_GL_NumParsedSingle(
                         **(dict(ge=11, le=13)
                         if self.expect__psu_may_start__hv_or_ext() and self.PTB_SET_PSON
                         else
@@ -227,13 +227,13 @@ class Base_TcAtcPtb(_Base_TcAtc):
                 ValidNoCum(
                     value_link=self.DEV_COLUMN.DUT.GET,
                     args__value="IIN",
-                    validate_link=EqValid_LGTE_NumParsedSingle(ge=0, le=0.1).resolve,
+                    validate_link=EqValid_GL_NumParsedSingle(ge=0, le=0.1).resolve,
                     name="GET+valid diapason",
                 ),
                 ValidFailContinue(
                     value_link=self.DEV_COLUMN.DUT.GET,
                     args__value="IOUT",
-                    validate_link=EqValid_LGTE_NumParsedSingle(ge=0, le=0.1).resolve,
+                    validate_link=EqValid_GL_NumParsedSingle(ge=0, le=0.1).resolve,
                     name="GET+valid diapason",
                 ),
             ]

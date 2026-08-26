@@ -29,7 +29,7 @@ class NestCmp_GLET_Any:
     __ge__ = lambda self, other: self.__cmp__(other) >= 0
 
     # USING - for just raiseIf prefix!
-    # FIXME: seems need to DEPRECATE? use direct EqValid_LGTE???
+    # FIXME: seems need to DEPRECATE? use direct EqValid_GL???
 
     # ------------------------
     check_ltgt = lambda self, other1, other2: self > other1 and self < other2

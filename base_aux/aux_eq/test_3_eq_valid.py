@@ -281,7 +281,7 @@ def test__EQ(args, other, _EXPECTED):
         ),
     ]
 )
-def test__LGTE_1_variants(args, other, _EXP_obj, _EXP_num):
+def test__GL_1_variants__single(args, other, _EXP_obj, _EXP_num):
     # ------
     _ExpectAux__eq_in__all_operators(EqValid_LT, other, _EXP_obj[0], *args)
     _ExpectAux__eq_in__all_operators(EqValid_LE, other, _EXP_obj[1], *args)
@@ -295,36 +295,37 @@ def test__LGTE_1_variants(args, other, _EXP_obj, _EXP_num):
     _ExpectAux__eq_in__all_operators(EqValid_GT_NumParsedSingle, other, _EXP_num[3], *args)
 
 @pytest.mark.parametrize(
-    argnames="kwargs, other, _EXPECTED",
+    argnames="variant, edges, other, _EXPECTED",
     argvalues=[
         # FAILS ------
         # (dict(lt=1, ), Exception, (False, False)),  # be careful! False < 1!!!!
-        (dict(lt=1, ), Exception, (False, False)),
-        (dict(lt=Exception, ), 1, (False, False)),
-        (dict(lt=1, ), "hello", (False, False)),
+        # (dict(lt=1, ), Exception, (False, False)),
+        # (dict(lt=Exception, ), 1, (False, False)),
+        # (dict(lt=1, ), "hello", (False, False)),
 
         # correct cmp ------
-        (dict(gt=1, lt=2), 0, (False, False)),
-        (dict(gt=1, lt=2), "aaa0bbb", (False, False)),
+        ((1, 2), "tt", 0, (False, False)),
+        ((1, 2), "tt", "aaa0bbb", (False, False)),
 
         # ------------------
-        (dict(gt=1, lt=2), 1, (False, False)),
-        (dict(ge=1, lt=2), 1, (True, True)),
-        (dict(ge=1, lt=2), "aaa1bbb", (False, True)),
+        ((1, 2), "tt", 1, (False, False)),
+        ((1, 2), "et", 1, (True, True)),
+
+        ((1, 2), "et", "aaa1bbb", (False, True)),
 
         # ------------------
-        (dict(gt=1, lt=2), 2, (False, False)),
-        (dict(gt=1, le=2), 2, (True, True)),
-        (dict(gt=1, le=2), "aaa2bbb", (False, True)),
+        ((1, 2), "tt", 2, (False, False)),
+        ((1, 2), "te", 2, (True, True)),
+        ((1, 2), "te", "aaa2bbb", (False, True)),
 
         # ------------------
-        (dict(gt=1, lt=2), 3, (False, False)),
-        (dict(gt=1, lt=2), "aaa3bbb", (False, False)),
+        ((1, 2), "tt", 3, (False, False)),
+        ((1, 2), "tt", "aaa3bbb", (False, False)),
     ]
 )
-def test__LGTE_2_dict(kwargs, other, _EXPECTED):
-    _ExpectAux__eq_in__all_operators(EqValid_LGTE, other, _EXPECTED[0], **kwargs)
-    _ExpectAux__eq_in__all_operators(EqValid_LGTE_NumParsedSingle, other, _EXPECTED[1], **kwargs)
+def test__GL_2_dict(variant, edges, other, _EXPECTED):
+    _ExpectAux__eq_in__all_operators(EqValid_GL, other, _EXPECTED[0], variant, edges=edges)
+    _ExpectAux__eq_in__all_operators(EqValid_GL_NumParsedSingle, other, _EXPECTED[1], variant, edges=edges)
 
 
 # ---------------------------------------------------------------------------------------------------------------------

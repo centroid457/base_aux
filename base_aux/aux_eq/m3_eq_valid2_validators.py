@@ -183,14 +183,13 @@ class Validators:
             other_final = TextAux(other_final).parse__number_single()
         return variant <= other_final
 
+    # -----------------------------------------------------------------------------------------------------------------
     @staticmethod
-    def CMP_LGTE(
+    def CMP_GL(
             self,
             other_final: Any,
-            lt: Any | None = None,
-            le: Any | None = None,
-            gt: Any | None = None,
-            ge: Any | None = None,
+            variant: tuple[Any | None, Any | None],
+            edges: str,
             parse__number_single: bool = None,
     ) -> bool | NoReturn:
         """
@@ -202,16 +201,85 @@ class Validators:
         if parse__number_single:
             other_final = TextAux(other_final).parse__number_single()
 
+        # schema
+        if edges[0].lower() == "t":
+            edge_mode__greater = Validators.CMP_GT
+        else:
+            edge_mode__greater = Validators.CMP_GE
+
+        if edges[1].lower() == "t":
+            edge_mode__lower = Validators.CMP_LT
+        else:
+            edge_mode__lower = Validators.CMP_LE
+
         for validator, variant in [
-            (Validators.CMP_LT, lt),
-            (Validators.CMP_LE, le),
-            (Validators.CMP_GT, gt),
-            (Validators.CMP_GE, ge),
+            (edge_mode__greater, variant[0]),
+            (edge_mode__lower, variant[1]),
         ]:
             if variant is not None:
                 if not validator(self, other_final, variant):
                     return False
         return True
+
+    @staticmethod
+    def CMP_GL_EE(
+            self,
+            other_final: Any,
+            variant: tuple[Any | None, Any | None],
+            parse__number_single: bool = None,
+    ) -> bool | NoReturn:
+        return Validators.CMP_GL(
+            self=self,
+            other_final=other_final,
+            variant=variant,
+            edges="ee",
+            parse__number_single=parse__number_single,
+        )
+
+    @staticmethod
+    def CMP_GL_TT(
+            self,
+            other_final: Any,
+            variant: tuple[Any | None, Any | None],
+            parse__number_single: bool = None,
+    ) -> bool | NoReturn:
+        return Validators.CMP_GL(
+            self=self,
+            other_final=other_final,
+            variant=variant,
+            edges="tt",
+            parse__number_single=parse__number_single,
+        )
+
+    @staticmethod
+    def CMP_GL_TE(
+            self,
+            other_final: Any,
+            variant: tuple[Any | None, Any | None],
+            parse__number_single: bool = None,
+    ) -> bool | NoReturn:
+        return Validators.CMP_GL(
+            self=self,
+            other_final=other_final,
+            variant=variant,
+            edges="te",
+            parse__number_single=parse__number_single,
+        )
+
+    @staticmethod
+    def CMP_GL_ET(
+            self,
+            other_final: Any,
+            variant: tuple[Any | None, Any | None],
+            parse__number_single: bool = None,
+    ) -> bool | NoReturn:
+        return Validators.CMP_GL(
+            self=self,
+            other_final=other_final,
+            variant=variant,
+            edges="et",
+            parse__number_single=parse__number_single,
+        )
 
     # -----------------------------------------------------------------------------------------------------------------
     @staticmethod
@@ -231,15 +299,13 @@ class Validators:
         return Validators.CMP_GE(self, other_final, variant, parse__number_single=True)
 
     @staticmethod
-    def CMP_LGTE_NumParsedSingle(
+    def CMP_GL_NumParsedSingle(
             self,
             other_final: Any,
-            lt: Any | None = None,
-            le: Any | None = None,
-            gt: Any | None = None,
-            ge: Any | None = None,
+            variant: tuple[Any | None, Any | None],
+            edges: str,
     ) -> bool | NoReturn:
-        return Validators.CMP_LGTE(self, other_final, lt=lt, le=le, gt=gt, ge=ge, parse__number_single=True)
+        return Validators.CMP_GL(self, other_final, variant, edges, parse__number_single=True)
 
     # -----------------------------------------------------------------------------------------------------------------
     @staticmethod

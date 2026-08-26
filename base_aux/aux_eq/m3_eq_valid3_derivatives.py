@@ -163,9 +163,29 @@ class EqValid_GE(Base_EqValid):
 
 # --------------------------------
 @final
-class EqValid_LGTE(Base_EqValid):
+class EqValid_GL(Base_EqValid):
     CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ALL_TRUE
-    VALIDATOR = Validators.CMP_LGTE
+    VALIDATOR = Validators.CMP_GL
+
+@final
+class EqValid_GL_TT(Base_EqValid):
+    CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ALL_TRUE
+    VALIDATOR = Validators.CMP_GL_TT
+
+@final
+class EqValid_GL_TE(Base_EqValid):
+    CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ALL_TRUE
+    VALIDATOR = Validators.CMP_GL_TE
+
+@final
+class EqValid_GL_ET(Base_EqValid):
+    CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ALL_TRUE
+    VALIDATOR = Validators.CMP_GL_ET
+
+@final
+class EqValid_GL_EE(Base_EqValid):
+    CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ALL_TRUE
+    VALIDATOR = Validators.CMP_GL_EE
 
 # ----------------------------------------------------------------------------------------------------------------------
 @final
@@ -190,8 +210,8 @@ class EqValid_GE_NumParsedSingle(Base_EqValid):
 
 # --------------------------------
 @final
-class EqValid_LGTE_NumParsedSingle(Base_EqValid):
-    VALIDATOR = Validators.CMP_LGTE_NumParsedSingle
+class EqValid_GL_NumParsedSingle(Base_EqValid):
+    VALIDATOR = Validators.CMP_GL_NumParsedSingle
 
 # ----------------------------------------------------------------------------------------------------------------------
 @final
