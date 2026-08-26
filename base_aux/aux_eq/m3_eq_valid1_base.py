@@ -53,7 +53,7 @@ class Base_EqValid(NestCall_Resolve):
 
     CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ALL_TRUE
 
-    OTHER_FINAL__RESOLVE: bool = True   # goal: create chains with no ReCalculation inside
+    OTHER_RESOLVE: bool = True   # goal: create chains with no ReCalculation inside
     OTHER_RAISED: bool = None   # RAISE ON CALCULATION OTHER_FINAL! not on equation!!!
     OTHER_FINAL: Any | Exception = None
 
@@ -63,7 +63,7 @@ class Base_EqValid(NestCall_Resolve):
             *v_args,
             _validator: TYPING.VALID_VALIDATOR = None,
             _cumulate_mode: EnumAdj_BoolCumulate = None,
-            _other_final__resolve: bool = None,
+            _other_resolve: bool = None,
             # _other_druft: Any = None,     # DONT USE HERE! if need checking - create obj and use obj.validate(_other_druft)
             **v_kwargs,
     ) -> None:
@@ -76,8 +76,8 @@ class Base_EqValid(NestCall_Resolve):
         if _cumulate_mode is not None:
             self.CUMULATE_MODE = _cumulate_mode
 
-        if _other_final__resolve is not None:
-            self.OTHER_FINAL__RESOLVE = _other_final__resolve
+        if _other_resolve is not None:
+            self.OTHER_RESOLVE = _other_resolve
 
         # super(ArgsKwargs, self).__init__(*v_args, **v_kwargs)
         self.V_ARGS = v_args
@@ -90,8 +90,8 @@ class Base_EqValid(NestCall_Resolve):
         v_args = self.V_ARGS
         v_kwargs = self.V_KWARGS
         _cumulate_mode = self.CUMULATE_MODE
-        _other_final__resolve = self.OTHER_FINAL__RESOLVE
-        return f"{self.__class__.__name__}({v_args=}/{v_kwargs=}/{_cumulate_mode=}/{_other_final__resolve=})"
+        _other_resolve = self.OTHER_RESOLVE
+        return f"{self.__class__.__name__}({v_args=}/{v_kwargs=}/{_cumulate_mode=}/{_other_resolve=})"
 
     def __repr__(self):
         return str(self)
@@ -112,9 +112,9 @@ class Base_EqValid(NestCall_Resolve):
         yield from self.V_ARGS
 
     # PREPARES --------------------------------------------------------------------------------------------------------
-    def _other_final__resolve(self, other_draft: Any) -> None:
+    def _other_resolve(self, other_draft: Any) -> None:
         # TODO: decide use or not callable other??? = USE! it is really need to validate callable!!!
-        if self.OTHER_FINAL__RESOLVE:
+        if self.OTHER_RESOLVE:
             try:
                 self.OTHER_FINAL = Lambda(other_draft).resolve__raise()
                 self.OTHER_RAISED = False
@@ -135,7 +135,7 @@ class Base_EqValid(NestCall_Resolve):
         """
         for v_arg in self.V_ARGS:
             if isinstance(v_arg, Base_EqValid):
-                v_arg.OTHER_FINAL__RESOLVE = False
+                v_arg.OTHER_RESOLVE = False
                 v_arg.OTHER_RAISED = self.OTHER_RAISED
 
     # VALIDATE-1=VALUE SINGLE -----------------------------------------------------------------------------------------
@@ -153,7 +153,7 @@ class Base_EqValid(NestCall_Resolve):
         validate smth with special logic
         """
         # OTHER_FINAL --------------------
-        self._other_final__resolve(other_draft)
+        self._other_resolve(other_draft)
 
         # VALIDATION --------------------
         if not self.V_ARGS:

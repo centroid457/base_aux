@@ -31,7 +31,7 @@ class Base_KwargsEqExpect:
         EqValid_EQ_StrIc i  most useful
     """
     OTHER_DRAFT: Any | Callable = True
-    OTHER_FINAL__RESOLVE: bool = True
+    OTHER_RESOLVE: bool = True
     OTHER_RAISED: bool = None
     OTHER_FINAL: Any | Exception = None
 
@@ -64,7 +64,7 @@ class Base_KwargsEqExpect:
         if other_draft is not NoValue:
             self.OTHER_DRAFT = other_draft
 
-        if self.OTHER_FINAL__RESOLVE:
+        if self.OTHER_RESOLVE:
             try:
                 self.OTHER_FINAL = Lambda(self.OTHER_DRAFT).resolve__raise()
                 self.OTHER_RAISED = False
@@ -77,7 +77,7 @@ class Base_KwargsEqExpect:
     def init__other_push__chain(self):
         for eq_valid in self.EQ_KWARGS.values():
             if isinstance(eq_valid, Base_EqValid):
-                eq_valid.OTHER_FINAL__RESOLVE = False
+                eq_valid.OTHER_RESOLVE = False
                 eq_valid.OTHER_RAISED = self.OTHER_RAISED
 
     def _eq_expects__get_final(self, **eq_axpects: bool | None | Any) -> dict[str, bool | None]:

@@ -255,7 +255,7 @@ class Test_1__GNSS:
 [15:39:04.015178]COM16.readEOL[OK]= b'$GNRMC,123527.00,V,,,,,,,110826,,,N*6F'
 [15:39:04.023177]COM16.readEOL[OK]= b'$GNVTG,,,,,,,,,N*2E'
 [15:39:04.035514]COM16.readEOL[OK]= b'$GN\x1b[?2004hroot@harvest05:~# '
-[15:39:04.035514]COM16.stop_line[OK]= b'' [extra=EqValid_Regexp(v_args=(b'.*root@.+:.+#.*',)/v_kwargs={}/_cumulate_mode=<EnumAdj_BoolCumulate.ALL_TRUE: <built-in function all>>/_other_final__resolve=True)]
+[15:39:04.035514]COM16.stop_line[OK]= b'' [extra=EqValid_Regexp(v_args=(b'.*root@.+:.+#.*',)/v_kwargs={}/_cumulate_mode=<EnumAdj_BoolCumulate.ALL_TRUE: <built-in function all>>/_other_resolve=True)]
 [15:39:04.035514]COM16.readNoEOL[OK]= b'$GN\x1b[?2004hroot@harvest05:~# '
 [15:39:04.136724]COM16.reset_input[OK]= b'in_waiting__bytes_count=36'
 [15:39:04.136724]COM16.in_waiting__bytes_data[OK]= b'\n\x1b[?2004l\r\x1b[?2004hroot@harvest05:~# '
