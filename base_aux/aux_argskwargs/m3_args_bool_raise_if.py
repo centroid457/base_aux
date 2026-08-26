@@ -14,7 +14,7 @@ class Base_ArgsBoolIf(NestInit_Args_Implicit, NestCall_Resolve):
     and raise if True
     """
     ARGS: Any | Callable[..., Any] = ()
-    IRESULT_CUMULATE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ANY_TRUE
+    CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ANY_TRUE
 
     RAISE_INSTEAD_TRUE: bool = None  # RAISE_INSTEAD_TRUE
     RAISE_ON_INIT: bool = None
@@ -23,7 +23,7 @@ class Base_ArgsBoolIf(NestInit_Args_Implicit, NestCall_Resolve):
         super().__init__(*args, **kwargs)
 
         if _cumulate_mode is not None:
-            self.IRESULT_CUMULATE = _cumulate_mode
+            self.CUMULATE_MODE = _cumulate_mode
 
         if _raise_instead_true is not None:
             self.RAISE_INSTEAD_TRUE = bool(_raise_instead_true)
@@ -40,19 +40,19 @@ class Base_ArgsBoolIf(NestInit_Args_Implicit, NestCall_Resolve):
             arg_result = Lambda(arg_source).resolve__bool()
             results_all.append(arg_result)
 
-            if self.IRESULT_CUMULATE == EnumAdj_BoolCumulate.ALL_TRUE:
+            if self.CUMULATE_MODE == EnumAdj_BoolCumulate.ALL_TRUE:
                 if arg_result:
                     continue
                 else:
                     return False
 
-            elif self.IRESULT_CUMULATE == EnumAdj_BoolCumulate.ALL_FALSE:
+            elif self.CUMULATE_MODE == EnumAdj_BoolCumulate.ALL_FALSE:
                 if not arg_result:
                     continue
                 else:
                     return False
 
-            elif self.IRESULT_CUMULATE == EnumAdj_BoolCumulate.ANY_TRUE:
+            elif self.CUMULATE_MODE == EnumAdj_BoolCumulate.ANY_TRUE:
                 if arg_result:
                     if self.RAISE_INSTEAD_TRUE:
                         msg = f"{arg_source=}/{arg_result=}//{results_all=}"
@@ -60,7 +60,7 @@ class Base_ArgsBoolIf(NestInit_Args_Implicit, NestCall_Resolve):
                     else:
                         return True
 
-            elif self.IRESULT_CUMULATE == EnumAdj_BoolCumulate.ANY_FALSE:
+            elif self.CUMULATE_MODE == EnumAdj_BoolCumulate.ANY_FALSE:
                 if not arg_result:
                     if self.RAISE_INSTEAD_TRUE:
                         msg = f"{arg_source=}/{arg_result=}//{results_all=}"
@@ -69,7 +69,7 @@ class Base_ArgsBoolIf(NestInit_Args_Implicit, NestCall_Resolve):
                         return True
 
         # FINAL ---------
-        if self.IRESULT_CUMULATE == EnumAdj_BoolCumulate.ANY_TRUE or self.IRESULT_CUMULATE == EnumAdj_BoolCumulate.ANY_FALSE:
+        if self.CUMULATE_MODE in [EnumAdj_BoolCumulate.ANY_TRUE, EnumAdj_BoolCumulate.ANY_FALSE]:
             return False
         else:   # self.CUMULATE_MODE == EnumAdj_BoolCumulate.ALL_TRUE or self.CUMULATE_MODE == EnumAdj_BoolCumulate.ALL_FALSE
             if self.RAISE_INSTEAD_TRUE:
@@ -81,19 +81,19 @@ class Base_ArgsBoolIf(NestInit_Args_Implicit, NestCall_Resolve):
 
 # =====================================================================================================================
 class ArgsBoolIf_AllTrue(Base_ArgsBoolIf):
-    IRESULT_CUMULATE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ALL_TRUE
+    CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ALL_TRUE
 
 
 class ArgsBoolIf_AnyTrue(Base_ArgsBoolIf):
-    IRESULT_CUMULATE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ANY_TRUE
+    CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ANY_TRUE
 
 
 class ArgsBoolIf_AllFalse(Base_ArgsBoolIf):
-    IRESULT_CUMULATE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ALL_FALSE
+    CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ALL_FALSE
 
 
 class ArgsBoolIf_AnyFalse(Base_ArgsBoolIf):
-    IRESULT_CUMULATE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ANY_FALSE
+    CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ANY_FALSE
 
 
 # =====================================================================================================================
@@ -103,19 +103,19 @@ class Base_ArgsRaiseIf(Base_ArgsBoolIf):
 
 # ---------------------------------------------------------------------------------------------------------------------
 class ArgsRaiseIf_AllTrue(Base_ArgsRaiseIf):
-    IRESULT_CUMULATE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ALL_TRUE
+    CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ALL_TRUE
 
 
 class ArgsRaiseIf_AnyTrue(Base_ArgsRaiseIf):
-    IRESULT_CUMULATE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ANY_TRUE
+    CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ANY_TRUE
 
 
 class ArgsRaiseIf_AllFalse(Base_ArgsRaiseIf):
-    IRESULT_CUMULATE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ALL_FALSE
+    CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ALL_FALSE
 
 
 class ArgsRaiseIf_AnyFalse(Base_ArgsRaiseIf):
-    IRESULT_CUMULATE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ANY_FALSE
+    CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ANY_FALSE
 
 
 # ---------------------------------------------------------------------------------------------------------------------
