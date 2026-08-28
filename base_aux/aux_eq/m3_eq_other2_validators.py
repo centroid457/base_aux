@@ -2,6 +2,8 @@ from base_aux.aux_eq.m2_eq_aux import *
 from base_aux.aux_text.m1_text_aux import *
 from base_aux.base_types.m0_static_typing import TYPING
 
+from base_aux.aux_eq.m3_eq_other1 import *
+
 
 # =====================================================================================================================
 class Validators:

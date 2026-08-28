@@ -8,7 +8,7 @@ from datetime import datetime
 from .utils import *
 
 from base_aux.buses.d1_serial2_new.m2_manager import SerialManager
-from base_aux.aux_eq.m3_eq_valid3_derivatives import *
+from base_aux.aux_eq.m4_eq_valid2_derivatives import *
 
 
 # ======================================================================================================================

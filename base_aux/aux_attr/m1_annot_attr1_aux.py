@@ -3,7 +3,7 @@ import re
 from base_aux.aux_attr.m4_dump0_dumped import *
 from base_aux.base_lambdas.m1_lambda import *
 # from base_aux.aux_iter.m1_iter_aux import *   # dont add! import error!
-from base_aux.aux_eq.m3_eq_valid1_base import Base_EqValid
+from base_aux.aux_eq.m4_eq_valid1_base import Base_EqValid
 from base_aux.base_types.m0_static_typing import TYPING
 
 

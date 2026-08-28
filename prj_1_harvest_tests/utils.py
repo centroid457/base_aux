@@ -9,7 +9,7 @@ import base64
 import pathlib
 
 from .client import BaseClient
-from base_aux.aux_eq.m3_eq_valid3_derivatives import *
+from base_aux.aux_eq.m4_eq_valid2_derivatives import *
 
 
 # ======================================================================================================================

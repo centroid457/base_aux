@@ -7,7 +7,7 @@ from base_aux.aux_np_pd.m0_typing import *
 from base_aux.base_nest_dunders.m1_init3_params_dict_kwargs_update import *
 from base_aux.base_nest_dunders.m1_init2_annots1_attrs_by_args_kwargs import *
 from base_aux.aux_dict.m2_dict_ic import *
-from base_aux.aux_eq.m3_eq_valid3_derivatives import *
+from base_aux.aux_eq.m4_eq_valid2_derivatives import *
 
 # calculates ta_meth!!!
 import pandas_ta as ta  # VERY IMPORTANT!!! even if no used!

@@ -6,7 +6,7 @@ from serial import Serial, SerialException
 from serial.tools import list_ports
 from threading import Lock
 
-from base_aux.aux_eq.m3_eq_valid3_derivatives import EqValid_EQ_StrIc
+from base_aux.aux_eq.m4_eq_valid2_derivatives import EqValid_EQ_StrIc
 from base_aux.base_values.m3_exceptions import Exc__SerialPL2303IncorrectDriver
 from base_aux.buses.d1_serial2_new.m1_serial_client import SerialClient2, TYPING__WR_SCHEMA_VALIDATE
 
