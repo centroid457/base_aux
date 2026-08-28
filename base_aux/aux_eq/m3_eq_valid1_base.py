@@ -6,6 +6,46 @@ _NO_VARIANT = object()
 
 
 # =====================================================================================================================
+class OtherResolved:
+    DRAFT: Any | Self
+
+    RESOLVED: bool | None = None
+    RAISED: bool | None = None
+    EXC: Exception | None = None
+    RESULT: Any | None = None
+
+    def __init__(self, draft: Any) -> None:
+        """
+        GOAL
+        just make
+        """
+        if isinstance(draft, OtherResolved):
+            self.RESOLVED = draft.RESOLVED
+            self.RESULT = draft.RESULT
+            self.RAISED = draft.RAISED
+            self.EXC = draft.EXC
+
+            self.DRAFT = draft.DRAFT
+        else:
+            self.DRAFT = draft
+
+        self._resolve()
+
+    def _resolve(self) -> None:
+        if self.RESOLVED:
+            return
+
+        try:
+            self.RESULT = Lambda(self.DRAFT).resolve__raise()
+            self.RAISED = False
+        except Exception as exc:
+            self.RAISED = True
+            self.EXC = exc
+
+        self.RESOLVED = True
+
+
+# =====================================================================================================================
 class Base_EqValid(NestCall_Resolve):
     """
     RULES
@@ -56,24 +96,23 @@ class Base_EqValid(NestCall_Resolve):
 
     CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ALL_TRUE
 
-    OTHER_RESOLVE: bool = True   # goal: create chains with no ReCalculation inside
-    OTHER_RAISED: bool = None   # RAISE ON CALCULATION OTHER_FINAL! not on equation!!!
-    OTHER_FINAL: Any | Exception = None
+    # FIXME:
+    # FIXME:
+    # FIXME:
+    # FIXME:
+    # FIXME:
+    OTHER_RAISED: bool
 
     # -----------------------------------------------------------------------------------------------------------------
     def __init__(
             self,
             *v_args,
             _cumulate_mode: EnumAdj_BoolCumulate = None,
-            _other_resolve: bool = None,
             # _other_druft: Any = None,     # DONT USE HERE! if need checking - create obj and use obj.validate(_other_druft)
             **v_kwargs,
     ) -> None:
         if _cumulate_mode is not None:
             self.CUMULATE_MODE = _cumulate_mode
-
-        if _other_resolve is not None:
-            self.OTHER_RESOLVE = _other_resolve
 
         # super(ArgsKwargs, self).__init__(*v_args, **v_kwargs)
         self.V_ARGS = v_args
@@ -86,8 +125,7 @@ class Base_EqValid(NestCall_Resolve):
         v_args = self.V_ARGS
         v_kwargs = self.V_KWARGS
         _cumulate_mode = self.CUMULATE_MODE
-        _other_resolve = self.OTHER_RESOLVE
-        return f"{self.__class__.__name__}({v_args=}/{v_kwargs=}/{_cumulate_mode=}/{_other_resolve=})"
+        return f"{self.__class__.__name__}({v_args=}/{v_kwargs=}/{_cumulate_mode=})"
 
     def __repr__(self):
         return str(self)
@@ -107,32 +145,6 @@ class Base_EqValid(NestCall_Resolve):
         """
         yield from self.V_ARGS
 
-    # PREPARES --------------------------------------------------------------------------------------------------------
-    def _other_resolve(self, other_draft: Any) -> None:
-        if self.OTHER_RESOLVE:
-            try:
-                self.OTHER_FINAL = Lambda(other_draft).resolve__raise()
-                self.OTHER_RAISED = False
-            except Exception as exc:
-                self.OTHER_RAISED = True
-                self.OTHER_FINAL = exc
-        else:
-            self.OTHER_FINAL = other_draft
-            # self.OTHER_RAISED = False     # DONT PLACE HERE!!!
-
-        self._other_final__push_chain()
-
-    def _other_final__push_chain(self) -> None:
-        """
-        GOAL
-        ---
-        if object is CHAIN apply FinalValue from first chain without resolving in other chains!!!
-        """
-        for v_arg in self.V_ARGS:
-            if isinstance(v_arg, Base_EqValid):
-                v_arg.OTHER_RESOLVE = False
-                v_arg.OTHER_RAISED = self.OTHER_RAISED
-
     # VALIDATE-1=VALUE SINGLE -----------------------------------------------------------------------------------------
     def __eq__(self, other_draft) -> bool:
         return self.resolve(other_draft)
@@ -148,17 +160,17 @@ class Base_EqValid(NestCall_Resolve):
         validate smth with special logic
         """
         # OTHER_FINAL --------------------
-        self._other_resolve(other_draft)
+        other_resolved = OtherResolved(other_draft)
 
         # VALIDATE -----------------------
         for v_arg in (self.V_ARGS or (_NO_VARIANT,)):
             try:
                 if v_arg is _NO_VARIANT:
                     # 1=ARGS BLANK --------------
-                    result = bool(self.VALIDATOR(self.OTHER_FINAL, **self.V_KWARGS))
+                    result = bool(self.VALIDATOR(other_resolved, **self.V_KWARGS))
                 else:
                     # 2=ARGS one or MORE --------------
-                    result = bool(self.VALIDATOR(self.OTHER_FINAL, v_arg, **self.V_KWARGS))
+                    result = bool(self.VALIDATOR(other_resolved, v_arg, **self.V_KWARGS))
             except Exception:
                 result = False
 
