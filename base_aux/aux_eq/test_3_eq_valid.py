@@ -7,7 +7,7 @@ from base_aux.aux_eq.m3_eq_valid3_derivatives import *
 from base_aux.base_nest_dunders.m1_init2_annots1_attrs_by_args_kwargs import *
 
 
-# =====================================================================================================================
+# ======================================================================================================================
 def _ExpectAux__eq_in__all_operators(eq_cls: type[Base_EqValid], other, _EXPECTED, *args, **kwargs: dict[str, Any]) -> None | NoReturn:
     """
     GOAL
@@ -18,9 +18,10 @@ def _ExpectAux__eq_in__all_operators(eq_cls: type[Base_EqValid], other, _EXPECTE
     Lambda(other in eq_cls(*args, **kwargs)).check_expected__assert(_EXPECTED)
 
 
-# ---------------------------------------------------------------------------------------------------------------------
-def test__0_EqValidObj__usage_operators():
-    assert 1 == EqValid_BoolTrue()
+# ======================================================================================================================
+def test__0_EqValid__usage_operators():
+    assert EqValid_BoolTrue() == 1
+
     assert 1 in EqValid_BoolTrue()
     assert 0 not in EqValid_BoolTrue()
 
@@ -31,71 +32,45 @@ def test__0_EqValidObj__usage_operators():
     assert 0 not in [1, EqValid_BoolTrue()]
 
 
-# ---------------------------------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------------------------
 @pytest.mark.parametrize(
-    argnames="_validator, other, _EXPECTED",
+    argnames="other, _EXPECTED",
     argvalues=[
-        (bool, None, False),
-        (bool, 0, False),
-        (bool, 1, True),
-        (bool, 2, True),
-        (bool, LAMBDA_TRUE, True),
-        (bool, LAMBDA_FALSE, False),
+        (None, False),
+        (0, False),
+        (1, True),
+        (2, True),
+        (LAMBDA_TRUE, True),
+        (LAMBDA_FALSE, False),
     ]
 )
-def test__0_Base_EqValid__single(_validator, other, _EXPECTED):
-    Lambda(Base_EqValid(_validator=_validator) == other).check_expected__assert(_EXPECTED)
-    Lambda(other in Base_EqValid(_validator=_validator)).check_expected__assert(_EXPECTED)
+def test__0_EqValid_EQ_AllTrue__single(other, _EXPECTED):
+    Lambda(EqValid_BoolTrue() == other).check_expected__assert(_EXPECTED)
+    Lambda(other in EqValid_BoolTrue()).check_expected__assert(_EXPECTED)
 
 
-# ---------------------------------------------------------------------------------------------------------------------
-def _victim_validator(source, arg) -> bool:
-    return source == arg
-
-
+# ----------------------------------------------------------------------------------------------------------------------
 @pytest.mark.parametrize(
-    argnames="_validator, other, args, _EXPECTED",
+    argnames="other, args, _EXPECTED",
     argvalues=[
         # ALL True ----
-        (_victim_validator, 1, [1, 1], [True, True, False, False]),
-        (_victim_validator, LAMBDA_1, [1, 1], [True, True, False, False]),
+        (1, [1, 1], [True, True, False, False]),
+        (LAMBDA_1, [1, 1], [True, True, False, False]),
 
         # # ALL False ----
-        (_victim_validator, 0, [1, 1], [False, False, True, True]),
-        (_victim_validator, LAMBDA_0, [1, 1], [False, False, True, True]),
+        (0, [1, 1], [False, False, True, True]),
+        (LAMBDA_0, [1, 1], [False, False, True, True]),
     ]
 )
-def test__0_Base_EqValid__args_cumulate_1__ALL(_validator, other, args, _EXPECTED):
+def test__0_EqValid_EQ__args_cumulate_1__ALL(other, args, _EXPECTED):
     for index, _cumulate_mode in enumerate(EnumAdj_BoolCumulate):
         print()
         print(index, _cumulate_mode)
-        Lambda(Base_EqValid(*args, _validator=_validator, _cumulate_mode=_cumulate_mode) == other).check_expected__assert(_EXPECTED[index])
-        Lambda(other in Base_EqValid(*args, _validator=_validator, _cumulate_mode=_cumulate_mode)).check_expected__assert(_EXPECTED[index])
+        Lambda(EqValid_EQ(*args, _cumulate_mode=_cumulate_mode) == other).check_expected__assert(_EXPECTED[index])
+        Lambda(other in EqValid_EQ(*args, _cumulate_mode=_cumulate_mode)).check_expected__assert(_EXPECTED[index])
 
 
-@pytest.mark.parametrize(
-    argnames="_validator, other, args, _cumulate_mode, _EXPECTED",
-    argvalues=[
-        # [direct, reverse]
-        # ALL True ----
-        (_victim_validator, 1, [1, 1], EnumAdj_BoolCumulate.ANY_TRUE, [True, False]),
-        (_victim_validator, 1, [1, 1], EnumAdj_BoolCumulate.ANY_FALSE, [False, True]),
-
-        # # ALL False ----
-        (_victim_validator, 0, [1, 1], EnumAdj_BoolCumulate.ANY_TRUE, [False, True]),
-        (_victim_validator, 0, [1, 1], EnumAdj_BoolCumulate.ANY_FALSE, [True, False]),
-
-        # ANY
-        (_victim_validator, 1, [0, 1], EnumAdj_BoolCumulate.ANY_TRUE, [True, True]),
-        (_victim_validator, 1, [0, 1], EnumAdj_BoolCumulate.ANY_FALSE, [True, True]),
-    ]
-)
-def test__0_Base_EqValid__args_cumulate_2__ANY(_validator, other, args, _cumulate_mode, _EXPECTED):
-    Lambda(Base_EqValid(*args, _validator=_validator, _cumulate_mode=_cumulate_mode) == other).check_expected__assert(_EXPECTED[0])
-    Lambda(other in Base_EqValid(*args, _validator=_validator, _cumulate_mode=_cumulate_mode)).check_expected__assert(_EXPECTED[0])
-
-
-# =====================================================================================================================
+# ======================================================================================================================
 @pytest.mark.parametrize(
     argnames="args, other, _EXPECTED",
     argvalues=[
@@ -111,7 +86,7 @@ def test__isinstance(args, other, _EXPECTED):
     _ExpectAux__eq_in__all_operators(EqValid_IsinstanceSameinstance, other, _EXPECTED, *args)
 
 
-# =====================================================================================================================
+# ======================================================================================================================
 @pytest.mark.parametrize(
     argnames="args, other, _EXPECTED",
     argvalues=[
@@ -132,7 +107,7 @@ def test__contains(args, other, _EXPECTED):
     _ExpectAux__eq_in__all_operators(EqValid_ContainStrIc, other, _EXPECTED[1], *args)
 
 
-# =====================================================================================================================
+# ======================================================================================================================
 @pytest.mark.parametrize(
     argnames="args, other, _EXPECTED",
     argvalues=[
@@ -146,7 +121,7 @@ def test__startswith(args, other, _EXPECTED):
     _ExpectAux__eq_in__all_operators(EqValid_StartswithIc, other, _EXPECTED[1], *args)
 
 
-# ---------------------------------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------------------------
 @pytest.mark.parametrize(
     argnames="args, other, _EXPECTED",
     argvalues=[
@@ -160,7 +135,7 @@ def test__endswith(args, other, _EXPECTED):
     _ExpectAux__eq_in__all_operators(EqValid_EndswithIc, other, _EXPECTED[1], *args)
 
 
-# =====================================================================================================================
+# ======================================================================================================================
 @pytest.mark.parametrize(
     argnames="other, _EXPECTED",
     argvalues=[
@@ -182,7 +157,7 @@ def test__bool_exc_raise(other, _EXPECTED):
     _ExpectAux__eq_in__all_operators(EqValid_ExcRaise, other, _EXPECTED[4], *args)
 
 
-# =====================================================================================================================
+# ======================================================================================================================
 @pytest.mark.parametrize(
     argnames="args, other, _EXPECTED",
     argvalues=[
@@ -205,7 +180,7 @@ def test__EQ(args, other, _EXPECTED):
     _ExpectAux__eq_in__all_operators(EqValid_EQ_NumParsedSingle, other, _EXPECTED[2], *args)
 
 
-# ---------------------------------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------------------------
 @pytest.mark.parametrize(
     argnames="args, other, _EXP_obj, _EXP_num",
     argvalues=[
@@ -328,7 +303,7 @@ def test__GL_2_dict(variant, edges, other, _EXPECTED):
     _ExpectAux__eq_in__all_operators(EqValid_GL_NumParsedSingle, other, _EXPECTED[1], variant, edges=edges)
 
 
-# ---------------------------------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------------------------
 @pytest.mark.parametrize(
     argnames="other, value, _EXPECTED",
     argvalues=[
@@ -362,7 +337,7 @@ def test__EqValid_NumParsedSingle(other, value, _EXPECTED):
     _ExpectAux__eq_in__all_operators(EqValid_NumParsedSingle_TypeFloat, other, _EXPECTED[3])
 
 
-# ---------------------------------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------------------------
 @pytest.mark.parametrize(
     argnames="args, other, _EXPECTED",
     argvalues=[
@@ -395,7 +370,7 @@ def test__regexp_manual():
     Lambda(EqValid_Regexp(r"\d+[.,]?\d*V") == "11.688889V").check_expected__assert()
 
 
-# ---------------------------------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------------------------
 @pytest.mark.parametrize(
     argnames="source, other, _EXPECTED",
     argvalues=[
@@ -436,4 +411,4 @@ def test__AttrsByObj(source, other, _EXPECTED):
     ).check_expected__assert(_EXPECTED[1])
 
 
-# =====================================================================================================================
+# ======================================================================================================================

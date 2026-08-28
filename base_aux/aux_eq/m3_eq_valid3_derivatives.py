@@ -4,28 +4,46 @@ from base_aux.base_types.m0_static_types import *
 from base_aux.base_enums.m2_enum1_adj import *
 
 
-# =====================================================================================================================
-class EqValid_DictFull(Base_EqValid):
-    # use direct cmp!!!
-    CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ALL_TRUE
-    VALIDATOR = Validators.DictFull
+# ======================================================================================================================
+pass
+# 1=NO VARIANTS
+pass
+# ======================================================================================================================
+
+@final
+class EqValid_BoolTrue(Base_EqValid):
+    VALIDATOR = Validators.BoolTrue
 
 
-class EqValid_DictPart(Base_EqValid):
-    CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ALL_TRUE
-    VALIDATOR = Validators.DictPart
-
-
-# TODO: add
 # ----------------------------------------------------------------------------------------------------------------------
-class EqValid_Json(Base_EqValid): ...
-class EqValid_JsonPartial(Base_EqValid): ...
-# --------------------------------------------
-class EqValid_JsonKwargs(Base_EqValid): ...
-class EqValid_JsonPartialKwargs(Base_EqValid): ...
+@final
+class EqValid_Raise(Base_EqValid):
+    VALIDATOR = Validators.Raise
+
+
+# ----------------------------------------------------------------------------------------------------------------------
+@final
+class EqValid_NotRaise(Base_EqValid):
+    VALIDATOR = Validators.NotRaise
+
+
+# ----------------------------------------------------------------------------------------------------------------------
+@final
+class EqValid_Exc(Base_EqValid):
+    VALIDATOR = Validators.Exc
+
+
+# ----------------------------------------------------------------------------------------------------------------------
+@final
+class EqValid_ExcRaise(Base_EqValid):
+    VALIDATOR = Validators.ExcRaise
 
 
 # ======================================================================================================================
+pass
+pass
+# ======================================================================================================================
+
 # @final    # DONT USE FINAL!!! need next
 class EqValid_EQ(Base_EqValid):
     CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ALL_TRUE
@@ -55,6 +73,27 @@ class EqValid_EQ_AllFalse(EqValid_EQ):
 class EqValid_EQ_AnyFalse(EqValid_EQ):
     CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ANY_FALSE
     VALIDATOR = Validators.CMP_EQ
+
+
+# ======================================================================================================================
+class EqValid_DictFull(Base_EqValid):
+    # use direct cmp!!!
+    CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ALL_TRUE
+    VALIDATOR = Validators.DictFull
+
+
+class EqValid_DictPart(Base_EqValid):
+    CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ALL_TRUE
+    VALIDATOR = Validators.DictPart
+
+
+# TODO: add
+# ----------------------------------------------------------------------------------------------------------------------
+class EqValid_Json(Base_EqValid): ...
+class EqValid_JsonPartial(Base_EqValid): ...
+# --------------------------------------------
+class EqValid_JsonKwargs(Base_EqValid): ...
+class EqValid_JsonPartialKwargs(Base_EqValid): ...
 
 
 # ======================================================================================================================
@@ -115,36 +154,6 @@ class EqValid_Endswith(Base_EqValid):
 class EqValid_EndswithIc(Base_EqValid):
     CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ANY_TRUE
     VALIDATOR = Validators.EndswithIc
-
-
-# ======================================================================================================================
-@final
-class EqValid_BoolTrue(Base_EqValid):
-    VALIDATOR = Validators.BoolTrue
-
-
-# ----------------------------------------------------------------------------------------------------------------------
-@final
-class EqValid_Raise(Base_EqValid):
-    VALIDATOR = Validators.Raise
-
-
-# ----------------------------------------------------------------------------------------------------------------------
-@final
-class EqValid_NotRaise(Base_EqValid):
-    VALIDATOR = Validators.NotRaise
-
-
-# ----------------------------------------------------------------------------------------------------------------------
-@final
-class EqValid_Exc(Base_EqValid):
-    VALIDATOR = Validators.Exc
-
-
-# ----------------------------------------------------------------------------------------------------------------------
-@final
-class EqValid_ExcRaise(Base_EqValid):
-    VALIDATOR = Validators.ExcRaise
 
 
 # ======================================================================================================================

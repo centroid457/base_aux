@@ -64,18 +64,11 @@ class Base_EqValid(NestCall_Resolve):
     def __init__(
             self,
             *v_args,
-            _validator: TYPING.VALID_VALIDATOR = None,
             _cumulate_mode: EnumAdj_BoolCumulate = None,
             _other_resolve: bool = None,
             # _other_druft: Any = None,     # DONT USE HERE! if need checking - create obj and use obj.validate(_other_druft)
             **v_kwargs,
     ) -> None:
-        """
-        :param _validator: dont use! define in new class as attribute
-        """
-        if _validator is not None:
-            self.VALIDATOR = _validator
-
         if _cumulate_mode is not None:
             self.CUMULATE_MODE = _cumulate_mode
 

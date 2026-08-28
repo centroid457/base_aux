@@ -26,7 +26,68 @@ class Validators:
     3/ in cmp result KEEP variant ALWAYS AT FIRST PLACE!!! to use its DANDER-methods first! like in CMP_LT
 
     """
-    # -----------------------------------------------------------------------------------------------------------------
+    # ==================================================================================================================
+    # 1=NO VARIANTS
+    @staticmethod
+    def BoolTrue(self, other_final: Any) -> bool:
+        """
+        GOAL
+        ----
+        True - if Other object called with no raise and no Exception in result
+        """
+        if self.OTHER_RAISED or TypeAux(other_final).check__exception():
+            return False
+        try:
+            return bool(other_final)
+        except:
+            return False
+
+    @staticmethod
+    def BoolFalse(self, other_final: Any) -> bool:
+        # FIXME: what to do with exc and real false?
+        return not Validators.BoolTrue(self, other_final)
+
+    # ------------------------------------------------------------------------------------------------------------------
+    @staticmethod
+    def Raise(self, other_final: Any) -> bool:
+        """
+        GOAL
+        ----
+        True - if Other object called with raised
+        if other is exact final Exception without raising - it would return False!
+        """
+        return self.OTHER_RAISED
+
+    @staticmethod
+    def NotRaise(self, other_final: Any) -> bool:
+        """
+        GOAL
+        ----
+        True - if Other object called with raised
+        if other is exact final Exception without raising - it would return False!
+        """
+        return not self.OTHER_RAISED
+
+    @staticmethod
+    def Exc(self, other_final: Any) -> bool:
+        """
+        GOAL
+        ----
+        True - if Other object is exact Exception or Exception()
+        if raised - return False!!
+        """
+        return not self.OTHER_RAISED and TypeAux(other_final).check__exception()
+
+    @staticmethod
+    def ExcRaise(self, other_final: Any) -> bool:
+        """
+        GOAL
+        ----
+        True - if Other object is exact Exception or Exception() or Raised
+        """
+        return self.OTHER_RAISED or TypeAux(other_final).check__exception()
+
+    # ==================================================================================================================
     @staticmethod
     def IsinstanceSameinstance(self, other_final: Any, variant: type[Any] | Any) -> bool | NoReturn:
         """
@@ -85,62 +146,6 @@ class Validators:
         other_final = str(other_final).lower()
         variant = str(variant).lower()
         return other_final.endswith(variant)
-
-    # -----------------------------------------------------------------------------------------------------------------
-    @staticmethod
-    def BoolTrue(self, other_final: Any) -> bool:
-        """
-        GOAL
-        ----
-        True - if Other object called with no raise and no Exception in result
-        """
-        if self.OTHER_RAISED or TypeAux(other_final).check__exception():
-            return False
-        try:
-            return bool(other_final)
-        except:
-            return False
-
-    # TODO: add FALSE????? what to do with exc and real false?
-
-    @staticmethod
-    def Raise(self, other_final: Any) -> bool:
-        """
-        GOAL
-        ----
-        True - if Other object called with raised
-        if other is exact final Exception without raising - it would return False!
-        """
-        return self.OTHER_RAISED
-
-    @staticmethod
-    def NotRaise(self, other_final: Any) -> bool:
-        """
-        GOAL
-        ----
-        True - if Other object called with raised
-        if other is exact final Exception without raising - it would return False!
-        """
-        return not self.OTHER_RAISED
-
-    @staticmethod
-    def Exc(self, other_final: Any) -> bool:
-        """
-        GOAL
-        ----
-        True - if Other object is exact Exception or Exception()
-        if raised - return False!!
-        """
-        return not self.OTHER_RAISED and TypeAux(other_final).check__exception()
-
-    @staticmethod
-    def ExcRaise(self, other_final: Any) -> bool:
-        """
-        GOAL
-        ----
-        True - if Other object is exact Exception or Exception() or Raised
-        """
-        return self.OTHER_RAISED or TypeAux(other_final).check__exception()
 
     # ==================================================================================================================
     @staticmethod
