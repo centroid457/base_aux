@@ -151,9 +151,13 @@ class Validators:
 
     # ==================================================================================================================
     @staticmethod
-    def CMP_EQ(self, other_resolved: OtherResolved, variant: Any) -> bool | NoReturn:
-        print(f"CMP_EQ={other_resolved.RESULT=}/{variant=}")
-        return variant == other_resolved.RESULT
+    def CMP_EQ(self, other_resolved: OtherResolved, variant: Any, parse__number_single: bool | None = None) -> bool | NoReturn:
+        if parse__number_single:
+            other_final = TextAux(other_resolved.RESULT).parse__number_single()
+        else:
+            other_final = other_resolved.RESULT
+        print(f"CMP_EQ={other_resolved.RESULT=}/{other_final=}/{variant=}")
+        return variant == other_final
 
     @staticmethod
     def CMP_EQ__StrIc(self, other_resolved: OtherResolved, variant: Any) -> bool | NoReturn:
@@ -161,9 +165,7 @@ class Validators:
 
     @staticmethod
     def CMP_EQ__NumParsedSingle(self, other_resolved: OtherResolved, variant: Any) -> bool | NoReturn:
-        other_final = TextAux(other_resolved.RESULT).parse__number_single()
-        print(f"CMP_EQ__NumParsedSingle={other_final=}/{variant=}")
-        return Validators.CMP_EQ(self, other_resolved, variant)
+        return Validators.CMP_EQ(self, other_resolved, variant, parse__number_single=True)
 
     # ==================================================================================================================
     @staticmethod
