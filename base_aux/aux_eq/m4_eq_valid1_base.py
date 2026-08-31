@@ -50,6 +50,7 @@ class Base_EqValid(NestCall_Resolve):
         dump_attrs(Cls(), skip_names=["exit", call1, call2, call3])
         dump_attrs(Cls(), skip_names=["exit", EqValid_Startswith(call)])
     """
+    # TODO: add patch???
     VALIDATOR: TYPING.VALID_VALIDATOR    # DEFINE!!!
 
     V_ARGS: TYPING.ARGS_FINAL       # as variant for validation! can be blank!

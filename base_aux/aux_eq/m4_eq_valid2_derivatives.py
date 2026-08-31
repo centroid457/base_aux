@@ -96,7 +96,7 @@ class EqValid_EQ_AnyFalse(EqValid_EQ):
 
 # ======================================================================================================================
 pass
-#
+# DICT
 pass
 pass
 pass
@@ -119,13 +119,21 @@ class EqValid_DictPart(Base_EqValid):
 
 # TODO: add
 # ----------------------------------------------------------------------------------------------------------------------
-class EqValid_Json(Base_EqValid): ...
-class EqValid_JsonPartial(Base_EqValid): ...
-# --------------------------------------------
-class EqValid_JsonKwargs(Base_EqValid): ...
-class EqValid_JsonPartialKwargs(Base_EqValid): ...
+# class EqValid_DictJsonFull(Base_EqValid): ...
+# class EqValid_DictJsonPart(Base_EqValid): ...
 
 
+# ======================================================================================================================
+pass
+#
+pass
+pass
+pass
+pass
+pass
+pass
+pass
+pass
 # ======================================================================================================================
 @final
 class EqValid_EQ_StrIc(Base_EqValid):

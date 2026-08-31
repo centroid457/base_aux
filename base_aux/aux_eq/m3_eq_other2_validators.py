@@ -5,7 +5,7 @@ from base_aux.base_types.m0_static_typing import TYPING
 from base_aux.aux_eq.m3_eq_other1 import *
 
 
-# =====================================================================================================================
+# ======================================================================================================================
 class Validators:
     """
     CAREFULL
@@ -104,7 +104,7 @@ class Validators:
 
         return isinstance(other_resolved.RESULT, variant)
 
-    # -----------------------------------------------------------------------------------------------------------------
+    # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
     def Contain(self, other_resolved: OtherResolved, variant: Any) -> bool | NoReturn:
         """
@@ -123,7 +123,7 @@ class Validators:
     def ContainStrIc(self, other_resolved: OtherResolved, variant: Any) -> bool | NoReturn:
         return str(variant).lower() in str(other_resolved.RESULT).lower()
 
-    # -----------------------------------------------------------------------------------------------------------------
+    # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
     def Startswith(self, other_resolved: OtherResolved, variant: Any) -> bool | NoReturn:
         other_final = str(other_resolved.RESULT)
@@ -136,7 +136,7 @@ class Validators:
         variant = str(variant).lower()
         return other_final.startswith(variant)
 
-    # -----------------------------------------------------------------------------------------------------------------
+    # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
     def Endswith(self, other_resolved: OtherResolved, variant: Any) -> bool | NoReturn:
         other_final = str(other_resolved.RESULT)
@@ -200,7 +200,7 @@ class Validators:
             other_final = other_resolved.RESULT
         return variant <= other_final
 
-    # -----------------------------------------------------------------------------------------------------------------
+    # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
     def CMP_GL(
             self,
@@ -295,7 +295,7 @@ class Validators:
             parse__number_single=parse__number_single,
         )
 
-    # -----------------------------------------------------------------------------------------------------------------
+    # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
     def CMP_LT_NumParsedSingle(self, other_resolved: OtherResolved, variant: Any) -> bool | NoReturn:
         return Validators.CMP_LT(self, other_resolved, variant, parse__number_single=True)
@@ -337,7 +337,7 @@ class Validators:
         other_final = TextAux(other_resolved.RESULT).parse__number_single()
         return isinstance(other_final, float)
 
-    # -----------------------------------------------------------------------------------------------------------------
+    # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
     def Regexp(
             self,
@@ -381,7 +381,7 @@ class Validators:
             match_link=re.search,
         )
 
-    # -----------------------------------------------------------------------------------------------------------------
+    # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
     def AttrsByKwargs(
             self,
@@ -421,12 +421,12 @@ class Validators:
     def AttrsByObj_NotHidden(self, other_resolved: OtherResolved, source: Any) -> bool | NoReturn:
         return Validators.AttrsByObj(self, other_resolved=other_resolved, source=source, attr_level=EnumAdj_AttrScope.NOT_HIDDEN)
 
-    # -----------------------------------------------------------------------------------------------------------------
+    # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
     def AnnotsAllExists(self, other_resolved: OtherResolved) -> bool | NoReturn:
         return AttrAux_AnnotsAll(other_resolved.RESULT).annots__check_all_defined()
 
-    # -----------------------------------------------------------------------------------------------------------------
+    # ==================================================================================================================
     @staticmethod
     def DictFull(self, other_resolved: OtherResolved, dictfull: dict[Any, Any | Base_EqValid]) -> bool | NoReturn:
         # use direct cmp!!!
@@ -437,6 +437,10 @@ class Validators:
 
     @staticmethod
     def DictPart(self, other_resolved: OtherResolved, dictpart: dict[Any, Any | Base_EqValid]) -> bool | NoReturn:
+        """
+        GOAL
+        validate only part of other
+        """
         if not isinstance(other_resolved.RESULT, dict):
             return False
 
@@ -446,5 +450,10 @@ class Validators:
 
         return True
 
+    # ------------------------------------------------------------------------------------------------------------------
+    # @staticmethod
+    # def JsonFull(self, other_resolved: OtherResolved, dictfull: dict[Any, Any | Base_EqValid]) -> bool | NoReturn:
+    #     pass
 
-# =====================================================================================================================
+
+# ======================================================================================================================
