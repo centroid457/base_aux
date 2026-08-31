@@ -14,8 +14,8 @@ def func_ExpectAux__all_operators__eq_in(eq_cls: type[Base_EqValid], other, _EXP
     ----
     check one EqClass by 4 variant lines
     """
-    Lambda(eq_cls(*args, **kwargs) == other).check_expected__assert(_EXPECTED)
-    Lambda(other in eq_cls(*args, **kwargs)).check_expected__assert(_EXPECTED)
+    Lambda(lambda: eq_cls(*args, **kwargs) == other).check_expected__assert(_EXPECTED)
+    Lambda(lambda: other in eq_cls(*args, **kwargs)).check_expected__assert(_EXPECTED)
 
 
 # ======================================================================================================================
@@ -270,7 +270,7 @@ def test__GL_1_variants__single(args, other, _EXP_obj, _EXP_num):
     func_ExpectAux__all_operators__eq_in(EqValid_GT_NumParsedSingle, other, _EXP_num[3], *args)
 
 @pytest.mark.parametrize(
-    argnames="variant, edges, other, _EXPECTED",
+    argnames="variant, edges_mode, other, _EXPECTED",
     argvalues=[
         # FAILS ------
         # (dict(lt=1, ), Exception, (False, False)),  # be careful! False < 1!!!!
@@ -298,9 +298,9 @@ def test__GL_1_variants__single(args, other, _EXP_obj, _EXP_num):
         ((1, 2), "tt", "aaa3bbb", (False, False)),
     ]
 )
-def test__GL_2_dict(variant, edges, other, _EXPECTED):
-    func_ExpectAux__all_operators__eq_in(EqValid_GL, other, _EXPECTED[0], variant, edges=edges)
-    func_ExpectAux__all_operators__eq_in(EqValid_GL_NumParsedSingle, other, _EXPECTED[1], variant, edges=edges)
+def test__GL_2_dict(variant, edges_mode, other, _EXPECTED):
+    func_ExpectAux__all_operators__eq_in(EqValid_GL, other, _EXPECTED[0], variant, edges_mode=edges_mode)
+    func_ExpectAux__all_operators__eq_in(EqValid_GL_NumParsedSingle, other, _EXPECTED[1], variant, edges_mode=edges_mode)
 
 
 # ----------------------------------------------------------------------------------------------------------------------
