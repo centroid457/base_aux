@@ -57,13 +57,6 @@ class Base_EqValid(NestCall_Resolve):
 
     CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ALL_TRUE
 
-    # FIXME:
-    # FIXME:
-    # FIXME:
-    # FIXME:
-    # FIXME:
-    OTHER_RAISED: bool
-
     # -----------------------------------------------------------------------------------------------------------------
     def __init__(
             self,
@@ -125,7 +118,10 @@ class Base_EqValid(NestCall_Resolve):
         # VALIDATE -----------------------
         for v_arg in (self.V_ARGS or (_NO_VARIANT,)):
             try:
-                if v_arg is _NO_VARIANT:
+                if isinstance(v_arg, Base_EqValid):
+                    # Передаем уже разрешенное значение вложенному валидатору
+                    result = v_arg.resolve(other_resolved)
+                elif v_arg is _NO_VARIANT:
                     # 1=ARGS BLANK --------------
                     result = bool(self.VALIDATOR(other_resolved, **self.V_KWARGS))
                 else:

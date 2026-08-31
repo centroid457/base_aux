@@ -16,8 +16,8 @@ from base_aux.base_values.m3_exceptions import Exc__ExpectedAnother
         ((1, 2), 1, [False, True]),
         ((1, 2), 0, [False, False]),
 
-        # ((EqValid_Raised(), EqValid_NotRaised(), ), LAMBDA_RAISE, [False, True]),
-        # ((EqValid_NotRaised(), EqValid_Raised(), ), LAMBDA_RAISE, [False, True]),
+        ((EqValid_Raised(), EqValid_NotRaised(), ), LAMBDA_RAISE, [False, True]),
+        ((EqValid_NotRaised(), EqValid_Raised(), ), LAMBDA_RAISE, [False, True]),
 
         ((EqValid_Raised(),), LAMBDA_RAISE, [True, True]),
         ((EqValid_Raised(),), LAMBDA_1, [False, False]),
@@ -25,6 +25,7 @@ from base_aux.base_values.m3_exceptions import Exc__ExpectedAnother
         ((EqValid_Raised(), EqValid_NotRaised()), 1, [False, True]),
 
         ((EqValid_NotRaised(),), LAMBDA_RAISE, [False, False]),
+        ((EqValid_NotRaised(),), LAMBDA_1, [True, True]),
         ((EqValid_NotRaised(),), 1, [True, True]),
         ((EqValid_NotRaised(), EqValid_Raised()), 1, [False, True]),
 

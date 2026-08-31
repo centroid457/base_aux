@@ -63,7 +63,12 @@ def test__0_EqValid_EQ_AllTrue__single(other, _EXPECTED):
     ]
 )
 def test__0_EqValid_EQ__args_cumulate_1__ALL(other, args, _EXPECTED):
-    for index, _cumulate_mode in enumerate(EnumAdj_BoolCumulate):
+    for index, _cumulate_mode in enumerate([
+        EnumAdj_BoolCumulate.ALL_TRUE,
+        EnumAdj_BoolCumulate.ANY_TRUE,
+        EnumAdj_BoolCumulate.ALL_FALSE,
+        EnumAdj_BoolCumulate.ANY_FALSE,
+    ]):
         print()
         print(index, _cumulate_mode)
         Lambda(EqValid_EQ(*args, _cumulate_mode=_cumulate_mode) == other).check_expected__assert(_EXPECTED[index])
