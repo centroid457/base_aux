@@ -1,5 +1,6 @@
 from base_aux.base_types.m0_static_typing import *
 from base_aux.base_lambdas.m1_lambda import *
+from base_aux.aux_eq.m3_eq_other1 import *
 
 
 _NO_VARIANT = object()
@@ -68,7 +69,6 @@ class Base_EqValid(NestCall_Resolve):
             self,
             *v_args,
             _cumulate_mode: EnumAdj_BoolCumulate = None,
-            # _other_druft: Any = None,     # DONT USE HERE! if need checking - create obj and use obj.validate(_other_druft)
             **v_kwargs,
     ) -> None:
         if _cumulate_mode is not None:

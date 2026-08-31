@@ -16,8 +16,12 @@ from base_aux.base_values.m3_exceptions import Exc__ExpectedAnother
         ((1, 2), 1, [False, True]),
         ((1, 2), 0, [False, False]),
 
-        ((EqValid_Raise(), EqValid_NotRaise(), ), LAMBDA_RAISE, [False, True]),
-        ((EqValid_NotRaise(), EqValid_Raise(), ), LAMBDA_RAISE, [False, True]),
+        # ((EqValid_Raise(), EqValid_NotRaise(), ), LAMBDA_RAISE, [False, True]),
+        # ((EqValid_NotRaise(), EqValid_Raise(), ), LAMBDA_RAISE, [False, True]),
+
+        ((EqValid_Raise(),), LAMBDA_RAISE, [True, True]),
+        ((EqValid_Raise(),), 1, [False, False]),
+        ((EqValid_Raise(), EqValid_NotRaise()), 1, [False, True]),
 
         ((EqValid_NotRaise(), ), LAMBDA_RAISE, [False, False]),
         ((EqValid_NotRaise(), ), 1, [True, True]),

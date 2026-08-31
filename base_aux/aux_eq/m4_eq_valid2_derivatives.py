@@ -18,13 +18,13 @@ class EqValid_BoolTrue(Base_EqValid):
 # ----------------------------------------------------------------------------------------------------------------------
 @final
 class EqValid_Raise(Base_EqValid):
-    VALIDATOR = Validators.Raise
+    VALIDATOR = Validators.Raised
 
 
 # ----------------------------------------------------------------------------------------------------------------------
 @final
 class EqValid_NotRaise(Base_EqValid):
-    VALIDATOR = Validators.NotRaise
+    VALIDATOR = Validators.NotRaised
 
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -36,7 +36,7 @@ class EqValid_Exc(Base_EqValid):
 # ----------------------------------------------------------------------------------------------------------------------
 @final
 class EqValid_ExcRaise(Base_EqValid):
-    VALIDATOR = Validators.ExcRaise
+    VALIDATOR = Validators.ExcRaised
 
 
 # ======================================================================================================================
@@ -291,22 +291,19 @@ class EqValid_AttrsByKwargs(Base_EqValid):
 
 
 # ----------------------------------------------------------------------------------------------------------------------
-# @final
-# class EqValid_AttrsByObj(Base_EqValid):
-#     VALIDATOR = Validators.AttrsByObj
-#     ATTR_LEVEL: EnumAdj_AttrScope = EnumAdj_AttrScope.NOT_PRIVATE
+@final
+class EqValid_AttrsByObj(Base_EqValid):
+    VALIDATOR = Validators.AttrsByObj
 
 
 @final
 class EqValid_AttrsByObjNotPrivate(Base_EqValid):
-    VALIDATOR = Validators.AttrsByObj
-    ATTR_LEVEL: EnumAdj_AttrScope = EnumAdj_AttrScope.NOT_PRIVATE
+    VALIDATOR = Validators.AttrsByObj_NotPrivate
 
 
 @final
 class EqValid_AttrsByObjNotHidden(Base_EqValid):
-    VALIDATOR = Validators.AttrsByObj
-    ATTR_LEVEL: EnumAdj_AttrScope = EnumAdj_AttrScope.NOT_HIDDEN
+    VALIDATOR = Validators.AttrsByObj_NotHidden
 
 
 def _explore():
