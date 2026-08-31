@@ -113,7 +113,7 @@ class Base_EqValid(NestCall_Resolve):
         return self.resolve(item)
 
     # VALIDATE-2=VALUE with argsKwrgs----------------------------------------------------------------------------------
-    def resolve(self, other_draft: Any) -> bool:
+    def resolve(self, other_draft: Any | OtherResolved) -> bool:
         """
         GOAL
         ----
