@@ -21,15 +21,20 @@ class EqValid_BoolTrue(Base_EqValid):
     VALIDATOR = Validators.BoolTrue
 
 
+@final
+class EqValid_BoolFalse(Base_EqValid):
+    VALIDATOR = Validators.BoolFalse
+
+
 # ----------------------------------------------------------------------------------------------------------------------
 @final
-class EqValid_Raise(Base_EqValid):
+class EqValid_Raised(Base_EqValid):
     VALIDATOR = Validators.Raised
 
 
 # ----------------------------------------------------------------------------------------------------------------------
 @final
-class EqValid_NotRaise(Base_EqValid):
+class EqValid_NotRaised(Base_EqValid):
     VALIDATOR = Validators.NotRaised
 
 
@@ -41,7 +46,7 @@ class EqValid_Exc(Base_EqValid):
 
 # ----------------------------------------------------------------------------------------------------------------------
 @final
-class EqValid_ExcRaise(Base_EqValid):
+class EqValid_ExcRaised(Base_EqValid):
     VALIDATOR = Validators.ExcRaised
 
 

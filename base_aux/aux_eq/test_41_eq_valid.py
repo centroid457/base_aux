@@ -139,22 +139,28 @@ def test__endswith(args, other, _EXPECTED):
 @pytest.mark.parametrize(
     argnames="other, _EXPECTED",
     argvalues=[
-        (False, (False, False, False, True, False)),
-        (True, (True, False, False, True, False)),
-        (1, (True, False, False, True, False)),
-        (Exception, (False, True, False, True, True)),
-        (Exception(), (False, True, False, True, True)),
-        (LAMBDA_EXC, (False, True, False, True, True)),
-        (LAMBDA_RAISE, (False, False, True, False, True)),
+        (None, (False, False, False)),
+        (False, (False, False, False)),
+        (True, (True, False, False)),
+        (1, (True, False, False)),
+        (LAMBDA_1, (True, False, False)),
+        (Exception, (False, False, True)),
+        (Exception(), (False, False, True)),
+        (LAMBDA_EXC, (False, False, True)),
+        (LAMBDA_RAISE, (False, True, False)),
     ]
 )
 def test__bool_exc_raise(other, _EXPECTED):
     args = ()
     func_ExpectAux__all_operators__eq_in(EqValid_BoolTrue, other, _EXPECTED[0], *args)
-    func_ExpectAux__all_operators__eq_in(EqValid_Exc, other, _EXPECTED[1], *args)
-    func_ExpectAux__all_operators__eq_in(EqValid_Raise, other, _EXPECTED[2], *args)
-    func_ExpectAux__all_operators__eq_in(EqValid_NotRaise, other, _EXPECTED[3], *args)
-    func_ExpectAux__all_operators__eq_in(EqValid_ExcRaise, other, _EXPECTED[4], *args)
+    func_ExpectAux__all_operators__eq_in(EqValid_BoolFalse, other, not _EXPECTED[0], *args)
+
+    func_ExpectAux__all_operators__eq_in(EqValid_Raised, other, _EXPECTED[1], *args)
+    func_ExpectAux__all_operators__eq_in(EqValid_NotRaised, other, not _EXPECTED[1], *args)
+
+    func_ExpectAux__all_operators__eq_in(EqValid_Exc, other, _EXPECTED[2], *args)
+
+    func_ExpectAux__all_operators__eq_in(EqValid_ExcRaised, other, _EXPECTED[1] or _EXPECTED[2], *args)
 
 
 # ======================================================================================================================
