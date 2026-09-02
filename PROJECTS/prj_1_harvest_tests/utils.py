@@ -27,6 +27,21 @@ class Harvest:
         "AT",  # ответ эхо - проверка функционирования модема на канал
 
         # =========================================================================
+        # SETUP
+        #   AT+CREG=2 — включает вывод информации о регистрации в сетях 2G/GSM .
+        #   AT+CGREG=2 — включает вывод информации о регистрации в сетях GPRS .
+        #   AT+CEREG=2 — включает вывод информации о регистрации в сетях LTE .
+        "AT+CREG=2",  #
+        "AT+CGREG=2",  #
+        "AT+CEREG=2",  #
+        # AT+CREG?
+        # AT+CGREG?
+        # AT+CEREG?
+        "AT+CREG?",  #
+        "AT+CGREG?",  #
+        "AT+CEREG?",  #
+
+        # =========================================================================
         # попытка определить номер телефона
         "AT+CNUM",  # Основной запрос номера - НЕДОСТУПЕН НА M2M SIM!!!
         # "AT+CPBS=\"ON\"; +CPBR=1",  # Чтение своего номера из книги
@@ -73,6 +88,13 @@ class Harvest:
         # =========================================================================
         # ТЕКУЩАЯ СОТА И ЧАСТОТА
         "AT*CNTI=0",  # Информация о текущей соте (MCC, MNC, LAC, CellID, band, ARFCN)
+
+        # попытка 2
+        "AT*CPSI?",     # (часто работает на SIMCom для LTE, возвращает "LTE, TAC, CellID")
+        "AT*CNETSCAN?", # (может сработать).
+        "AT+CRUSET?",   # (просмотр текущих настроек сети).
+        "AT+CNETSCAN",   # Это заставит модем поискать другие вышки вокруг
+        "AT+CNETSCAN?",   # Это заставит модем поискать другие вышки вокруг
 
         # =========================================================================
         # ТЕХНОЛОГИЯ РАДИОДОСТУПА (RAT)
@@ -731,10 +753,17 @@ PASSED
         print(f"[AT]{cmd}--->{at_output}")
         return at_output
 
-    def at_cmd__dump(self, port: str, method_simple: bool = True, timeout: float = 2.0) -> dict[str, str]:
+    # ------------------------------------------------------------------------------------------------------------------
+    def at_cmd__dump(
+            self,
+            port: str,
+            method_simple: bool = True,
+            timeout: float = 2.0,
+            cmds: Iterable[str] | None = None,
+            return_sequence: bool | None = None,
+    ) -> dict[str, str] | list[tuple[str, str]]:
         """
         Опрашивает AT-команды из AT_CMD__DUMP
-
         ----------------------------
         M2M SIM
         я запустил симку на телефоне
@@ -748,7 +777,6 @@ PASSED
         *201#, *105#	"Неверный код MMI"	USSD-сервис отключен на уровне HLR оператора
         Звонок	Переадресация → сброс	Голос заблокирован, включена безусловная переадресация (CFU) на "заглушку"
         SMS	Не отправляются/не доходят	SMS-центр не настроен или услуга отключена
-
         ----------------------------
         HARVEST=M2M
         {
@@ -843,7 +871,11 @@ PASSED
         CFUN	1 (полный)
         CSCLK	0 (сон выключен)
 
-        ERROR (ожидаемо для этого модуля):
+        ERROR (ожидаемо для этого модуля - новый модуль со старыми командами):
+        Ваш модуль (SIMCom A7682E) — это современный LTE-модуль.
+        В сетях 4G (LTE) команды вроде AT+CCED или AT*CELLINFO
+        (которые были популярны на старых 2G/3G модемах) практически не работают или отключены прошивкой.
+
         AT+CPINR — не поддерживает доп. информацию по PIN/PUK
         AT+CCID — видимо не реализован (можно попробовать AT+ICCID)
         AT*CNTI=0 — vendor-specific, не поддерживается
@@ -852,15 +884,36 @@ PASSED
         AT+CPMUTEMP? — нет датчика температуры
         AT+CCED?, AT*CELLINFO? — нет расширенной инфы по сотам
         """
-        results = {}
+        result = []
         method_send = self.at_cmd__simple if method_simple else self.at_cmd__raw
-        for cmd in self.AT_CMD__DUMP:
+
+        cmds = cmds or self.AT_CMD__DUMP
+        for cmd in cmds:
             try:
                 resp = method_send(cmd, port=port, timeout=timeout)
-                results[cmd] = resp.strip()
+                result.append((cmd, resp.strip()))
             except Exception as exc:
-                results[cmd] = f"PYERROR:{exc!r}"  # нет таких!
-        return results
+                result.append((cmd, f"PYERROR:{exc!r}"))
+
+        if return_sequence:
+            return result
+        else:
+            return dict(result)
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def at_cmd__dump_sequence(self, *args, **kwargs) -> list[tuple[str, str]]:
+        try:
+            kwargs.pop("return_sequence")
+        except:
+            pass
+        return self.at_cmd__dump(*args, return_sequence=True, **kwargs)
+
+    def at_cmd__dump_dict(self, *args, **kwargs) -> dict[str, str]:
+        try:
+            kwargs.pop("return_sequence")
+        except:
+            pass
+        return self.at_cmd__dump(*args, return_sequence=False, **kwargs)
 
     # CMDS =============================================================================================================
     def prepare__stop__kernel_terminal_logs(self) -> bool:

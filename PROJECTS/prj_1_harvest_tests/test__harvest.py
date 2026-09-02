@@ -1220,6 +1220,21 @@ class Test_42__GSMAT:
     """Тесты GSM-модема через AT команды (Qualcomm/SIMcom 7682, требуется ручная инициализация драйвера option)"""
 
     # ------------------------------------------------------------------------------------------------------------------
+    @pytest.mark.skip
+    def test_gsmat_0__explore(self, harvest):
+        result = harvest.at_cmd__dump_sequence(
+            cmds=[
+                "AT+CREG=2",  #
+                "AT+CGREG=2",  #
+                "AT+CEREG=2",  #
+                "AT+CREG?",  #
+                "AT+CGREG?",  #
+                "AT+CEREG?",  #
+            ]
+        )
+        print(json.dumps(result, indent=2, ensure_ascii=False))
+
+    # ------------------------------------------------------------------------------------------------------------------
     @pytest.mark.dependency(name="gsmat_present")
     def test_gsmat_1__detect(self, gsm_at__port):
         assert gsm_at__port, "порт не обнаружен!"
@@ -1233,20 +1248,20 @@ class Test_42__GSMAT:
 
     # ------------------------------------------------------------------------------------------------------------------
     @pytest.mark.dependency(depends=["gsmat_present"])
-    def test_gsmat_3__deep__dump(self, gsm_at__dump):
-        assert gsm_at__dump, "dump не получен"
+    def test_gsmat_3__deep__dump(self, gsm_at__dump_dict):
+        assert gsm_at__dump_dict, "dump не получен"
 
     # ------------------------------------------------------------------------------------------------------------------
     @pytest.mark.dependency(depends=["gsmat_present"])
-    def test_gsmat_4__sim_ready(self, gsm_at__dump):
+    def test_gsmat_4__sim_ready(self, gsm_at__dump_dict):
         """AT+CPIN? -> READY."""
-        assert "+CPIN: READY" in gsm_at__dump.get("AT+CPIN?"), f"SIM не готова"
+        assert "+CPIN: READY" in gsm_at__dump_dict.get("AT+CPIN?"), f"SIM не готова"
 
     @pytest.mark.dependency(depends=["gsmat_present"])
-    def test_gsmat_4__signal_quality(self, gsm_at__dump):
+    def test_gsmat_4__signal_quality(self, gsm_at__dump_dict):
         """AT+CSQ, RSSI >= 5 (из 31)."""
         at_cmd = "AT+CSQ"
-        out = gsm_at__dump.get(at_cmd)
+        out = gsm_at__dump_dict.get(at_cmd)
         for line in out.splitlines():
             if "+CSQ:" in line:
                 parts = line.split(":")[1].strip().split(",")
@@ -1256,14 +1271,14 @@ class Test_42__GSMAT:
         pytest.fail(f"CSQ не найден: {out}")
 
     @pytest.mark.dependency(depends=["gsmat_present"])
-    def test_gsmat_4__network_registration(self, gsm_at__dump):
+    def test_gsmat_4__network_registration(self, gsm_at__dump_dict):
         """AT+CREG? – статус 1 (зарегистрирован) или 5 (роуминг).
 
         AT+CREG? – статус 1 или 5.
         [at_output='+CREG: 0,1\nOK']
         """
         at_cmd = "AT+CREG?"
-        out = gsm_at__dump.get(at_cmd)
+        out = gsm_at__dump_dict.get(at_cmd)
         registered = any(
             "+CREG:" in l and (",1" in l or ",5" in l)
             for l in out.splitlines()
@@ -1271,12 +1286,12 @@ class Test_42__GSMAT:
         assert registered, f"Не зарегистрирован в сети: {out}"
 
     @pytest.mark.dependency(depends=["gsmat_present"])
-    def test_gsmat_4__operator(self, gsm_at__dump):
+    def test_gsmat_4__operator(self, gsm_at__dump_dict):
         """AT+COPS? – имя оператора.
         [at_output='+COPS: 0,2,"25020",7\nOK']
         """
         at_cmd = "AT+COPS?"
-        out = gsm_at__dump.get(at_cmd)
+        out = gsm_at__dump_dict.get(at_cmd)
         assert "COPS" in out, f"Оператор не получен: {out}"
         print(f"GSM operator: {out}")
 

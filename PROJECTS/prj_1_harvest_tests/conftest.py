@@ -551,10 +551,10 @@ root@harvest05:~#
 
 # ----------------------------------------------------------------------------------------------------------------------
 @pytest.fixture(scope="session")
-def gsm_at__dump(harvest, gsm_at__port) -> dict[str, str]:
-    dump = harvest.at_cmd__dump(port=gsm_at__port, method_simple=True)
-    print(json.dumps(dump, indent=2, ensure_ascii=False))
-    return dump
+def gsm_at__dump_dict(harvest, gsm_at__port) -> dict[str, str]:
+    result = harvest.at_cmd__dump_dict(port=gsm_at__port, method_simple=True)
+    print(json.dumps(result, indent=2, ensure_ascii=False))
+    return result
 
 
 # ======================================================================================================================
