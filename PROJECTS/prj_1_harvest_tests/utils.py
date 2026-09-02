@@ -713,7 +713,7 @@ PASSED
         print(f"[AT]{cmd}--->{at_output}")
         return at_output
 
-    def at_cmd__raw(
+    def at_cmd__raw(    # NOTE: DONT USE!
             self,
             cmd: str,
             bridge: str = "scr__gsm_at_client.py",
@@ -939,7 +939,7 @@ PASSED
 
         # "AT+CREG=?" ---> "+CREG: (0-2)\nOK"
         cmd = f"AT+{param.upper()}=?"
-        responce = self.at_cmd__raw(cmd=cmd, port=port, timeout=timeout)
+        responce = self.at_cmd__simple(cmd=cmd, port=port, timeout=timeout)
         match = re.search(r"\(0-(\d+)\)", responce)
         if not match:
             return

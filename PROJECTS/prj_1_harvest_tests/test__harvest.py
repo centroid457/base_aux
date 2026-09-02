@@ -1225,6 +1225,7 @@ class Test_42__GSMAT:
         result = harvest.at_param__explore(
             param="CREG",
         )
+        result = list(filter(lambda x: x[0].endswith("?"), result))
         print(json.dumps(result, indent=2, ensure_ascii=False))
 
     # ------------------------------------------------------------------------------------------------------------------
