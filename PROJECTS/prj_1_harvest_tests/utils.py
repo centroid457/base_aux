@@ -769,6 +769,7 @@ PASSED
             port: str = '/dev/ttyUSB2',
             method_simple: bool = True,
             timeout: float = 2.0,
+            timeout_continue: float | None = None,
             cmds: Iterable[str] | None = None,
             return_sequence: bool | None = None,
     ) -> dict[str, str] | list[tuple[str, str]]:
@@ -900,7 +901,7 @@ PASSED
         cmds = cmds or self.AT_CMD__DUMP
         for cmd in cmds:
             try:
-                resp = method_send(cmd, port=port, timeout=timeout)
+                resp = method_send(cmd, port=port, timeout=timeout, timeout_continue=timeout_continue)
                 result.append((cmd, resp.strip()))
             except Exception as exc:
                 result.append((cmd, f"PYERROR:{exc!r}"))
@@ -931,7 +932,8 @@ PASSED
             param: str,
 
             port: str = '/dev/ttyUSB2',
-            timeout: float = 4.0,
+            timeout: float = 2.0,               # best 2!
+            timeout_continue: float | None = 1, # best 1!
     ) -> list[tuple[str, str]] | None:
         """
         result = re.search(r"\(0-(\d+)\)", "+CREG: (0-2)\nOK")
@@ -943,7 +945,7 @@ PASSED
 
         # "AT+CREG=?" ---> "+CREG: (0-2)\nOK"
         cmd = f"AT+{param.upper()}=?"
-        responce = self.at_cmd__simple(cmd=cmd, port=port, timeout=timeout)
+        responce = self.at_cmd__simple(cmd=cmd, port=port, timeout=timeout, timeout_continue=timeout_continue)
         match = re.search(r"\(0-(\d+)\)", responce)
         if not match:
             return
@@ -954,7 +956,7 @@ PASSED
         for value in range(value_last+1):
             cmds.append(f"AT+{param}={value}")
             cmds.append(f"AT+{param}?")
-        return self.at_cmd__dump_sequence(cmds=cmds)
+        return self.at_cmd__dump_sequence(cmds=cmds, port=port, timeout=timeout, timeout_continue=timeout_continue)
 
     # CMDS =============================================================================================================
     def prepare__stop__kernel_terminal_logs(self) -> bool:

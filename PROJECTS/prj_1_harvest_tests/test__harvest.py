@@ -1217,16 +1217,22 @@ class Test_41__GSM:
 # ----------------------------------------------------------------------------------------------------------------------
 @pytest.mark.GSM
 class Test_42__GSMAT:
-    """Тесты GSM-модема через AT команды (Qualcomm/SIMcom 7682, требуется ручная инициализация драйвера option)"""
+    """
+    Тесты GSM-модема через AT команды
+    (Qualcomm/SIMcom 7682, - требуется ручная инициализация драйвера option)
+    """
 
     # ------------------------------------------------------------------------------------------------------------------
     # @pytest.mark.skip
-    def test_gsmat_0__explore(self, harvest):
+    def test_gsmat_0__explore(self, harvest, gsm_at__port):
         print()
         print()
         print()
         result = harvest.at_param__explore(
             param="CREG",
+            port=gsm_at__port,
+            timeout=2,
+            timeout_continue=1,
         )
         print(f"{result=}")
         assert result, "не удалось получить данные"
