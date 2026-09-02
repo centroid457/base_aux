@@ -1223,22 +1223,32 @@ class Test_42__GSMAT:
     """
 
     # ------------------------------------------------------------------------------------------------------------------
-    # @pytest.mark.skip
-    def test_gsmat_0__explore(self, harvest, gsm_at__port):
+    @pytest.mark.skip
+    def test_gsmat_0__explore1_one(self, harvest, gsm_at__port):
         print()
         print()
         print()
         result = harvest.at_param__explore(
             param="CREG",
             port=gsm_at__port,
-            timeout=2,
-            timeout_continue=1,
         )
-        print(f"{result=}")
+        # print(f"{result=}")
         assert result, "не удалось получить данные"
         # result = list(filter(lambda x: x[0].endswith("?"), result))
-        for line in result or []:
-            print(f"\t{line}")
+        # print(json.dumps(result, indent=2, ensure_ascii=False))
+
+    # @pytest.mark.skip
+    def test_gsmat_0__explore2_several(self, harvest, gsm_at__port):
+        print()
+        print()
+        print()
+        result = harvest.at_params__explore(
+            params=harvest.AT_PARAMS__LIST,
+            port=gsm_at__port,
+        )
+        # print(f"{result=}")
+        assert result, "не удалось получить данные"
+        # result = list(filter(lambda x: x[0].endswith("?"), result))
         # print(json.dumps(result, indent=2, ensure_ascii=False))
 
     # ------------------------------------------------------------------------------------------------------------------

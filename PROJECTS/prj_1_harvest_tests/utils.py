@@ -22,7 +22,49 @@ PATTERN_MAC = r"[0-9A-F:]{17}"
 
 # ======================================================================================================================
 class Harvest:
-    AT_CMD__DUMP: list[str] = [
+    AT_PARAMS__LIST: list[str] = [
+        "CREG",
+        "CGREG",
+        "CEREG",
+        "CNUM",
+        "CPBS",
+        "CPBR",
+        "CRSM",
+        "CGMI",
+        "CGMM",
+        "CGMR",
+        "CGSN",
+        "CIMI",
+        "GSN",
+        "CPIN",
+        "CPINR",
+        "CCID",
+        "ICCID",
+        "COPS",
+        "CSQ",
+        "CESQ",
+        "CPSI",
+        "CNETSCAN",
+        "CRUSET",
+        "WS46",
+        "CGDCONT",
+        "CGCONTRDP",
+        "CGPADDR",
+        "CGACT",
+        "CGATT",
+        "CGDATA",
+        "CIMS",
+        "CIREG",
+        "CFUN",
+        "CSCLK",
+        "CPMUTEMP",
+        "CBC",
+        "CCED",
+        "CELLINFO",
+        "CEER",
+    ]
+
+    AT_CMD__LIST: list[str] = [
         # =========================================================================
         "AT",  # ответ эхо - проверка функционирования модема на канал
 
@@ -31,16 +73,16 @@ class Harvest:
         #   AT+CREG=2 — включает вывод информации о регистрации в сетях 2G/GSM .
         #   AT+CGREG=2 — включает вывод информации о регистрации в сетях GPRS .
         #   AT+CEREG=2 — включает вывод информации о регистрации в сетях LTE .
-        "AT+CREG=2",  #
-        "AT+CGREG=2",  #
-        "AT+CEREG=2",  #
-        # AT+CREG?
-        # AT+CGREG?
-        # AT+CEREG?
-        # "AT+CREG",  # проверить
-        "AT+CREG?",  #
-        "AT+CGREG?",  #
-        "AT+CEREG?",  #
+        # "AT+CREG=2",  #
+        # "AT+CGREG=2",  #
+        # "AT+CEREG=2",  #
+        # # AT+CREG?
+        # # AT+CGREG?
+        # # AT+CEREG?
+        # # "AT+CREG",  # проверить
+        # "AT+CREG?",  #
+        # "AT+CGREG?",  #
+        # "AT+CEREG?",  #
 
         # =========================================================================
         # попытка определить номер телефона
@@ -49,11 +91,6 @@ class Harvest:
         # "AT+CPBS=\'ON\'; +CPBR=1",  # Чтение своего номера из книги
         # "AT+CIMI",                # IMSI (для идентификации)
         # "AT+CRSM=176,28589,0,0,12",  # Чтение EF_MSISDN с SIM (прямой доступ)
-        #
-        # "+CNUM",  #
-        # "+CNUM?",  #
-        # "AT+CNUM?",  #
-        # "AT+CNUM",  #
 
         # =========================================================================
         # ИДЕНТИФИКАЦИЯ И ВЕРСИИ
@@ -94,8 +131,8 @@ class Harvest:
         "AT*CPSI?",     # (часто работает на SIMCom для LTE, возвращает "LTE, TAC, CellID")
         "AT*CNETSCAN?", # (может сработать).
         "AT+CRUSET?",   # (просмотр текущих настроек сети).
-        "AT+CNETSCAN",   # Это заставит модем поискать другие вышки вокруг
-        "AT+CNETSCAN?",   # Это заставит модем поискать другие вышки вокруг
+        # "AT+CNETSCAN",   # Это заставит модем поискать другие вышки вокруг
+        # "AT+CNETSCAN?",   # Это заставит модем поискать другие вышки вокруг
 
         # =========================================================================
         # ТЕХНОЛОГИЯ РАДИОДОСТУПА (RAT)
@@ -774,7 +811,7 @@ PASSED
             return_sequence: bool | None = None,
     ) -> dict[str, str] | list[tuple[str, str]]:
         """
-        Опрашивает AT-команды из AT_CMD__DUMP
+        Опрашивает AT-команды из AT_CMD__LIST
         ----------------------------
         M2M SIM
         я запустил симку на телефоне
@@ -898,7 +935,9 @@ PASSED
         result = []
         method_send = self.at_cmd__simple if method_simple else self.at_cmd__raw
 
-        cmds = cmds or self.AT_CMD__DUMP
+        if cmds is None:
+            cmds = self.AT_CMD__LIST
+
         for cmd in cmds:
             try:
                 resp = method_send(cmd, port=port, timeout=timeout, timeout_continue=timeout_continue)
@@ -932,31 +971,206 @@ PASSED
             param: str,
 
             port: str = '/dev/ttyUSB2',
-            timeout: float = 2.0,               # best 2!
-            timeout_continue: float | None = 1, # best 1!
-    ) -> list[tuple[str, str]] | None:
+            timeout: float = 2.0,                   # best 2!
+            timeout_continue: float | None = 1,     # best 1!
+    ) -> list[tuple[str, str]]:
         """
         result = re.search(r"\(0-(\d+)\)", "+CREG: (0-2)\nOK")
         print(result)
         print(result.group(1))
         """
-        pass
-        # return self.at_cmd__dump(*args, return_sequence=True, **kwargs)
+        cmds = []
 
+        # 1=BASE/DEFAULT TRY -------------
+        cmds.append(f"AT+{param}")
+        cmds.append(f"AT+{param}?")
+
+        # 2=EDGES DETECT -----------------
         # "AT+CREG=?" ---> "+CREG: (0-2)\nOK"
         cmd = f"AT+{param.upper()}=?"
         responce = self.at_cmd__simple(cmd=cmd, port=port, timeout=timeout, timeout_continue=timeout_continue)
         match = re.search(r"\(0-(\d+)\)", responce)
-        if not match:
-            return
+        if match:
+            value_last = int(match.group(1))
+            for value in range(value_last+1):
+                cmds.append(f"AT+{param}={value}")
+                cmds.append(f"AT+{param}?")
 
-        value_last = int(match.group(1))
-        cmds = []
-        # cmds.append(f"AT+{param}")
-        for value in range(value_last+1):
-            cmds.append(f"AT+{param}={value}")
-            cmds.append(f"AT+{param}?")
-        return self.at_cmd__dump_sequence(cmds=cmds, port=port, timeout=timeout, timeout_continue=timeout_continue)
+        # 3=FINAL -----------------------
+        result = self.at_cmd__dump_sequence(cmds=cmds, port=port, timeout=timeout, timeout_continue=timeout_continue)
+        for line in result or []:
+            print(f"\t{line}")
+        return result
+
+    def at_params__explore(
+            self,
+            params: list[str],
+            **kwargs,
+    ) -> dict[str, list[tuple[str, str]]]:
+        """
+CREG
+	('AT+CREG', 'OK')
+	('AT+CREG?', '+CREG: 0,1\nOK')
+	('AT+CREG=0', 'OK')
+	('AT+CREG?', '+CREG: 0,1\nOK')
+	('AT+CREG=1', 'OK')
+	('AT+CREG?', '+CREG: 1,1\nOK')
+	('AT+CREG=2', 'OK')
+	('AT+CREG?', '+CREG: 2,1,6CAF,0BCAB435\nOK')
+CGREG
+	('AT+CGREG', 'OK')
+	('AT+CGREG?', '+CGREG: 0,1\nOK')
+	('AT+CGREG=0', 'OK')
+	('AT+CGREG?', '+CGREG: 0,1\nOK')
+	('AT+CGREG=1', 'OK')
+	('AT+CGREG?', '+CGREG: 1,1\nOK')
+	('AT+CGREG=2', 'OK')
+	('AT+CGREG?', '+CGREG: 2,1,6CAF,0BCAB435\nOK')
+CEREG
+	('AT+CEREG', 'OK')
+	('AT+CEREG?', '+CEREG: 0,1\nOK')
+	('AT+CEREG=0', 'OK')
+	('AT+CEREG?', '+CEREG: 0,1\nOK')
+	('AT+CEREG=1', 'OK')
+	('AT+CEREG?', '+CEREG: 1,1\nOK')
+	('AT+CEREG=2', 'OK')
+	('AT+CEREG?', '+CEREG: 2,1,6CAF,0BCAB435\nOK')
+CNUM
+	('AT+CNUM', 'OK')
+	('AT+CNUM?', '+CME ERROR: 4')
+CPBS
+	('AT+CPBS', 'OK')
+	('AT+CPBS?', '+CPBS: "SM",0,100\nOK')
+CPBR
+	('AT+CPBR', 'ERROR')
+	('AT+CPBR?', '+CME ERROR: 302')
+CRSM
+	('AT+CRSM', 'ERROR')
+	('AT+CRSM?', '+CME ERROR: 4')
+CGMI
+	('AT+CGMI', 'INCORPORATED\nOK')
+	('AT+CGMI?', 'INCORPORATED\nOK')
+CGMM
+	('AT+CGMM', 'A7682E-R\nOK')
+	('AT+CGMM?', 'A7682E-R\nOK')
+CGMR
+	('AT+CGMR', '+CGMR: A011B02A7682M6_DS_FOTA\nOK')
+	('AT+CGMR?', '+CGMR: A011B02A7682M6_DS_FOTA\nOK')
+CGSN
+	('AT+CGSN', '865286077380516\nOK')
+	('AT+CGSN?', 'ERROR')
+CIMI
+	('AT+CIMI', '250470002905372\nOK')
+	('AT+CIMI?', '+CME ERROR: 4')
+GSN
+	('AT+GSN', '865286077380516\nOK')
+	('AT+GSN?', 'ERROR')
+CPIN
+	('AT+CPIN', 'ERROR')
+	('AT+CPIN?', '+CPIN: READY\nOK')
+CPINR
+	('AT+CPINR', '+CME ERROR: 4')
+	('AT+CPINR?', '+CPINR:3,3,10,10\nOK')
+	('AT+CPINR=0', 'ERROR')
+	('AT+CPINR?', '+CPINR:3,3,10,10\nOK')
+	('AT+CPINR=1', 'ERROR')
+	('AT+CPINR?', '+CPINR:3,3,10,10\nOK')
+	('AT+CPINR=2', 'ERROR')
+	('AT+CPINR?', '+CPINR:3,3,10,10\nOK')
+	('AT+CPINR=3', 'ERROR')
+	('AT+CPINR?', '+CPINR:3,3,10,10\nOK')
+CCID
+	('AT+CCID', 'ERROR')
+	('AT+CCID?', 'ERROR')
+ICCID
+	('AT+ICCID', 'ERROR')
+	('AT+ICCID?', 'ERROR')
+COPS
+	('AT+COPS', '')
+	('AT+COPS?', '')
+CSQ
+	('AT+CSQ', '')
+	('AT+CSQ?', '')
+CESQ
+	('AT+CESQ', '')
+	('AT+CESQ?', '')
+CPSI
+	('AT+CPSI', '')
+	('AT+CPSI?', '')
+CNETSCAN
+	('AT+CNETSCAN', '')
+	('AT+CNETSCAN?', '')
+CRUSET
+	('AT+CRUSET', '')
+	('AT+CRUSET?', '')
+WS46
+	('AT+WS46', '')
+	('AT+WS46?', '')
+CGDCONT
+	('AT+CGDCONT', '')
+	('AT+CGDCONT?', '')
+CGCONTRDP
+	('AT+CGCONTRDP', '')
+	('AT+CGCONTRDP?', '+COPS: (2,"Next T","Next T","25020",7),(1,"Next B","Next B","25099",0),(1,"Next MF","Next MF","25002",0),(1,"Next M","Next M","25001",0),(1,"Next B","Next B","25099",7),(1,"Next M","Next M","25001",7),(1,"Next MF","Next MF","25002",7),(1,"YOTA","YOTA","25011",7),,(0,1,2,3,4),(0,1,2)\nOK\nERROR\n+COPS: 0,0,"Next T",7\nOK\n+CSQ: (0-31,99),(0-7,99)\nOK\n+CSQ: 24,99\nOK\nERROR\n+CESQ: (0-63,99),(0-7,99),(0-96,255),(0-49,255),(0-34,255),(0-97,255)\nOK\n+CESQ: 47,99,255,255,10,47\nOK\n+CME ERROR: 100\nOK\nERROR\n+CPSI: LTE,Online,250-20,0x6CAF,197833781,459,EUTRAN-BAND1,100,3,0,13,48,48,0\nOK\nERROR\nERROR\nERROR\nERROR\nERROR\nERROR\n+WS46: (12,22,25,28,29,30,31)\nOK\nOK\n+WS46:12\nOK\n+CGDCONT: (1-15),"IP",,,(0-2),(0-1),(0-1),(0-2)\n+CGDCONT: (1-15),"IPV6",,,(0-2),(0-1),(0-1),(0-2)\n+CGDCONT: (1-15),"IPV4V6",,,(0-2),(0-1),(0-1),(0-2)\nOK\nOK\nOK\nOK\nOK')
+
+                        С ТОГО МОМЕНТА ПОЧЕМУТО ПРОПАЛИ ЗНАЧЕНИЯ!!!! раенее спокойно были!!!
+CGPADDR
+	('AT+CGPADDR', '')
+	('AT+CGPADDR?', '')
+CGACT
+	('AT+CGACT', '')
+	('AT+CGACT?', '')
+CGATT
+	('AT+CGATT', '')
+	('AT+CGATT?', '')
+CGDATA
+	('AT+CGDATA', '')
+	('AT+CGDATA?', '')
+CIMS
+	('AT+CIMS', '')
+	('AT+CIMS?', '')
+CIREG
+	('AT+CIREG', '')
+	('AT+CIREG?', '')
+CFUN
+	('AT+CFUN', '')
+	('AT+CFUN?', '')
+CSCLK
+	('AT+CSCLK', '')
+	('AT+CSCLK?', '')
+CPMUTEMP
+	('AT+CPMUTEMP', '')
+	('AT+CPMUTEMP?', '')
+CBC
+	('AT+CBC', '')
+	('AT+CBC?', '')
+CCED
+	('AT+CCED', '')
+	('AT+CCED?', '')
+CELLINFO
+	('AT+CELLINFO', '')
+	('AT+CELLINFO?', '')
+CEER
+	('AT+CEER', '')
+	('AT+CEER?', '')
+        """
+        result = {}
+
+        # ----------------------------------
+        for param in params:
+            step = self.at_param__explore(param=param, **kwargs)
+            result[param] = step
+
+        # PRINTOUT -------------------------
+        print(f"=========at_params__explore===========[")
+        for param, values in result.items():
+            print(f"{param}")
+            for line in values or []:
+                print(f"\t{line}")
+        print(f"=========at_params__explore===========]")
+
+        # PRINTOUT -------------------------
+        return result
 
     # CMDS =============================================================================================================
     def prepare__stop__kernel_terminal_logs(self) -> bool:
