@@ -661,7 +661,13 @@ PASSED
     #     print(f"[SIMPLE_AT] {at_output=}")
     #     return at_output
 
-    def at_cmd__simple(self, cmd: str, port="/dev/ttyUSB2", timeout=2.0, timeout_continue=None) -> str:
+    def at_cmd__simple(
+            self,
+            cmd: str,
+            port="/dev/ttyUSB2",
+            timeout=2.0,
+            timeout_continue=None,
+    ) -> str:
         """
         Отправить AT-команду на уже настроенный порт (stty raw + echo off).
 
@@ -753,10 +759,10 @@ PASSED
         print(f"[AT]{cmd}--->{at_output}")
         return at_output
 
-    # ------------------------------------------------------------------------------------------------------------------
+    # AT DUMP ==========================================================================================================
     def at_cmd__dump(
             self,
-            port: str,
+            port: str = '/dev/ttyUSB2',
             method_simple: bool = True,
             timeout: float = 2.0,
             cmds: Iterable[str] | None = None,
@@ -914,6 +920,36 @@ PASSED
         except:
             pass
         return self.at_cmd__dump(*args, return_sequence=False, **kwargs)
+
+    # AT EXPLORE =======================================================================================================
+    def at_param__explore(
+            self,
+            param: str,
+
+            port: str = '/dev/ttyUSB2',
+            timeout: float = 2.0,
+    ) -> list[tuple[str, str]] | None:
+        """
+        result = re.search(r"\(0-(\d+)\)", "+CREG: (0-2)\nOK")
+        print(result)
+        print(result.group(1))
+        """
+        pass
+        # return self.at_cmd__dump(*args, return_sequence=True, **kwargs)
+
+        # "AT+CREG=?" ---> "+CREG: (0-2)\nOK"
+        cmd = f"AT+{param.upper()}=?"
+        responce = self.at_cmd__raw(cmd=cmd, port=port, timeout=timeout)
+        match = re.search(r"\(0-(\d+)\)", responce)
+        if not match:
+            return
+
+        value_last = int(match.group(1))
+        cmds = []
+        for value in range(value_last+1):
+            cmds.append(f"AT+{param}={value}")
+            cmds.append(f"AT+{param}?")
+        return self.at_cmd__dump_sequence(cmds=cmds)
 
     # CMDS =============================================================================================================
     def prepare__stop__kernel_terminal_logs(self) -> bool:

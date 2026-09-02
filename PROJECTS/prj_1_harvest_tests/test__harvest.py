@@ -1220,17 +1220,10 @@ class Test_42__GSMAT:
     """Тесты GSM-модема через AT команды (Qualcomm/SIMcom 7682, требуется ручная инициализация драйвера option)"""
 
     # ------------------------------------------------------------------------------------------------------------------
-    @pytest.mark.skip
+    # @pytest.mark.skip
     def test_gsmat_0__explore(self, harvest):
-        result = harvest.at_cmd__dump_sequence(
-            cmds=[
-                "AT+CREG=2",  #
-                "AT+CGREG=2",  #
-                "AT+CEREG=2",  #
-                "AT+CREG?",  #
-                "AT+CGREG?",  #
-                "AT+CEREG?",  #
-            ]
+        result = harvest.at_param__explore(
+            param="CREG",
         )
         print(json.dumps(result, indent=2, ensure_ascii=False))
 
