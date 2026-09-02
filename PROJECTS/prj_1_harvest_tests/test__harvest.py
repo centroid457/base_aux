@@ -1222,11 +1222,18 @@ class Test_42__GSMAT:
     # ------------------------------------------------------------------------------------------------------------------
     # @pytest.mark.skip
     def test_gsmat_0__explore(self, harvest):
+        print()
+        print()
+        print()
         result = harvest.at_param__explore(
             param="CREG",
         )
-        result = list(filter(lambda x: x[0].endswith("?"), result))
-        print(json.dumps(result, indent=2, ensure_ascii=False))
+        print(f"{result=}")
+        assert result, "не удалось получить данные"
+        # result = list(filter(lambda x: x[0].endswith("?"), result))
+        for line in result or []:
+            print(f"\t{line}")
+        # print(json.dumps(result, indent=2, ensure_ascii=False))
 
     # ------------------------------------------------------------------------------------------------------------------
     @pytest.mark.dependency(name="gsmat_present")

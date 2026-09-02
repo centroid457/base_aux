@@ -37,6 +37,7 @@ class Harvest:
         # AT+CREG?
         # AT+CGREG?
         # AT+CEREG?
+        # "AT+CREG",  # проверить
         "AT+CREG?",  #
         "AT+CGREG?",  #
         "AT+CEREG?",  #
@@ -422,6 +423,8 @@ output='/dev/ttyS2'
 	read=[[33]-  Exit 124                timeout 2.0 cat /dev/ttyUSB2]
 output='[33]-  Exit 124                timeout 2.0 cat /dev/ttyUSB2'
 PASSED
+
+[14:02:08.095470]COM3.readEOL[OK]= b'[1]+  Done                    timeout 2.0 cat /dev/ttyUSB2'
         """
         # === ЗАЩИТА ОТ ПУСТОГО ОТВЕТА ===
         if not data:
@@ -448,6 +451,7 @@ PASSED
                     re.match(r'\s*\[\d+\]\s+(?:Exit|Terminated|Done)?\s*\d*\s*', line)
                     or
                     re.match(r'\s*\[\d+\]-?\s+(?:Exit|Terminated|Done)?\s*\d*\s*.*', line)
+                    # re.match(r'\s*\[\d+\][+-]?\s+(?:Exit|Terminated|Done)?\s*\d*\s*.*', line)
             )
         ]
         result = result_clear_service
@@ -927,7 +931,7 @@ PASSED
             param: str,
 
             port: str = '/dev/ttyUSB2',
-            timeout: float = 2.0,
+            timeout: float = 4.0,
     ) -> list[tuple[str, str]] | None:
         """
         result = re.search(r"\(0-(\d+)\)", "+CREG: (0-2)\nOK")
@@ -946,6 +950,7 @@ PASSED
 
         value_last = int(match.group(1))
         cmds = []
+        # cmds.append(f"AT+{param}")
         for value in range(value_last+1):
             cmds.append(f"AT+{param}={value}")
             cmds.append(f"AT+{param}?")
