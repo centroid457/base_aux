@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pytest WebUI</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Pytest WebUI</h1>
+            <div class="controls">
+                <select id="root-path">
+                    <option value="TESTPLANS">TESTPLANS</option>
+                </select>
+                <select id="testplan-select">
+                    <option value="">Выберите тестплан</option>
+                </select>
+                <button id="run-btn" onclick="runTests()">▶ Запустить</button>
+                <button id="pause-btn" onclick="pauseTests()" disabled>⏸ Пауза</button>
+                <button id="stop-btn" onclick="stopTests()" disabled>⏹ Остановить</button>
+            </div>
+        </header>
+        
+        <div class="status-bar">
+            <span id="status">Статус: idle</span>
+            <span id="current-test"></span>
+        </div>
+        
+        <div class="main-content">
+            <div class="test-tree">
+                <h2>Структура тестов</h2>
+                <div id="test-tree"></div>
+            </div>
+            
+            <div class="output">
+                <h2>Вывод</h2>
+                <pre id="output"></pre>
+            </div>
+        </div>
+    </div>
+    
+    <script src="/static/app.js"></script>
+</body>
+</html>

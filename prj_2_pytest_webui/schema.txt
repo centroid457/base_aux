@@ -1,0 +1,23 @@
+project/
+├── server/
+│   ├── __init__.py
+│   ├── main.py           # FastAPI приложение
+│   ├── config.py         # Конфигурация
+│   ├── models.py         # Pydantic модели
+│   ├── state_manager.py  # Управление состоянием
+│   ├── test_runner.py    # Запуск тестов
+│   ├── test_collector.py # Сбор информации о тестах
+│   └── static/
+│       ├── index.html
+│       ├── app.js
+│       └── styles.css
+├── TESTPLANS/
+│   ├── __init__.py
+│   ├── base_utils.py
+│   ├── plan1/
+│   │   ├── __init__.py
+│   │   └── test_feature1.py
+│   └── plan2/
+│       ├── __init__.py
+│       └── test_feature2.py
+└── conftest.py
