@@ -49,7 +49,9 @@ class Harvest:
         "WS46",
         "CGDCONT",
         "CGCONTRDP",
-        "CGPADDR",
+
+        # "CGPADDR",  # вероятно блокирует все остальное! все перестает отвечать!
+
         "CGACT",
         "CGATT",
         "CGDATA",
@@ -966,13 +968,46 @@ PASSED
         return self.at_cmd__dump(*args, return_sequence=False, **kwargs)
 
     # AT EXPLORE =======================================================================================================
+    @staticmethod
+    def at_param__parse_variants(response: str) -> list[int]:
+        """
+        ВАРИАНТЫ
+        	('AT+CGATT=?', '+CGATT: (0-1)\nOK')
+            ('AT+CGACT=?', '+CGACT: (0,1)\nOK')
+            ('AT+CFUN=?', '+CFUN: (0-1,4-8),(0-1)\nOK')
+
+            ('AT+CGDATA=?', '+CGDATA: ("")\nOK')
+            ('AT+CIMS=?', 'ERROR')
+        """
+        diaps_final: list[str] = []
+
+        diapasones: list[str] = re.findall(r"\(([ 0-9,-]+)\)", response)
+        for diapason in diapasones:
+            diaps_final.extend(diapason.split(","))
+
+        values_final: list[int] = []
+        for subdiap in diaps_final:
+            if "-" in subdiap:
+                start, finish = subdiap.split("-")
+                start = int(start)
+                finish = int(finish)
+                for value in range(start, finish+1):
+                    if value not in values_final:
+                        values_final.append(value)
+            else:
+                value = int(subdiap)
+                if value not in values_final:
+                    values_final.append(value)
+
+        return sorted(values_final)
+
     def at_param__explore(
             self,
             param: str,
 
             port: str = '/dev/ttyUSB2',
-            timeout: float = 2.0,                   # best 2!
-            timeout_continue: float | None = 1,     # best 1!
+            timeout: float = 4.0,                   # best 2!
+            timeout_continue: float | None = 3,     # best 1!
     ) -> list[tuple[str, str]]:
         """
         result = re.search(r"\(0-(\d+)\)", "+CREG: (0-2)\nOK")
@@ -984,17 +1019,16 @@ PASSED
         # 1=BASE/DEFAULT TRY -------------
         cmds.append(f"AT+{param}")
         cmds.append(f"AT+{param}?")
+        cmds.append(f"AT+{param}=?")
 
         # 2=EDGES DETECT -----------------
         # "AT+CREG=?" ---> "+CREG: (0-2)\nOK"
         cmd = f"AT+{param.upper()}=?"
-        responce = self.at_cmd__simple(cmd=cmd, port=port, timeout=timeout, timeout_continue=timeout_continue)
-        match = re.search(r"\(0-(\d+)\)", responce)
-        if match:
-            value_last = int(match.group(1))
-            for value in range(value_last+1):
-                cmds.append(f"AT+{param}={value}")
-                cmds.append(f"AT+{param}?")
+        response = self.at_cmd__simple(cmd=cmd, port=port, timeout=timeout, timeout_continue=timeout_continue)
+        param_variants = self.at_param__parse_variants(response)
+        for value in param_variants or []:
+            cmds.append(f"AT+{param}={value}")
+            cmds.append(f"AT+{param}?")
 
         # 3=FINAL -----------------------
         result = self.at_cmd__dump_sequence(cmds=cmds, port=port, timeout=timeout, timeout_continue=timeout_continue)
@@ -1113,6 +1147,10 @@ CGCONTRDP
 	('AT+CGCONTRDP', '')
 	('AT+CGCONTRDP?', '+COPS: (2,"Next T","Next T","25020",7),(1,"Next B","Next B","25099",0),(1,"Next MF","Next MF","25002",0),(1,"Next M","Next M","25001",0),(1,"Next B","Next B","25099",7),(1,"Next M","Next M","25001",7),(1,"Next MF","Next MF","25002",7),(1,"YOTA","YOTA","25011",7),,(0,1,2,3,4),(0,1,2)\nOK\nERROR\n+COPS: 0,0,"Next T",7\nOK\n+CSQ: (0-31,99),(0-7,99)\nOK\n+CSQ: 24,99\nOK\nERROR\n+CESQ: (0-63,99),(0-7,99),(0-96,255),(0-49,255),(0-34,255),(0-97,255)\nOK\n+CESQ: 47,99,255,255,10,47\nOK\n+CME ERROR: 100\nOK\nERROR\n+CPSI: LTE,Online,250-20,0x6CAF,197833781,459,EUTRAN-BAND1,100,3,0,13,48,48,0\nOK\nERROR\nERROR\nERROR\nERROR\nERROR\nERROR\n+WS46: (12,22,25,28,29,30,31)\nOK\nOK\n+WS46:12\nOK\n+CGDCONT: (1-15),"IP",,,(0-2),(0-1),(0-1),(0-2)\n+CGDCONT: (1-15),"IPV6",,,(0-2),(0-1),(0-1),(0-2)\n+CGDCONT: (1-15),"IPV4V6",,,(0-2),(0-1),(0-1),(0-2)\nOK\nOK\nOK\nOK\nOK')
 
+                        ----------
+                        ----------
+                        ----------
+                        ----------
                         С ТОГО МОМЕНТА ПОЧЕМУТО ПРОПАЛИ ЗНАЧЕНИЯ!!!! раенее спокойно были!!!
 CGPADDR
 	('AT+CGPADDR', '')
@@ -3338,10 +3376,37 @@ A02901810001203000E2806894000050035FD77070430A430A3000E2806894000050035FD7707010
         print("sql_settings__get_all=", json.dumps(result, indent=2))
         return result
 
+
 # ======================================================================================================================
 # def test__():
 #     data = b'"UTC":2945843\n"Distance up":000\n"Distance side":000\n"Temperature":023\n"Battery":098\n"Percentage":022'
 #     assert Harvest.btus__validate_pkg(data)
+
+
+# ======================================================================================================================
+@pytest.mark.skip
+@pytest.mark.parametrize(
+    argnames="source, _EXPECTED",
+    argvalues=[
+        # BLANK ------
+        ('ERROR', []),
+        ('+CGDATA: ("")\nOK', []),
+
+        # SINGLE ------
+        ('+CGATT: (0-1)\nOK', [0, 1]),
+        ('+CREG: (0-2)\nOK', [0, 1, 2]),
+
+        ('+CGACT: (0,1)\nOK', [0, 1]),
+
+        # SOFISTICATED ------
+        ('+CFUN: (0-1,4-8),(0-1)\nOK', [0, 1, 4, 5, 6, 7, 8, ]),
+        ('+: (1,4-8)\nOK', [1, 4, 5, 6, 7, 8, ]),
+        ('+: (4-8),(0-1)\nOK', [0, 1, 4, 5, 6, 7, 8, ]),
+    ]
+)
+def test__at_param__parse_variants(source, _EXPECTED):
+    func_link = Harvest.at_param__parse_variants
+    Lambda(func_link, source).check_expected__assert(_EXPECTED)
 
 
 # ======================================================================================================================
