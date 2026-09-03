@@ -708,7 +708,7 @@ PASSED
             self,
             cmd: str,
             port: str = "/dev/ttyUSB2",
-            timeout: float = 4.0,
+            timeout: float = 5.0,
             timeout_continue: float = 2,
     ) -> str:
         """
@@ -743,7 +743,7 @@ PASSED
         FAILED
         """
         # Увеличиваем задержку для медленных команд
-        sleep_after_write = 0.8 if '=?' in cmd else 0.4  # для запроса диапазона нужно больше времени 0.6 as first attempt
+        sleep_after_write = 1 if '=' in cmd else 0.6  # для запроса диапазона нужно больше времени 0.6 as first attempt
 
         cmd_full = (
             f"cat {port} & sleep 0.1; "
@@ -1032,7 +1032,7 @@ PASSED
             param: str,
 
             port: str = '/dev/ttyUSB2',
-            timeout: float = 4.0,                   # best 2!
+            timeout: float = 5.0,                   # best 2!
             timeout_continue: float | None = 3,     # best 1!
     ) -> list[tuple[str, str]]:
         """
@@ -1040,24 +1040,24 @@ PASSED
         print(result)
         print(result.group(1))
         """
+        result = []
         cmds = []
 
-        # 1=BASE/DEFAULT TRY -------------
-        cmds.append(f"AT+{param}")
-        cmds.append(f"AT+{param}?")
-        cmds.append(f"AT+{param}=?")
-
-        # 2=EDGES DETECT -----------------
+        # 1=EDGES DETECT -----------------
         # "AT+CREG=?" ---> "+CREG: (0-2)\nOK"
         cmd = f"AT+{param.upper()}=?"
         response = self.at_cmd__simple(cmd=cmd, port=port, timeout=timeout, timeout_continue=timeout_continue)
-        param_variants = self.at_param__parse_variants(response)
-        for value in param_variants or []:
+        result.append((cmd, response))
+
+        # 2=CREATE CMDS LIST-------------
+        cmds.append(f"AT+{param}")
+        cmds.append(f"AT+{param}?")
+        for value in self.at_param__parse_variants(response) or []:
             cmds.append(f"AT+{param}={value}")
             cmds.append(f"AT+{param}?")
 
         # 3=FINAL -----------------------
-        result = self.at_cmd__dump_sequence(cmds=cmds, port=port, timeout=timeout, timeout_continue=timeout_continue)
+        result.extend(self.at_cmd__dump_sequence(cmds=cmds, port=port, timeout=timeout, timeout_continue=timeout_continue))
         for line in result or []:
             print(f"\t{line}")
         return result
