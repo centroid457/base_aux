@@ -989,18 +989,19 @@ PASSED
         for subdiap in diaps_final:
             if "-" in subdiap:
                 start, finish = subdiap.split("-")
-                start = int(start)
-                finish = int(finish)
+                start = int(start.strip())
+                finish = int(finish.strip())
                 for value in range(start, finish+1):
                     if value not in values_final:
                         values_final.append(value)
             else:
-                value = int(subdiap)
+                value = int(subdiap.strip())
                 if value not in values_final:
                     values_final.append(value)
 
         return sorted(values_final)
 
+    # ------------------------------------------------------------------------------------------------------------------
     def at_param__explore(
             self,
             param: str,
@@ -3395,13 +3396,16 @@ A02901810001203000E2806894000050035FD77070430A430A3000E2806894000050035FD7707010
         # SINGLE ------
         ('+CGATT: (0-1)\nOK', [0, 1]),
         ('+CREG: (0-2)\nOK', [0, 1, 2]),
+        ('+CREG: ( 0 -  2 )\nOK', [0, 1, 2]),
 
         ('+CGACT: (0,1)\nOK', [0, 1]),
+        ('+CGACT: ( 0 , 1  )\nOK', [0, 1]),
 
         # SOFISTICATED ------
         ('+CFUN: (0-1,4-8),(0-1)\nOK', [0, 1, 4, 5, 6, 7, 8, ]),
-        ('+: (1,4-8)\nOK', [1, 4, 5, 6, 7, 8, ]),
         ('+: (4-8),(0-1)\nOK', [0, 1, 4, 5, 6, 7, 8, ]),
+        ('+: (1,4-8)\nOK', [1, 4, 5, 6, 7, 8, ]),
+        ('+: ( 1 , 4 -  8 )\nOK', [1, 4, 5, 6, 7, 8, ]),
     ]
 )
 def test__at_param__parse_variants(source, _EXPECTED):
