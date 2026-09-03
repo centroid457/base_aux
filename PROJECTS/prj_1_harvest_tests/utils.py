@@ -707,9 +707,9 @@ PASSED
     def at_cmd__simple(
             self,
             cmd: str,
-            port="/dev/ttyUSB2",
-            timeout=2.0,
-            timeout_continue=None,
+            port: str = "/dev/ttyUSB2",
+            timeout: float = 4.0,
+            timeout_continue: float = 2,
     ) -> str:
         """
         Отправить AT-команду на уже настроенный порт (stty raw + echo off).
@@ -742,17 +742,34 @@ PASSED
         [AT] AT ---> at_output=''
         FAILED
         """
+        # Увеличиваем задержку для медленных команд
+        sleep_after_write = 0.8 if '=?' in cmd else 0.4  # для запроса диапазона нужно больше времени 0.6 as first attempt
+
         cmd_full = (
             f"cat {port} & sleep 0.1; "
             f"printf '{cmd}\\r\\n' > {port}; "
-            f"sleep 0.4; "
+            f"sleep {sleep_after_write}; "
             f"kill %1 2>/dev/null"
         )
-        at_output = self.cmd_timeout__write_read__payload(
-            cmd=cmd_full,
-            timeout=timeout,
-            timeout_continue=timeout_continue or timeout * 0.8,
-        )
+
+        # Добавляем повторную попытку при пустом ответе
+        at_output = None
+        for attempt in range(2):
+            at_output = self.cmd_timeout__write_read__payload(
+                cmd=cmd_full,
+                timeout=timeout,
+                timeout_continue=timeout_continue or timeout * 0.8,
+            )
+
+            # Если получили ответ - выходим
+            if at_output.strip():
+                break
+
+            # Если ответ пустой - ждем и пробуем снова
+            if attempt == 0:
+                print(f"[AT] Пустой ответ на {cmd}, повторная попытка...")
+                time.sleep(0.5)
+
         print(f"[AT]{cmd}--->{at_output}")
         return at_output
 
@@ -969,15 +986,21 @@ PASSED
 
     # AT EXPLORE =======================================================================================================
     @staticmethod
-    def at_param__parse_variants(response: str) -> list[int]:
+    def at_param__parse_variants(response: str, max_count: int | None = 10) -> list[int]:
         """
         ВАРИАНТЫ
-        	('AT+CGATT=?', '+CGATT: (0-1)\nOK')
-            ('AT+CGACT=?', '+CGACT: (0,1)\nOK')
-            ('AT+CFUN=?', '+CFUN: (0-1,4-8),(0-1)\nOK')
+            1=RANGES
+                ('AT+CGATT=?', '+CGATT: (0-1)\nOK')
+                ('AT+CGACT=?', '+CGACT: (0,1)\nOK')
+                ('AT+CFUN=?', '+CFUN: (0-1,4-8),(0-1)\nOK')
 
-            ('AT+CGDATA=?', '+CGDATA: ("")\nOK')
-            ('AT+CIMS=?', 'ERROR')
+                ('AT+CGDATA=?', '+CGDATA: ("")\nOK')
+                ('AT+CIMS=?', 'ERROR')
+
+                [AT]AT+CPBR=?--->+CPBR: (1-100),20,28\nOK
+            2=VALUES
+                # TODO:
+            	('AT+CPBS=?', '+CPBS: ("SM","FD","ON","AP")\nOK')
         """
         diaps_final: list[str] = []
 
@@ -985,21 +1008,23 @@ PASSED
         for diapason in diapasones:
             diaps_final.extend(diapason.split(","))
 
-        values_final: list[int] = []
+        values_final: set[int] = set()
         for subdiap in diaps_final:
             if "-" in subdiap:
                 start, finish = subdiap.split("-")
                 start = int(start.strip())
                 finish = int(finish.strip())
                 for value in range(start, finish+1):
-                    if value not in values_final:
-                        values_final.append(value)
+                    values_final.add(value)
             else:
                 value = int(subdiap.strip())
-                if value not in values_final:
-                    values_final.append(value)
+                values_final.add(value)
 
-        return sorted(values_final)
+        # slice -------------
+        if max_count:
+            return sorted(values_final)[:max_count]
+        else:
+            return sorted(values_final)
 
     # ------------------------------------------------------------------------------------------------------------------
     def at_param__explore(
@@ -1042,157 +1067,6 @@ PASSED
             params: list[str],
             **kwargs,
     ) -> dict[str, list[tuple[str, str]]]:
-        """
-CREG
-	('AT+CREG', 'OK')
-	('AT+CREG?', '+CREG: 0,1\nOK')
-	('AT+CREG=0', 'OK')
-	('AT+CREG?', '+CREG: 0,1\nOK')
-	('AT+CREG=1', 'OK')
-	('AT+CREG?', '+CREG: 1,1\nOK')
-	('AT+CREG=2', 'OK')
-	('AT+CREG?', '+CREG: 2,1,6CAF,0BCAB435\nOK')
-CGREG
-	('AT+CGREG', 'OK')
-	('AT+CGREG?', '+CGREG: 0,1\nOK')
-	('AT+CGREG=0', 'OK')
-	('AT+CGREG?', '+CGREG: 0,1\nOK')
-	('AT+CGREG=1', 'OK')
-	('AT+CGREG?', '+CGREG: 1,1\nOK')
-	('AT+CGREG=2', 'OK')
-	('AT+CGREG?', '+CGREG: 2,1,6CAF,0BCAB435\nOK')
-CEREG
-	('AT+CEREG', 'OK')
-	('AT+CEREG?', '+CEREG: 0,1\nOK')
-	('AT+CEREG=0', 'OK')
-	('AT+CEREG?', '+CEREG: 0,1\nOK')
-	('AT+CEREG=1', 'OK')
-	('AT+CEREG?', '+CEREG: 1,1\nOK')
-	('AT+CEREG=2', 'OK')
-	('AT+CEREG?', '+CEREG: 2,1,6CAF,0BCAB435\nOK')
-CNUM
-	('AT+CNUM', 'OK')
-	('AT+CNUM?', '+CME ERROR: 4')
-CPBS
-	('AT+CPBS', 'OK')
-	('AT+CPBS?', '+CPBS: "SM",0,100\nOK')
-CPBR
-	('AT+CPBR', 'ERROR')
-	('AT+CPBR?', '+CME ERROR: 302')
-CRSM
-	('AT+CRSM', 'ERROR')
-	('AT+CRSM?', '+CME ERROR: 4')
-CGMI
-	('AT+CGMI', 'INCORPORATED\nOK')
-	('AT+CGMI?', 'INCORPORATED\nOK')
-CGMM
-	('AT+CGMM', 'A7682E-R\nOK')
-	('AT+CGMM?', 'A7682E-R\nOK')
-CGMR
-	('AT+CGMR', '+CGMR: A011B02A7682M6_DS_FOTA\nOK')
-	('AT+CGMR?', '+CGMR: A011B02A7682M6_DS_FOTA\nOK')
-CGSN
-	('AT+CGSN', '865286077380516\nOK')
-	('AT+CGSN?', 'ERROR')
-CIMI
-	('AT+CIMI', '250470002905372\nOK')
-	('AT+CIMI?', '+CME ERROR: 4')
-GSN
-	('AT+GSN', '865286077380516\nOK')
-	('AT+GSN?', 'ERROR')
-CPIN
-	('AT+CPIN', 'ERROR')
-	('AT+CPIN?', '+CPIN: READY\nOK')
-CPINR
-	('AT+CPINR', '+CME ERROR: 4')
-	('AT+CPINR?', '+CPINR:3,3,10,10\nOK')
-	('AT+CPINR=0', 'ERROR')
-	('AT+CPINR?', '+CPINR:3,3,10,10\nOK')
-	('AT+CPINR=1', 'ERROR')
-	('AT+CPINR?', '+CPINR:3,3,10,10\nOK')
-	('AT+CPINR=2', 'ERROR')
-	('AT+CPINR?', '+CPINR:3,3,10,10\nOK')
-	('AT+CPINR=3', 'ERROR')
-	('AT+CPINR?', '+CPINR:3,3,10,10\nOK')
-CCID
-	('AT+CCID', 'ERROR')
-	('AT+CCID?', 'ERROR')
-ICCID
-	('AT+ICCID', 'ERROR')
-	('AT+ICCID?', 'ERROR')
-COPS
-	('AT+COPS', '')
-	('AT+COPS?', '')
-CSQ
-	('AT+CSQ', '')
-	('AT+CSQ?', '')
-CESQ
-	('AT+CESQ', '')
-	('AT+CESQ?', '')
-CPSI
-	('AT+CPSI', '')
-	('AT+CPSI?', '')
-CNETSCAN
-	('AT+CNETSCAN', '')
-	('AT+CNETSCAN?', '')
-CRUSET
-	('AT+CRUSET', '')
-	('AT+CRUSET?', '')
-WS46
-	('AT+WS46', '')
-	('AT+WS46?', '')
-CGDCONT
-	('AT+CGDCONT', '')
-	('AT+CGDCONT?', '')
-CGCONTRDP
-	('AT+CGCONTRDP', '')
-	('AT+CGCONTRDP?', '+COPS: (2,"Next T","Next T","25020",7),(1,"Next B","Next B","25099",0),(1,"Next MF","Next MF","25002",0),(1,"Next M","Next M","25001",0),(1,"Next B","Next B","25099",7),(1,"Next M","Next M","25001",7),(1,"Next MF","Next MF","25002",7),(1,"YOTA","YOTA","25011",7),,(0,1,2,3,4),(0,1,2)\nOK\nERROR\n+COPS: 0,0,"Next T",7\nOK\n+CSQ: (0-31,99),(0-7,99)\nOK\n+CSQ: 24,99\nOK\nERROR\n+CESQ: (0-63,99),(0-7,99),(0-96,255),(0-49,255),(0-34,255),(0-97,255)\nOK\n+CESQ: 47,99,255,255,10,47\nOK\n+CME ERROR: 100\nOK\nERROR\n+CPSI: LTE,Online,250-20,0x6CAF,197833781,459,EUTRAN-BAND1,100,3,0,13,48,48,0\nOK\nERROR\nERROR\nERROR\nERROR\nERROR\nERROR\n+WS46: (12,22,25,28,29,30,31)\nOK\nOK\n+WS46:12\nOK\n+CGDCONT: (1-15),"IP",,,(0-2),(0-1),(0-1),(0-2)\n+CGDCONT: (1-15),"IPV6",,,(0-2),(0-1),(0-1),(0-2)\n+CGDCONT: (1-15),"IPV4V6",,,(0-2),(0-1),(0-1),(0-2)\nOK\nOK\nOK\nOK\nOK')
-
-                        ----------
-                        ----------
-                        ----------
-                        ----------
-                        С ТОГО МОМЕНТА ПОЧЕМУТО ПРОПАЛИ ЗНАЧЕНИЯ!!!! раенее спокойно были!!!
-CGPADDR
-	('AT+CGPADDR', '')
-	('AT+CGPADDR?', '')
-CGACT
-	('AT+CGACT', '')
-	('AT+CGACT?', '')
-CGATT
-	('AT+CGATT', '')
-	('AT+CGATT?', '')
-CGDATA
-	('AT+CGDATA', '')
-	('AT+CGDATA?', '')
-CIMS
-	('AT+CIMS', '')
-	('AT+CIMS?', '')
-CIREG
-	('AT+CIREG', '')
-	('AT+CIREG?', '')
-CFUN
-	('AT+CFUN', '')
-	('AT+CFUN?', '')
-CSCLK
-	('AT+CSCLK', '')
-	('AT+CSCLK?', '')
-CPMUTEMP
-	('AT+CPMUTEMP', '')
-	('AT+CPMUTEMP?', '')
-CBC
-	('AT+CBC', '')
-	('AT+CBC?', '')
-CCED
-	('AT+CCED', '')
-	('AT+CCED?', '')
-CELLINFO
-	('AT+CELLINFO', '')
-	('AT+CELLINFO?', '')
-CEER
-	('AT+CEER', '')
-	('AT+CEER?', '')
-        """
         result = {}
 
         # ----------------------------------
