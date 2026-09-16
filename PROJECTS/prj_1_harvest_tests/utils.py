@@ -8,8 +8,8 @@ import logging
 import base64
 import pathlib
 
-from .client import BaseClient
 from base_aux.aux_eq.m4_eq_valid2_derivatives import *
+from base_aux.buses.d1_serial2_new.m1_serial_client import *
 
 
 # ======================================================================================================================
