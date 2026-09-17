@@ -15,9 +15,15 @@ from base_aux.clients.d1_serial.m1_serial_client import SerialClient2, TYPING__W
 class SerialManager:
     """
     GOAL
-    work with serial addresses!
-    found touch managing!
-    dont generate objects!
+    work with serial objects! not simple addresses!!!
+    used as ObjectGenerator!
+
+    Singleton!
+    working in pair with SerialClient
+    considering occupied!
+
+    NOTE
+    with this manager try not to use direct SerialClient
     """
     __addresses_cached: list[str] = None
     _lock_detect: Lock = Lock()
@@ -37,153 +43,7 @@ class SerialManager:
             return
         self._initialized = True
 
-    # ------------------------------------------------------------------------------------------------------------------
-    @property
-    def ADDRESSES_CASHED(self) -> list[str]:
-        if self.__addresses_cached is None:
-            self.detect__addresses_system()
-
-        return list(self.__addresses_cached)
-
-    def count__addresses_system(self) -> int:
-        return len(self.ADDRESSES_CASHED)
-
-    # ------------------------------------------------------------------------------------------------------------------
-    @staticmethod
-    def check__address_could_open(address: str) -> bool:
-        try:
-            obj = SerialClient2(address, _raise_if_occupied=False)
-            print(1, obj)
-            result = obj.connect()
-            print(2, obj)
-            obj.disconnect()
-            print(3, obj)
-            return result
-        except Exception as exc:
-            print(f"Не удалось открыть {address}: {exc!r}")
-            return False
-
-    @staticmethod
-    def check__address_exists(address: str) -> bool:
-        # FIXME: separate with os depandant
-        try:
-            s = Serial(address)
-            s.close()
-            return True
-        except SerialException as e:
-            msg = str(e).lower()
-            # Признаки того, что порта нет
-            if "file not found" in msg or "no such file" in msg or "не удается найти" in msg:
-                return False
-            # Если порт занят, нет прав, или другая ошибка – считаем, что порт существует
-            return True
-        except Exception:
-            # Любая другая неожиданная ошибка – считаем, что порта нет (безопаснее)
-            return False
-
-    # GEN ==============================================================================================================
-    def _iter__objects(self, can_open: bool | None = None, **init_kwargs) -> Iterable[SerialClient2]:
-        """
-        GOAL
-        BASE for fither GENs
-        """
-        for addr in self.ADDRESSES_CASHED:
-            if can_open and not self.check__address_could_open(addr):
-                continue
-            yield SerialClient2(address=addr, _raise_if_occupied=False, **init_kwargs)
-
-    def make__existed(
-            self,
-            count: int | None = None,
-            can_open: bool | None = None,
-            **init_kwargs,
-    ) -> list[SerialClient2]:
-        result = []
-        for obj in self._iter__objects(can_open=can_open, **init_kwargs):
-            result.append(obj)
-            if len(result) == count:
-                break
-        return result
-
-    def make__existed__first(
-            self,
-            can_open: bool | None = None,
-            **init_kwargs,
-    ) -> SerialClient2 | None:
-        data = self.make__existed(can_open=can_open, count=1, **init_kwargs)
-        if data:
-            return data[0]
-
-    # ------------------------------------------------------------------------------------------------------------------
-    def make__not_occupied(
-            self,
-            count: int | None = None,
-            can_open: bool | None = None,
-            **init_kwargs,
-    ) -> list[SerialClient2]:
-        result = []
-        for obj in self._iter__objects(can_open=can_open, **init_kwargs):
-            if not obj.check__occupied():
-                result.append(obj)
-                if len(result) == count:
-                    break
-        return result
-
-    def make__not_occupied__first(
-            self,
-            can_open: bool | None = None,
-            **init_kwargs,
-    ) -> SerialClient2 | None:
-        data = self.make__not_occupied(can_open=can_open, count=1, **init_kwargs)
-        if data:
-            return data[0]
-
-    # ------------------------------------------------------------------------------------------------------------------
-    def make__not_occupied__validated(
-            self,
-            schema: TYPING__WR_SCHEMA_VALIDATE,
-            count: int | None = None,
-            can_open: bool | None = None,
-            **init_kwargs,
-    ) -> list[SerialClient2]:
-        result = []
-        for obj in self.make__not_occupied(can_open=can_open, **init_kwargs):
-            with obj:
-                if obj.validate__wr_schema(schema):
-                    result.append(obj)
-                    if len(result) == count:
-                        break
-        return result
-
-    def make__not_occupied__validated_first(
-            self,
-            schema: TYPING__WR_SCHEMA_VALIDATE,
-            can_open: bool | None = None,
-            **init_kwargs,
-    ) -> SerialClient2 | None:
-        data = self.make__not_occupied__validated(can_open=can_open, schema=schema, count=1, **init_kwargs)
-        if data:
-            return data[0]
-
-    # ------------------------------------------------------------------------------------------------------------------
-    def make__not_occupied__shorted(
-            self,
-            count: int | None = None,
-            can_open: bool | None = None,
-            **init_kwargs,
-    ) -> list[SerialClient2]:
-        return self.make__not_occupied__validated(can_open=can_open, schema=self.SCHEMA_SHORTED, count=count, **init_kwargs)
-
-    def make__not_occupied__shorted_first(
-            self,
-            can_open: bool | None = None,
-            **init_kwargs,
-    ) -> SerialClient2 | None:
-        data = self.make__not_occupied__validated(can_open=can_open, schema=self.SCHEMA_SHORTED, count=1, **init_kwargs)
-        if data:
-            return data[0]
-
-    # DETECT ===========================================================================================================
+    # 0=DETECT =========================================================================================================
     def detect__addresses_system(self) -> list[str]:
         with self._lock_detect:
 
@@ -297,6 +157,152 @@ class SerialManager:
                 result.append(name)
 
         return result
+
+    # 1=ADDRESSES ======================================================================================================
+    @property
+    def ADDRESSES_CASHED(self) -> list[str]:
+        if self.__addresses_cached is None:
+            self.detect__addresses_system()
+
+        return list(self.__addresses_cached)
+
+    def count__addresses_system(self) -> int:
+        return len(self.ADDRESSES_CASHED)
+
+    # ------------------------------------------------------------------------------------------------------------------
+    @staticmethod
+    def check__address_could_open(address: str) -> bool:
+        try:
+            obj = SerialClient2(address, _raise_if_occupied=False)
+            print(1, obj)
+            result = obj.connect()
+            print(2, obj)
+            obj.disconnect()
+            print(3, obj)
+            return result
+        except Exception as exc:
+            print(f"Не удалось открыть {address}: {exc!r}")
+            return False
+
+    @staticmethod
+    def check__address_exists(address: str) -> bool:
+        # FIXME: separate with os depandant
+        try:
+            s = Serial(address)
+            s.close()
+            return True
+        except SerialException as e:
+            msg = str(e).lower()
+            # Признаки того, что порта нет
+            if "file not found" in msg or "no such file" in msg or "не удается найти" in msg:
+                return False
+            # Если порт занят, нет прав, или другая ошибка – считаем, что порт существует
+            return True
+        except Exception:
+            # Любая другая неожиданная ошибка – считаем, что порта нет (безопаснее)
+            return False
+
+    # 2=GEN ============================================================================================================
+    def _iter__objects(self, can_open: bool | None = None, **init_kwargs) -> Iterable[SerialClient2]:
+        """
+        GOAL
+        BASE for fither GENs
+        """
+        for addr in self.ADDRESSES_CASHED:
+            if can_open and not self.check__address_could_open(addr):
+                continue
+            yield SerialClient2(address=addr, _raise_if_occupied=False, **init_kwargs)
+
+    def make__existed(
+            self,
+            count: int | None = None,
+            can_open: bool | None = None,
+            **init_kwargs,
+    ) -> list[SerialClient2]:
+        result = []
+        for obj in self._iter__objects(can_open=can_open, **init_kwargs):
+            result.append(obj)
+            if len(result) == count:
+                break
+        return result
+
+    def make__existed__first(
+            self,
+            can_open: bool | None = None,
+            **init_kwargs,
+    ) -> SerialClient2 | None:
+        data = self.make__existed(can_open=can_open, count=1, **init_kwargs)
+        if data:
+            return data[0]
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def make__not_occupied(
+            self,
+            count: int | None = None,
+            can_open: bool | None = None,
+            **init_kwargs,
+    ) -> list[SerialClient2]:
+        result = []
+        for obj in self._iter__objects(can_open=can_open, **init_kwargs):
+            if not obj.check__occupied():
+                result.append(obj)
+                if len(result) == count:
+                    break
+        return result
+
+    def make__not_occupied__first(
+            self,
+            can_open: bool | None = None,
+            **init_kwargs,
+    ) -> SerialClient2 | None:
+        data = self.make__not_occupied(can_open=can_open, count=1, **init_kwargs)
+        if data:
+            return data[0]
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def make__not_occupied__validated(
+            self,
+            schema: TYPING__WR_SCHEMA_VALIDATE,
+            count: int | None = None,
+            can_open: bool | None = None,
+            **init_kwargs,
+    ) -> list[SerialClient2]:
+        result = []
+        for obj in self.make__not_occupied(can_open=can_open, **init_kwargs):
+            with obj:
+                if obj.validate__wr_schema(schema):
+                    result.append(obj)
+                    if len(result) == count:
+                        break
+        return result
+
+    def make__not_occupied__validated_first(
+            self,
+            schema: TYPING__WR_SCHEMA_VALIDATE,
+            can_open: bool | None = None,
+            **init_kwargs,
+    ) -> SerialClient2 | None:
+        data = self.make__not_occupied__validated(can_open=can_open, schema=schema, count=1, **init_kwargs)
+        if data:
+            return data[0]
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def make__not_occupied__shorted(
+            self,
+            count: int | None = None,
+            can_open: bool | None = None,
+            **init_kwargs,
+    ) -> list[SerialClient2]:
+        return self.make__not_occupied__validated(can_open=can_open, schema=self.SCHEMA_SHORTED, count=count, **init_kwargs)
+
+    def make__not_occupied__shorted_first(
+            self,
+            can_open: bool | None = None,
+            **init_kwargs,
+    ) -> SerialClient2 | None:
+        data = self.make__not_occupied__validated(can_open=can_open, schema=self.SCHEMA_SHORTED, count=1, **init_kwargs)
+        if data:
+            return data[0]
 
 
 # ======================================================================================================================
