@@ -1,9 +1,8 @@
 import logging
 import base64
 
-from base_aux.clients.d1_serial.m1_serial_client import *
 from base_aux.aux_eq.m4_eq_valid2_derivatives import *
-
+from base_aux.clients.m1_client_0__base import ClientBase
 
 # ======================================================================================================================
 logging.basicConfig(level=logging.INFO)
@@ -170,18 +169,18 @@ class Harvest:
 
     COMPILE_EOF__STR = re.compile(r".+@.+:.*#\s*")
 
-    def __init__(self, conn: BaseClient):
+    def __init__(self, conn: ClientBase):
         """
         REASON (refactor note)
         -----------------------
-        Раньше было `conn: SerialClient2` - типизация по конкретному транспорту,
+        Раньше было `conn: ClientSerial` - типизация по конкретному транспорту,
         хотя Harvest использует только протокольные методы (write_read_bytes,
         write_read_text, send__ctrl_c, occupy, ADDRESS, conn как контекстный
         менеджер и т.п.), которые одинаково доступны что через Serial, что
-        через SSH. Теперь conn типизирован по интерфейсу BaseClient, поэтому
-        Harvest можно передать любой BaseClient независимо от транспорта:
+        через SSH. Теперь conn типизирован по интерфейсу ClientBase, поэтому
+        Harvest можно передать любой ClientBase независимо от транспорта:
 
-            harvest_over_serial = Harvest(SerialClient2(address="COM16", baudrate=115200))
+            harvest_over_serial = Harvest(ClientSerial(address="COM16", baudrate=115200))
             harvest_over_ssh    = Harvest(SshClient(address="192.168.0.100", username="root", password="1"))
 
         Сам класс Harvest при этом не поменялся ни на строчку ниже.
@@ -707,8 +706,8 @@ PASSED
         """
         Отправить AT-команду на уже настроенный порт (stty raw + echo off).
 
-        SerialClient2(COM16.115200,occupied=o,isopen=True){'write': b"timeout 2 cat /dev/ttyUSB2 & sleep 0.1; printf 'AT+COPS?\\r\\n' > /dev/ttyUSB2; sleep 0.4; kill %1 2>/dev/null\r\n"}
-        SerialClient2(COM16.115200,occupied=o,isopen=True)READ(
+        ClientSerial(COM16.115200,occupied=o,isopen=True){'write': b"timeout 2 cat /dev/ttyUSB2 & sleep 0.1; printf 'AT+COPS?\\r\\n' > /dev/ttyUSB2; sleep 0.4; kill %1 2>/dev/null\r\n"}
+        ClientSerial(COM16.115200,occupied=o,isopen=True)READ(
             bytes=b'timeout 2 cat /dev/ttyUSB2 & sleep 0.1; printf \'AT+COPS?\\r\\n\' > /dev/ttyUSB2; sleep 0.4; kill %1 2>/dev/null\r\n\x1b[?2004l\r[6] 5353\r\n[5]   Exit 124                timeout 2 cat /dev/ttyUSB2\r\n\r\r\n+COPS: 0,2,"25020",7\r\r\n\r\r\nOK\r\r\n\x1b[?2004hroot@harvest05:~# \r\n\x1b[?2004l\r\x1b[?2004hroot@harvest05:~# '
             printable=timeout 2 cat /dev/ttyUSB2 & sleep 0.1; printf 'AT+COPS?\r\n' > /dev/ttyUSB2; sleep 0.4; kill %1 2>/dev/null
         [6] 5353
@@ -782,8 +781,8 @@ PASSED
         !USE SIMPLE! - works quicker!
         Отправляет AT-команду через скрипт на устройстве и возвращает строку ответа.
 
-        SerialClient2(COM16.115200,occupied=harvest05,isopen=True){'write': b"timeout 2 python3 /tmp/at_client.py 'AT+CSQ' /dev/ttyUSB2 115200\r\n"}
-        SerialClient2(COM16.115200,occupied=harvest05,isopen=True)READ(
+        ClientSerial(COM16.115200,occupied=harvest05,isopen=True){'write': b"timeout 2 python3 /tmp/at_client.py 'AT+CSQ' /dev/ttyUSB2 115200\r\n"}
+        ClientSerial(COM16.115200,occupied=harvest05,isopen=True)READ(
             bytes=b"timeout 2 python3 /tmp/at_client.py 'AT+CSQ' /dev/ttyUSB2 115200\r\n\x1b[?2004l\r\r\r\n+CSQ: 23,99\r\r\n\r\r\nOK\r\r\n\r\n\x1b[?2004hroot@harvest05:~# \r\n\x1b[?2004l\r\x1b[?2004hroot@harvest05:~# "
             printable=timeout 2 python3 /tmp/at_client.py 'AT+CSQ' /dev/ttyUSB2 115200
         root@harvest05:~#

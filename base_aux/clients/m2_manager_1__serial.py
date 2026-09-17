@@ -4,11 +4,11 @@ import glob
 import sys
 from serial import Serial, SerialException
 from serial.tools import list_ports
-from threading import Lock
 
 from base_aux.aux_eq.m4_eq_valid2_derivatives import EqValid_EQ_StrIc
 from base_aux.base_values.m3_exceptions import Exc__SerialPL2303IncorrectDriver
-from base_aux.clients.d1_serial.m1_serial_client import SerialClient2, TYPING__WR_SCHEMA_VALIDATE
+from base_aux.clients.m1_client_1__serial import ClientSerial
+from base_aux.clients.m1_client_0__base import *
 
 
 # ======================================================================================================================
@@ -175,7 +175,7 @@ class SerialClientManager:
     @staticmethod
     def check__address_could_open(address: str) -> bool:
         try:
-            obj = SerialClient2(address, _raise_if_occupied=False)
+            obj = ClientSerial(address, _raise_if_occupied=False)
             print(1, obj)
             result = obj.connect()
             print(2, obj)
@@ -205,7 +205,7 @@ class SerialClientManager:
             return False
 
     # 2=GEN ============================================================================================================
-    def _iter__objects(self, can_open: bool | None = None, **init_kwargs) -> Iterable[SerialClient2]:
+    def _iter__objects(self, can_open: bool | None = None, **init_kwargs) -> Iterable[ClientSerial]:
         """
         GOAL
         BASE for fither GENs
@@ -213,14 +213,14 @@ class SerialClientManager:
         for addr in self.ADDRESSES_CASHED:
             if can_open and not self.check__address_could_open(addr):
                 continue
-            yield SerialClient2(address=addr, _raise_if_occupied=False, **init_kwargs)
+            yield ClientSerial(address=addr, _raise_if_occupied=False, **init_kwargs)
 
     def make__existed(
             self,
             count: int | None = None,
             can_open: bool | None = None,
             **init_kwargs,
-    ) -> list[SerialClient2]:
+    ) -> list[ClientSerial]:
         result = []
         for obj in self._iter__objects(can_open=can_open, **init_kwargs):
             result.append(obj)
@@ -232,7 +232,7 @@ class SerialClientManager:
             self,
             can_open: bool | None = None,
             **init_kwargs,
-    ) -> SerialClient2 | None:
+    ) -> ClientSerial | None:
         data = self.make__existed(can_open=can_open, count=1, **init_kwargs)
         if data:
             return data[0]
@@ -243,7 +243,7 @@ class SerialClientManager:
             count: int | None = None,
             can_open: bool | None = None,
             **init_kwargs,
-    ) -> list[SerialClient2]:
+    ) -> list[ClientSerial]:
         result = []
         for obj in self._iter__objects(can_open=can_open, **init_kwargs):
             if not obj.check__occupied():
@@ -256,7 +256,7 @@ class SerialClientManager:
             self,
             can_open: bool | None = None,
             **init_kwargs,
-    ) -> SerialClient2 | None:
+    ) -> ClientSerial | None:
         data = self.make__not_occupied(can_open=can_open, count=1, **init_kwargs)
         if data:
             return data[0]
@@ -268,7 +268,7 @@ class SerialClientManager:
             count: int | None = None,
             can_open: bool | None = None,
             **init_kwargs,
-    ) -> list[SerialClient2]:
+    ) -> list[ClientSerial]:
         result = []
         for obj in self.make__not_occupied(can_open=can_open, **init_kwargs):
             with obj:
@@ -283,7 +283,7 @@ class SerialClientManager:
             schema: TYPING__WR_SCHEMA_VALIDATE,
             can_open: bool | None = None,
             **init_kwargs,
-    ) -> SerialClient2 | None:
+    ) -> ClientSerial | None:
         data = self.make__not_occupied__validated(can_open=can_open, schema=schema, count=1, **init_kwargs)
         if data:
             return data[0]
@@ -294,14 +294,14 @@ class SerialClientManager:
             count: int | None = None,
             can_open: bool | None = None,
             **init_kwargs,
-    ) -> list[SerialClient2]:
+    ) -> list[ClientSerial]:
         return self.make__not_occupied__validated(can_open=can_open, schema=self.SCHEMA_SHORTED, count=count, **init_kwargs)
 
     def make__not_occupied__shorted_first(
             self,
             can_open: bool | None = None,
             **init_kwargs,
-    ) -> SerialClient2 | None:
+    ) -> ClientSerial | None:
         data = self.make__not_occupied__validated(can_open=can_open, schema=self.SCHEMA_SHORTED, count=1, **init_kwargs)
         if data:
             return data[0]
@@ -321,7 +321,7 @@ def _explore__shorted():
 
 
 def _explore_Atc():
-    class Ate(SerialClient2):
+    class Ate(ClientSerial):
         pass
         BAUDRATE = 115200
         EOL__SEND = b"\n"

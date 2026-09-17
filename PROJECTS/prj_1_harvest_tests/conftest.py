@@ -3,7 +3,7 @@ from datetime import datetime
 
 from .utils import *
 
-from base_aux.clients.d1_serial.m2_serial_manager import SerialClientManager
+from base_aux.clients.m2_manager_1__serial import SerialClientManager
 from base_aux.aux_eq.m4_eq_valid2_derivatives import *
 
 

@@ -241,8 +241,8 @@ E       assert 'Not connected.' not in ['iw dev wlan0 link', 'Not connected.', '
 
 test__harvest.py:225: AssertionError
 ----------------------------------------------- Captured stdout call -----------------------------------------------
-SerialClient2(COM16.115200,occupied=harvest05){'write': b'iw dev wlan0 link\r\n'}
-SerialClient2(COM16.115200,occupied=harvest05bytes=b'iw dev wlan0 link\r\n\x1b[?2004l\rNot connected.\r\n\x1b[?2004hroot@harvest05:~# \r\n\x1b[?2004l\r\x1b[?2004hroot@harvest05:~# printable=iw dev wlan0 link
+ClientSerial(COM16.115200,occupied=harvest05){'write': b'iw dev wlan0 link\r\n'}
+ClientSerial(COM16.115200,occupied=harvest05bytes=b'iw dev wlan0 link\r\n\x1b[?2004l\rNot connected.\r\n\x1b[?2004hroot@harvest05:~# \r\n\x1b[?2004l\r\x1b[?2004hroot@harvest05:~# printable=iw dev wlan0 link
 Not connected.
 root@harvest05:~#
 root@harvest05:~#
@@ -273,8 +273,8 @@ E       Failed: Не удалось извлечь уровень сигнала
 
 test__harvest.py:385: Failed
 ----------------------------------------------- Captured stdout call -----------------------------------------------
-SerialClient2(COM16.115200,occupied=harvest05){'write': b'echo -e "AT+CSQ\\r\\n" > /dev/ttyUSB2 && cat /dev/ttyUSB2 & sleep 0.5; kill %1\r\n'}
-SerialClient2(COM16.115200,occupied=harvest05bytes=b'echo -e "AT+CSQ\\r\\n" > /dev/ttyUSB2 && cat /dev/ttyUSB2 & sleep 0.5; kill %1\r\n\x1b[?2004l\r[1] 1187\r\nAT+CSQ\r\r\n\r\n[1]+  Done                    echo -e "AT+CSQ\\r\\n" > /dev/ttyUSB2 && cat /dev/ttyUSB2\r\n-bash: kill: %1: no such job\r\n\x1b[?2004hroot@harvest05:~# \r\n\x1b[?2004l\r\x1b[?2004hroot@harvest05:~# printable=echo -e "AT+CSQ\r\n" > /dev/ttyUSB2 && cat /dev/ttyUSB2 & sleep 0.5; kill %1
+ClientSerial(COM16.115200,occupied=harvest05){'write': b'echo -e "AT+CSQ\\r\\n" > /dev/ttyUSB2 && cat /dev/ttyUSB2 & sleep 0.5; kill %1\r\n'}
+ClientSerial(COM16.115200,occupied=harvest05bytes=b'echo -e "AT+CSQ\\r\\n" > /dev/ttyUSB2 && cat /dev/ttyUSB2 & sleep 0.5; kill %1\r\n\x1b[?2004l\r[1] 1187\r\nAT+CSQ\r\r\n\r\n[1]+  Done                    echo -e "AT+CSQ\\r\\n" > /dev/ttyUSB2 && cat /dev/ttyUSB2\r\n-bash: kill: %1: no such job\r\n\x1b[?2004hroot@harvest05:~# \r\n\x1b[?2004l\r\x1b[?2004hroot@harvest05:~# printable=echo -e "AT+CSQ\r\n" > /dev/ttyUSB2 && cat /dev/ttyUSB2 & sleep 0.5; kill %1
 [1] 1187
 AT+CSQ
 
