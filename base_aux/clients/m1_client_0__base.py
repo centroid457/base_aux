@@ -33,7 +33,11 @@ class ClientBase(ABC):
 
     # rare INFRASTRUCTURE -------
     ENCODING: str = "utf8"
+    encoding: str
+
     EOL__SEND: bytes = b"\r\n"  # "\r"=ENTER in PUTTY  but "\r\n"=is better in read Putty!
+    eol__send: bytes
+
     EOL__UNI: bytes = b"\r\n"
 
     @property
