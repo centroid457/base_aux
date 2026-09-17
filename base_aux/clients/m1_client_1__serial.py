@@ -16,6 +16,11 @@ class ClientSerial(ClientBase):
         all you need - take result as read lines or line
         maybe keep history in device? not in this connection object
     3/
+
+    REFACTOR NOTE
+    -------------
+    Класс теперь содержит ТОЛЬКО транспортную логику (pyserial).
+    Терминальная логика (read_bytes/write_bytes/EOL/ANSI) — в ClientBase.
     """
     # SETTINGS ------------------------------------------------
     BAUDRATE: int = 9600  # 115200
@@ -125,173 +130,30 @@ class ClientSerial(ClientBase):
         except:
             return False
 
-    # BUFFERS ----------------------------------------------------------------------------------------------------------
-    def buffers_clear(self) -> None:
-        """useful to drop old previous incorrect send msg! in other words it is clear/reinit write buffer!
+    # ==================================================================================================================
+    # TRANSPORT PRIMITIVES
+    # ==================================================================================================================
+    def _transport__read(self, size: int = 1) -> bytes:
+        return self._conn.read(size)
 
-        here we need just finish line by correct/exact EOL if it was previously send without it or with incorrect.
-        """
-        if not self.check__connected():
-            return
+    def _transport__write(self, data: bytes) -> int:
+        return self._conn.write(data)
 
+    def _transport__set_timeout(self, timeout: float | None) -> float | None:
+        old = self._conn.timeout
+        self._conn.timeout = timeout
+        return old
+
+    def _transport__restore_timeout(self, old_timeout: float | None) -> None:
+        self._conn.timeout = old_timeout
+
+    def _transport__flush_input(self) -> None:
+        # сбрасываем оба буфера, как было в старом buffers_clear
         self._conn.reset_input_buffer()
         self._conn.reset_output_buffer()
 
-    def check__buffer_is_blank(self) -> bool:
-        return bool(self._conn.in_waiting)
-
-    # R ================================================================================================================
-    def read_bytes(
-            self,
-            stop_line: AnyStr | Base_EqValid | None = None,
-
-            timeout_start: Optional[float] = None,
-            timeout_continue: Optional[float] = None,
-
-            timeout_full_max: Optional[float] = None,
-            timeout_full_min: Optional[float] = None,
-    ) -> bytes:
-        """
-        MAIN METH!!!
-
-        Прочитать все доступные данные из порта.
-        Сначала ждём появления данных в течение timeout_start.
-        Как только появились – читаем с паузами timeout_continue, пока данные не кончатся.
-        Возвращает прочитанные байты.
-        """
-        with self._lock_r:
-            if not self.check__connected():
-                print("Port not connected")
-                return b""
-
-            if stop_line is not None:
-                if isinstance(stop_line, str):
-                    stop_line = self._to_bytes(stop_line)
-                if not isinstance(stop_line, (Base_EqValid, bytes)):
-                    msg = f"not expected type {stop_line=}"
-                    raise Exception(msg)
-
-            t_start = timeout_start if timeout_start is not None else self.timeout_read_initial
-            t_cont = timeout_continue if timeout_continue is not None else self.timeout_read_continue
-
-            # Сохраняем текущий таймаут, чтобы потом восстановить
-            old_timeout = self._conn.timeout
-
-            time_start = time.time()
-            result: bytes = b""
-            _new_line: bytes = b""
-
-            while True:
-                # self._print_line(process="readSTART")
-
-                # Ждём появления данных или таймаут
-                self._conn.timeout = t_start if result == b"" else t_cont
-                _new_byte = self._conn.read(1)
-
-                # 1=БАЙТА НЕТ ---------
-                if not _new_byte:
-                    if not timeout_full_min:
-                        break
-                    elif time.time() - time_start > timeout_full_min:
-                        break
-                    else:
-                        pass
-
-                # 2=БАЙТ ЕСТЬ ---------
-                if _new_byte:
-                    # 1=EOL - нет
-                    if _new_byte not in self.EOL__UNI:
-                        # 1.1=COLLECT ---------
-                        _new_line += _new_byte
-                        continue
-
-                    # 2=EOL - получен
-                    if _new_line:
-                        self._print_line(process="readEOL", line=_new_line)
-                        result += b"\n"
-                        result += _new_line
-
-                        # 1.2=STOP ON ---------
-                        if stop_line is not None:
-                            if _new_line == stop_line:
-                                self._print_line(process="stop_line", extra=stop_line)
-                                break
-
-                        _new_line = b""
-
-                # 3=MAX THRESH -----------
-                if timeout_full_max and time.time() - time_start > timeout_full_max:
-                    # if _new_byte in self.EOL__SEND:   # DONT USE IT HERE!!! stop is wary need whatever!!!
-                    break
-
-            # 4=finalize not ended EOL line like password: or terminal prompt
-            if _new_line:
-                self._print_line(process="readNoEOL", line=_new_line)
-                result += _new_line
-                _new_line = b""
-
-            # 5=EXIT ------------------
-            # Восстанавливаем таймаут
-            self._conn.timeout = old_timeout
-
-            msg = {"read": result}
-            if self.history_enable:
-                self.history.append(msg)
-
-            return result.strip()
-
-    # W ================================================================================================================
-    def write_bytes(
-            self,
-            data: AnyStr | None = None,
-            eol: bytes | None = None,
-            clear_input_first: bool = True,
-    ) -> bool:
-        """
-        just send data into bus!
-        usually we dont need just send without reading! so it useful for debugging
-
-        :return: result of sent
-
-        args/kwargs - used only for single line!!!
-        """
-        with self._lock_w:
-            if not self.check__connected():
-                print("Port not connected")
-                return False
-
-            if clear_input_first:
-                time.sleep(0.1)  # на всякий случай!!! 0.1 может не хватать!
-                line = self._to_bytes(f"in_waiting__bytes_count={self._conn.in_waiting}")
-                self._print_line(process="reset_input", line=line)
-                if self._conn.in_waiting:
-                    _new_bytes = self._conn.read(self._conn.in_waiting)
-                    self._print_line(process="in_waiting__bytes_data", line=_new_bytes)
-
-                    self._print_line(process="reset_input")
-                    self._conn.reset_input_buffer()
-
-            raw = self._to_bytes(data)
-            raw = self._eol_ensure(raw, eol)
-
-            if not raw:
-                return False
-
-            written = 0
-            try:
-                written = self._conn.write(raw)
-                self._print_line(process="write", line=raw)
-            except Exception as exc:
-                self._print_line(process="write", line=raw, success=False, extra=f"{exc!r}")
-
-            if written > 0:
-                msg = {"write": raw}
-                if self.history_enable:
-                    self.history.append(msg)
-
-                return written == len(raw)
-            else:
-                return False
+    def _transport__pending(self) -> int:
+        return self._conn.in_waiting
 
     # W=SPECIAL --------------------------------------------------------------------------------------------------------
     def send__break(self, duration: float = 0.25) -> None:

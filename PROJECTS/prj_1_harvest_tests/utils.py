@@ -1,3 +1,4 @@
+import json
 import logging
 import base64
 
@@ -14,50 +15,6 @@ PATTERN_MAC = r"[0-9A-F:]{17}"
 
 # ======================================================================================================================
 class Harvest:
-    AT_PARAMS__LIST: list[str] = [
-        "CREG",
-        "CGREG",
-        "CEREG",
-        "CNUM",
-        "CPBS",
-        "CPBR",
-        "CRSM",
-        "CGMI",
-        "CGMM",
-        "CGMR",
-        "CGSN",
-        "CIMI",
-        "GSN",
-        "CPIN",
-        "CPINR",
-        "CCID",
-        "ICCID",
-        "COPS",
-        "CSQ",
-        "CESQ",
-        "CPSI",
-        "CNETSCAN",
-        "CRUSET",
-        "WS46",
-        "CGDCONT",
-        "CGCONTRDP",
-
-        # "CGPADDR",  # вероятно блокирует все остальное! все перестает отвечать!
-
-        "CGACT",
-        "CGATT",
-        "CGDATA",
-        "CIMS",
-        "CIREG",
-        "CFUN",
-        "CSCLK",
-        "CPMUTEMP",
-        "CBC",
-        "CCED",
-        "CELLINFO",
-        "CEER",
-    ]
-
     AT_CMD__LIST: list[str] = [
         # =========================================================================
         "AT",  # ответ эхо - проверка функционирования модема на канал
@@ -1054,11 +1011,333 @@ PASSED
             print(f"\t{line}")
         return result
 
+    AT_PARAMS__LIST: list[str] = [
+        "CREG",
+        "CGREG",
+        "CEREG",
+        "CNUM",
+        "CPBS",
+        "CPBR",
+        "CRSM",
+        "CGMI",
+        "CGMM",
+        "CGMR",
+        "CGSN",
+        "CIMI",
+        "GSN",
+        "CPIN",
+        "CPINR",
+        "CCID",
+        "ICCID",
+        "COPS",
+        "CSQ",
+        "CESQ",
+        "CPSI",
+        "CNETSCAN",
+        "CRUSET",
+        "WS46",
+        "CGDCONT",
+        "CGCONTRDP",
+
+        # "CGPADDR",  # вероятно блокирует все остальное! все перестает отвечать!
+
+        "CGACT",
+        "CGATT",
+        "CGDATA",
+        "CIMS",
+        "CIREG",
+        "CFUN",
+        "CSCLK",
+        "CPMUTEMP",
+        "CBC",
+        "CCED",
+        "CELLINFO",
+        "CEER",
+    ]
+
     def at_params__explore(
             self,
             params: list[str],
             **kwargs,
     ) -> dict[str, list[tuple[str, str]]]:
+        """
+=========at_params__explore===========[
+CREG
+	('AT+CREG=?', '+CREG: (0-2)\nOK')
+	('AT+CREG', 'OK')
+	('AT+CREG?', '+CREG: 0,0\nOK')
+	('AT+CREG=0', 'OK')
+	('AT+CREG?', '+CREG: 0,0\nOK')
+	('AT+CREG=1', 'OK')
+	('AT+CREG?', '+CREG: 1,0\nOK')
+	('AT+CREG=2', 'OK')
+	('AT+CREG?', '+CREG: 2,0\nOK')
+CGREG
+	('AT+CGREG=?', '+CGREG: (0-2)\nOK')
+	('AT+CGREG', 'OK')
+	('AT+CGREG?', '+CGREG: 0,0\nOK')
+	('AT+CGREG=0', 'OK')
+	('AT+CGREG?', '+CGREG: 0,0\nOK')
+	('AT+CGREG=1', 'OK')
+	('AT+CGREG?', '+CGREG: 1,0\nOK')
+	('AT+CGREG=2', 'OK')
+	('AT+CGREG?', '+CGREG: 2,0,"0000","00000000"\nOK')
+CEREG
+	('AT+CEREG=?', '+CEREG: (0-2)\nOK')
+	('AT+CEREG', 'OK')
+	('AT+CEREG?', '+CEREG: 0,0\nOK')
+	('AT+CEREG=0', 'OK')
+	('AT+CEREG?', '+CEREG: 0,0\nOK')
+	('AT+CEREG=1', 'OK')
+	('AT+CEREG?', '+CEREG: 1,0\nOK')
+	('AT+CEREG=2', 'OK')
+	('AT+CEREG?', '+CEREG: 2,0,0000,00000000\nOK')
+CNUM
+	('AT+CNUM=?', 'ERROR')
+	('AT+CNUM', 'ERROR')
+	('AT+CNUM?', 'ERROR')
+CPBS
+	('AT+CPBS=?', 'ERROR')
+	('AT+CPBS', 'ERROR')
+	('AT+CPBS?', 'ERROR')
+CPBR
+	('AT+CPBR=?', '+CME ERROR: unknown error')
+	('AT+CPBR', 'ERROR')
+	('AT+CPBR?', '+CME ERROR: unknown error')
+CRSM
+	('AT+CRSM=?', 'OK')
+	('AT+CRSM', 'ERROR')
+	('AT+CRSM?', '+CME ERROR: Operation not supported')
+CGMI
+	('AT+CGMI=?', 'OK')
+	('AT+CGMI', 'INCORPORATED\nOK')
+	('AT+CGMI?', 'INCORPORATED\nOK')
+CGMM
+	('AT+CGMM=?', 'OK')
+	('AT+CGMM', 'A7682E-R\nOK')
+	('AT+CGMM?', 'A7682E-R\nOK')
+CGMR
+	('AT+CGMR=?', 'OK')
+	('AT+CGMR', '+CGMR: A011B02A7682M6_DS_FOTA\nOK')
+	('AT+CGMR?', '+CGMR: A011B02A7682M6_DS_FOTA\nOK')
+CGSN
+	('AT+CGSN=?', 'OK')
+	('AT+CGSN', '865286077380516\nOK')
+	('AT+CGSN?', 'ERROR')
+CIMI
+	('AT+CIMI=?', 'OK')
+	('AT+CIMI', '+CME ERROR: SIM failure')
+	('AT+CIMI?', '+CME ERROR: Operation not supported')
+GSN
+	('AT+GSN=?', 'OK')
+	('AT+GSN', '865286077380516\nOK')
+	('AT+GSN?', 'ERROR')
+CPIN
+	('AT+CPIN=?', 'OK')
+	('AT+CPIN', 'ERROR')
+	('AT+CPIN?', '+CME ERROR: SIM not inserted')
+CPINR
+	('AT+CPINR=?', '+CPINR: (0-3),(0-3),(0-10),(0-10)\nOK')
+	('AT+CPINR', '+CME ERROR: Operation not supported')
+	('AT+CPINR?', '+CME ERROR: SIM not inserted')
+	('AT+CPINR=0', 'ERROR')
+	('AT+CPINR?', '+CME ERROR: SIM not inserted')
+	('AT+CPINR=1', 'ERROR')
+	('AT+CPINR?', '+CME ERROR: SIM not inserted')
+	('AT+CPINR=2', 'ERROR')
+	('AT+CPINR?', '+CME ERROR: SIM not inserted')
+	('AT+CPINR=3', 'ERROR')
+	('AT+CPINR?', '+CME ERROR: SIM not inserted')
+	('AT+CPINR=4', 'ERROR')
+	('AT+CPINR?', '+CME ERROR: SIM not inserted')
+	('AT+CPINR=5', 'ERROR')
+	('AT+CPINR?', '+CME ERROR: SIM not inserted')
+	('AT+CPINR=6', 'ERROR')
+	('AT+CPINR?', '+CME ERROR: SIM not inserted')
+	('AT+CPINR=7', 'ERROR')
+	('AT+CPINR?', '+CME ERROR: SIM not inserted')
+	('AT+CPINR=8', 'ERROR')
+	('AT+CPINR?', '+CME ERROR: SIM not inserted')
+	('AT+CPINR=9', 'ERROR')
+	('AT+CPINR?', '+CME ERROR: SIM not inserted')
+CCID
+	('AT+CCID=?', 'ERROR')
+	('AT+CCID', 'ERROR')
+	('AT+CCID?', 'ERROR')
+ICCID
+	('AT+ICCID=?', 'ERROR')
+	('AT+ICCID', 'ERROR')
+	('AT+ICCID?', 'ERROR')
+COPS
+	('AT+COPS=?', '')
+	('AT+COPS', '')
+	('AT+COPS?', '')
+CSQ
+	('AT+CSQ=?', '')
+	('AT+CSQ', '+COPS: (1,"Beeline","Beeline","25099",0),(1,"MegaFon RUS","MegaFon","25002",0),(1,"MTS RUS","MTS RUS","25001",0),,(0,1,2,3,4),(0,1,2)\nOK')
+	('AT+CSQ?', '')
+CESQ
+	('AT+CESQ=?', '')
+	('AT+CESQ', '')
+	('AT+CESQ?', '')
+CPSI
+	('AT+CPSI=?', '+COPS: (1,"MTS RUS","MTS RUS","25001",0),(1,"MegaFon RUS","MegaFon","25002",0),(1,"Beeline","Beeline","25099",0),,(0,1,2,3,4),(0,1,2)\nOK\nERROR\nERROR\n+COPS: 0\nOK\n+COPS: 0\nOK\n+CSQ: (0-31,99),(0-7,99)\nOK\n+CSQ: (0-31,99),(0-7,99)\nOK\n+CSQ: 23,0\nOK\nERROR\nERROR\n+CESQ: (0-63,99),(0-7,99),(0-96,255),(0-49,255),(0-34,255),(0-97,255)\nOK\n+CESQ: (0-63,99),(0-7,99),(0-96,255),(0-49,255),(0-34,255),(0-97,255)\nOK\n+CESQ: 44,0,255,255,255,255\nOK\n+CESQ: 44,0,255,255,255,255\nOK\n+CME ERROR: unknown error\n+CME ERROR: unknown error\nOK\nOK')
+	('AT+CPSI', 'ERROR')
+	('AT+CPSI?', '+CPSI: NO SERVICE,Online\nOK')
+	('AT+CPSI=0', 'ERROR')
+	('AT+CPSI?', '+CPSI: NO SERVICE,Online\nOK')
+	('AT+CPSI=1', 'ERROR')
+	('AT+CPSI?', '+CPSI: NO SERVICE,Online\nOK')
+	('AT+CPSI=2', 'ERROR')
+	('AT+CPSI?', '+CPSI: NO SERVICE,Online\nOK')
+	('AT+CPSI=3', 'ERROR')
+	('AT+CPSI?', '+CPSI: NO SERVICE,Online\nOK')
+	('AT+CPSI=4', 'ERROR')
+	('AT+CPSI?', '+CPSI: NO SERVICE,Online\nOK')
+	('AT+CPSI=5', 'ERROR')
+	('AT+CPSI?', '+CPSI: NO SERVICE,Online\nOK')
+	('AT+CPSI=6', 'ERROR')
+	('AT+CPSI?', '+CPSI: NO SERVICE,Online\nOK')
+	('AT+CPSI=7', 'ERROR')
+	('AT+CPSI?', '+CPSI: NO SERVICE,Online\nOK')
+	('AT+CPSI=8', 'ERROR')
+	('AT+CPSI?', '+CPSI: NO SERVICE,Online\nOK')
+	('AT+CPSI=9', 'ERROR')
+	('AT+CPSI?', '+CPSI: NO SERVICE,Online\nOK')
+CNETSCAN
+	('AT+CNETSCAN=?', 'ERROR')
+	('AT+CNETSCAN', 'ERROR')
+	('AT+CNETSCAN?', 'ERROR')
+CRUSET
+	('AT+CRUSET=?', 'ERROR')
+	('AT+CRUSET', 'ERROR')
+	('AT+CRUSET?', 'ERROR')
+WS46
+	('AT+WS46=?', '+WS46: (12,22,25,28,29,30,31)\nOK')
+	('AT+WS46', 'OK')
+	('AT+WS46?', '+WS46:12\nOK')
+	('AT+WS46=12', 'OK')
+	('AT+WS46?', '+WS46:12\nOK')
+	('AT+WS46=22', 'OK')
+	('AT+WS46?', '+WS46:12\nOK')
+	('AT+WS46=25', 'OK')
+	('AT+WS46?', '+WS46:12\nOK')
+	('AT+WS46=28', 'OK\n+CGEV: ME DETACH')
+	('AT+WS46?', '+WS46:28\nOK')
+	('AT+WS46=29', 'OK')
+	('AT+WS46?', '+WS46:28\nOK')
+	('AT+WS46=30', 'OK\n+CGEV: ME DETACH')
+	('AT+WS46?', '+WS46:30\nOK')
+	('AT+WS46=31', 'OK')
+	('AT+WS46?', '+WS46:30\nOK')
+CGDCONT
+	('AT+CGDCONT=?', '+CGDCONT: (1-15),"IP",,,(0-2),(0-1),(0-1),(0-2)\n+CGDCONT: (1-15),"IPV6",,,(0-2),(0-1),(0-1),(0-2)\n+CGDCONT: (1-15),"IPV4V6",,,(0-2),(0-1),(0-1),(0-2)\nOK')
+	('AT+CGDCONT', 'OK')
+	('AT+CGDCONT?', 'OK')
+	('AT+CGDCONT=0', 'ERROR')
+	('AT+CGDCONT?', 'OK')
+	('AT+CGDCONT=1', 'OK')
+	('AT+CGDCONT?', 'OK')
+	('AT+CGDCONT=2', 'OK')
+	('AT+CGDCONT?', 'OK')
+	('AT+CGDCONT=3', 'OK')
+	('AT+CGDCONT?', 'OK')
+	('AT+CGDCONT=4', 'OK')
+	('AT+CGDCONT?', 'OK')
+	('AT+CGDCONT=5', 'OK')
+	('AT+CGDCONT?', 'OK')
+	('AT+CGDCONT=6', 'OK')
+	('AT+CGDCONT?', 'OK')
+	('AT+CGDCONT=7', 'OK')
+	('AT+CGDCONT?', 'OK')
+	('AT+CGDCONT=8', 'OK')
+	('AT+CGDCONT?', 'OK')
+	('AT+CGDCONT=9', 'OK')
+	('AT+CGDCONT?', 'OK')
+CGCONTRDP
+	('AT+CGCONTRDP=?', 'OK')
+	('AT+CGCONTRDP', 'OK')
+	('AT+CGCONTRDP?', '+CGCONTRDP: (<p_cid>), (<bearer_id>),(<apn>),(<source_addr and subnet_mask>),(<gw_addr>), (<DNS_prim_addr>), (<DNS_sec_addr>), (<P-CSCF_prim_addr>), (<P-CSCF_sec_addr>),(<IM_CN_Signalling_Flag>)r\nOK')
+CGACT
+	('AT+CGACT=?', '+CGACT: (0,1)\nOK')
+	('AT+CGACT', 'ERROR')
+	('AT+CGACT?', 'OK')
+	('AT+CGACT=0', 'OK')
+	('AT+CGACT?', 'OK')
+	('AT+CGACT=1', 'OK')
+	('AT+CGACT?', 'OK')
+CGATT
+	('AT+CGATT=?', '+CGATT: (0-1)\nOK')
+	('AT+CGATT', 'ERROR')
+	('AT+CGATT?', '+CGATT: 0\nOK')
+	('AT+CGATT=0', 'OK')
+	('AT+CGATT?', '+CGATT: 0\nOK')
+	('AT+CGATT=1', '+CME ERROR: operation not allowed')
+	('AT+CGATT?', '+CGATT: 0\nOK')
+CGDATA
+	('AT+CGDATA=?', '+CGDATA: ("")\nOK')
+	('AT+CGDATA', '+CME ERROR: Operation not supported')
+	('AT+CGDATA?', '+CME ERROR: Operation not supported')
+CIMS
+	('AT+CIMS=?', 'ERROR')
+	('AT+CIMS', 'ERROR')
+	('AT+CIMS?', 'ERROR')
+CIREG
+	('AT+CIREG=?', '+CIREG: (0-3)\nOK')
+	('AT+CIREG', '+CME ERROR: Operation not supported')
+	('AT+CIREG?', '+CME ERROR: Operation not supported')
+	('AT+CIREG=0', '+CME ERROR: Operation not supported')
+	('AT+CIREG?', '+CME ERROR: Operation not supported')
+	('AT+CIREG=1', '+CME ERROR: Operation not supported')
+	('AT+CIREG?', '+CME ERROR: Operation not supported')
+	('AT+CIREG=2', '+CME ERROR: Operation not supported')
+	('AT+CIREG?', '+CME ERROR: Operation not supported')
+	('AT+CIREG=3', '+CME ERROR: Operation not supported')
+	('AT+CIREG?', '+CME ERROR: Operation not supported')
+CFUN
+	('AT+CFUN=?', '+CFUN: (0-1,4-8),(0-1)\nOK')
+	('AT+CFUN', 'ERROR')
+	('AT+CFUN?', '+CFUN: 1\nOK')
+	('AT+CFUN=0', '+SIMCARD: NOT AVAILABLE\n+CGEV: ME DETACH\nOK')
+	('AT+CFUN?', '+CFUN: 0\nOK')
+	('AT+CFUN=1', 'OK\n+CPIN: SIM REMOVED\nOK')
+	('AT+CFUN?', '+CFUN: 1\nOK')
+	('AT+CFUN=4', '+CGEV: ME DETACH\nOK')
+	('AT+CFUN?', '+CFUN: 4\nOK')
+	('AT+CFUN=5', 'OK')
+	('AT+CFUN?', '+CFUN: 5\nOK')
+	('AT+CFUN=6', 'OK\n+CGEV: ME DETACH')
+	('AT+CFUN?', 'cat: /dev/ttyUSB2: No such file or directory\n[1]+  Exit 1                  timeout 5.0 cat /dev/ttyUSB2')
+	('AT+CFUN=7', 'AT+CFUN?\n[1]+  Done                    timeout 5.0 cat /dev/ttyUSB2')
+	('AT+CFUN?', 'AT+CFUN=7\n[1]+  Done                    timeout 5.0 cat /dev/ttyUSB2')
+	('AT+CFUN=8', 'AT+CFUN?\n[1]+  Done                    timeout 5.0 cat /dev/ttyUSB2')
+	('AT+CFUN?', 'AT+CFUN=8\n[1]+  Done                    timeout 5.0 cat /dev/ttyUSB2')
+CSCLK
+	('AT+CSCLK=?', 'AT+CFUN?\n[1]+  Done                    timeout 5.0 cat /dev/ttyUSB2')
+	('AT+CSCLK', 'AT+CSCLK=?\n[1]+  Done                    timeout 5.0 cat /dev/ttyUSB2')
+	('AT+CSCLK?', 'AT+CSCLK\n[1]+  Done                    timeout 5.0 cat /dev/ttyUSB2')
+CPMUTEMP
+	('AT+CPMUTEMP=?', 'AT+CSCLK?\n[1]+  Done                    timeout 5.0 cat /dev/ttyUSB2')
+	('AT+CPMUTEMP', 'AT+CPMUTEMP=?\n[1]+  Done                    timeout 5.0 cat /dev/ttyUSB2')
+	('AT+CPMUTEMP?', 'AT+CPMUTEMP\n[1]+  Done                    timeout 5.0 cat /dev/ttyUSB2')
+CBC
+	('AT+CBC=?', 'AT+CPMUTEMP?\n[1]+  Done                    timeout 5.0 cat /dev/ttyUSB2')
+	('AT+CBC', 'AT+CBC=?\n[1]+  Done                    timeout 5.0 cat /dev/ttyUSB2')
+	('AT+CBC?', 'AT+CBC\n[1]+  Done                    timeout 5.0 cat /dev/ttyUSB2')
+CCED
+	('AT+CCED=?', 'AT+CBC?\n[1]+  Done                    timeout 5.0 cat /dev/ttyUSB2')
+	('AT+CCED', 'AT+CCED=?\n[1]+  Done                    timeout 5.0 cat /dev/ttyUSB2')
+	('AT+CCED?', 'AT+CCED\n[1]+  Done                    timeout 5.0 cat /dev/ttyUSB2')
+CELLINFO
+	('AT+CELLINFO=?', 'AT+CCED?\n[1]+  Done                    timeout 5.0 cat /dev/ttyUSB2')
+	('AT+CELLINFO', 'AT+CELLINFO=?\n[1]+  Done                    timeout 5.0 cat /dev/ttyUSB2')
+	('AT+CELLINFO?', 'AT+CELLINFO\n[1]+  Done                    timeout 5.0 cat /dev/ttyUSB2')
+CEER
+	('AT+CEER=?', 'AT+CELLINFO?\n[1]+  Done                    timeout 5.0 cat /dev/ttyUSB2')
+	('AT+CEER', 'AT+CEER=?\n[1]+  Done                    timeout 5.0 cat /dev/ttyUSB2')
+	('AT+CEER?', 'AT+CEER\n[1]+  Done                    timeout 5.0 cat /dev/ttyUSB2')
+=========at_params__explore===========]
+        """
         result = {}
 
         # ----------------------------------
@@ -1072,6 +1351,9 @@ PASSED
             print(f"{param}")
             for line in values or []:
                 print(f"\t{line}")
+        print(f"=========at_params__explore===========]")
+        print(f"=========at_params__explore===========[")
+        print(json.dumps(result, indent=4))
         print(f"=========at_params__explore===========]")
 
         # PRINTOUT -------------------------

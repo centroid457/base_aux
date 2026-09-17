@@ -22,6 +22,19 @@ class ClientBase(ABC):
         all you need - take result as read lines or line
         maybe keep history in device? not in this connection object
     3/
+
+    REFACTOR NOTE (transport/terminal split)
+    ----------------------------------------
+    Класс разделён на два слоя ответственности:
+        1) ТРАНСПОРТ  — абстрактные _transport__* методы.
+           Конкретные реализации (ClientSerial / ClientSsh / ClientDirect)
+           реализуют ТОЛЬКО их.
+        2) ТЕРМИНАЛ   — публичные read_bytes / write_bytes / *_text,
+           работа с EOL, ANSI-фильтрами, таймаутами.
+           Реализованы здесь ОДИН РАЗ и переиспользуются всеми транспортами.
+
+    Это позволяет Harvest/ClientBase-потребителям не зависеть от транспорта
+    и не дублировать терминальную логику в каждом клиенте.
     """
     # SETTINGS ------------------------------------------------
     __address: str
@@ -29,7 +42,9 @@ class ClientBase(ABC):
 
     # need NONE NOT 0!!! if wait always!!
     TIMEOUT_READ_INITIAL: float = 0.5  # время ожидания первого байта # 0.2 is too short!!! dont touch! in case of reading char by char 0.5 is the best!!! 0.3 is not enough!!!
+    timeout_read_initial: float
     TIMEOUT_READ_CONTINUE: float = 0.1  # пауза между чтениями после появления данных
+    timeout_read_continue: float
 
     # rare INFRASTRUCTURE -------
     ENCODING: str = "utf8"
@@ -48,13 +63,23 @@ class ClientBase(ABC):
     _instances: dict[str, Self] = {}
 
     def __new__(cls, address: str, **kwargs):
-        # Если экземпляр уже есть – возвращаем его (игнорируем kwargs, либо проверяем)
-        if address in cls._instances:
-            return cls._instances[address]
-        # Иначе создаём новый
+        # Ключ мультитона может быть уточнён наследниками (см. _multiton_key).
+        key = cls._multiton_key(address=address, **kwargs)
+        if key in cls._instances:
+            return cls._instances[key]
         instance = super().__new__(cls)
-        cls._instances[address] = instance
+        cls._instances[key] = instance
         return instance
+
+    @classmethod
+    def _multiton_key(cls, address: str, **kwargs) -> str:
+        """
+        GOAL
+        По умолчанию — только address (как было).
+        Наследники (SshClient) могут переопределить, добавив username/port,
+        чтобы не было конфликта при разных учётках на одном хосте.
+        """
+        return address
 
     # INIT =============================================================================================================
     def __init__(
@@ -144,6 +169,64 @@ class ClientBase(ABC):
     def check__connected(self) -> bool:
         """Check if connection is active."""
         pass
+
+    # ==================================================================================================================
+    # TRANSPORT PRIMITIVES (abstract) — реализуются наследниками
+    # ==================================================================================================================
+    @abstractmethod
+    def _transport__read(self, size: int = 1) -> bytes:
+        """
+        Прочитать до `size` байт с текущим таймаутом транспорта.
+        Может вернуть b"" при таймауте.
+        """
+        pass
+
+    @abstractmethod
+    def _transport__write(self, data: bytes) -> int:
+        """Записать байты, вернуть количество записанных."""
+        pass
+
+    @abstractmethod
+    def _transport__set_timeout(self, timeout: float | None) -> Any:
+        """
+        Установить текущий таймаут транспорта.
+        Вернуть старое значение (для последующего restore).
+        """
+        pass
+
+    @abstractmethod
+    def _transport__restore_timeout(self, old_timeout: Any) -> None:
+        """Восстановить таймаут, полученный из _transport__set_timeout."""
+        pass
+
+    @abstractmethod
+    def _transport__flush_input(self) -> None:
+        """Очистить входной буфер транспорта."""
+        pass
+
+    @abstractmethod
+    def _transport__pending(self) -> int:
+        """Сколько байт доступно для чтения без блокировки (может быть 0)."""
+        pass
+
+    # BUFFERS ----------------------------------------------------------------------------------------------------------
+    def buffers_clear(self) -> None:
+        """useful to drop old previous incorrect send msg! in other words it is clear/reinit write buffer!
+
+        here we need just finish line by correct/exact EOL if it was previously send without it or with incorrect.
+        """
+        if not self.check__connected():
+            return
+        self._transport__flush_input()
+
+    def check__buffer_is_blank(self) -> bool:
+        # ВНИМАНИЕ: исторически метод возвращает True, если данные ЕСТЬ
+        # (так было в ClientSerial: bool(self._conn.in_waiting)).
+        # Сохраняем поведение для совместимости.
+        try:
+            return bool(self._transport__pending())
+        except Exception:
+            return False
 
     # RW CONVERTERS ====================================================================================================
     # BYTES/STR --------------------------------------------------------------------------------------------------------
@@ -317,7 +400,6 @@ class ClientBase(ABC):
             print(f"[{datetime.datetime.now().time()}]{self.ADDRESS}.{process}[{status}]={exc!r}", extra)
 
     # R ================================================================================================================
-    @abstractmethod
     def read_bytes(
             self,
             stop_line: AnyStr | Base_EqValid | None = None,
@@ -335,8 +417,89 @@ class ClientBase(ABC):
         Сначала ждём появления данных в течение timeout_start.
         Как только появились – читаем с паузами timeout_continue, пока данные не кончатся.
         Возвращает прочитанные байты.
+
+        Реализовано ОДИН РАЗ для всех транспортов через _transport__* примитивы.
         """
-        pass
+        with self._lock_r:
+            if not self.check__connected():
+                print("Port not connected")
+                return b""
+
+            if stop_line is not None:
+                if isinstance(stop_line, str):
+                    stop_line = self._to_bytes(stop_line)
+                if not isinstance(stop_line, (Base_EqValid, bytes)):
+                    msg = f"not expected type {stop_line=}"
+                    raise Exception(msg)
+
+            t_start = timeout_start if timeout_start is not None else self.timeout_read_initial
+            t_cont = timeout_continue if timeout_continue is not None else self.timeout_read_continue
+
+            # Сохраняем текущий таймаут, чтобы потом восстановить
+            old_timeout = self._transport__set_timeout(t_start)
+
+            time_start = time.time()
+            result: bytes = b""
+            _new_line: bytes = b""
+
+            while True:
+                # self._print_line(process="readSTART")
+
+                # Ждём появления данных или таймаут
+                self._transport__set_timeout(t_start if result == b"" else t_cont)
+                _new_byte = self._transport__read(1)
+
+                # 1=БАЙТА НЕТ ---------
+                if not _new_byte:
+                    if not timeout_full_min:
+                        break
+                    elif time.time() - time_start > timeout_full_min:
+                        break
+                    else:
+                        pass
+
+                # 2=БАЙТ ЕСТЬ ---------
+                if _new_byte:
+                    # 1=EOL - нет
+                    if _new_byte not in self.EOL__UNI:
+                        # 1.1=COLLECT ---------
+                        _new_line += _new_byte
+                        continue
+
+                    # 2=EOL - получен
+                    if _new_line:
+                        self._print_line(process="readEOL", line=_new_line)
+                        result += b"\n"
+                        result += _new_line
+
+                        # 1.2=STOP ON ---------
+                        if stop_line is not None:
+                            if _new_line == stop_line:
+                                self._print_line(process="stop_line", extra=stop_line)
+                                break
+
+                        _new_line = b""
+
+                # 3=MAX THRESH -----------
+                if timeout_full_max and time.time() - time_start > timeout_full_max:
+                    # if _new_byte in self.EOL__SEND:   # DONT USE IT HERE!!! stop is wary need whatever!!!
+                    break
+
+            # 4=finalize not ended EOL line like password: or terminal prompt
+            if _new_line:
+                self._print_line(process="readNoEOL", line=_new_line)
+                result += _new_line
+                _new_line = b""
+
+            # 5=EXIT ------------------
+            # Восстанавливаем таймаут
+            self._transport__restore_timeout(old_timeout)
+
+            msg = {"read": result}
+            if self.history_enable:
+                self.history.append(msg)
+
+            return result.strip()
 
     def read_text(self, **r_kwargs) -> str:
         """
@@ -347,7 +510,6 @@ class ClientBase(ABC):
         return text
 
     # W ================================================================================================================
-    @abstractmethod
     def write_bytes(
             self,
             data: AnyStr | None = None,
@@ -361,8 +523,46 @@ class ClientBase(ABC):
         :return: result of sent
 
         args/kwargs - used only for single line!!!
+
+        Реализовано ОДИН РАЗ для всех транспортов через _transport__* примитивы.
         """
-        pass
+        with self._lock_w:
+            if not self.check__connected():
+                print("Port not connected")
+                return False
+
+            if clear_input_first:
+                time.sleep(0.1)  # на всякий случай!!! 0.1 может не хватать!
+                line = self._to_bytes(f"in_waiting__bytes_count={self._transport__pending()}")
+                self._print_line(process="reset_input", line=line)
+                if self._transport__pending():
+                    _new_bytes = self._transport__read(self._transport__pending())
+                    self._print_line(process="in_waiting__bytes_data", line=_new_bytes)
+
+                    self._print_line(process="reset_input")
+                    self._transport__flush_input()
+
+            raw = self._to_bytes(data)
+            raw = self._eol_ensure(raw, eol)
+
+            if not raw:
+                return False
+
+            written = 0
+            try:
+                written = self._transport__write(raw)
+                self._print_line(process="write", line=raw)
+            except Exception as exc:
+                self._print_line(process="write", line=raw, success=False, extra=f"{exc!r}")
+
+            if written > 0:
+                msg = {"write": raw}
+                if self.history_enable:
+                    self.history.append(msg)
+
+                return written == len(raw)
+            else:
+                return False
 
     # W=SPECIAL --------------------------------------------------------------------------------------------------------
     def _write__eol(self, eol: bytes = None) -> bool:

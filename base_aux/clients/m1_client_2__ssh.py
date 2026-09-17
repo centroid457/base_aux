@@ -6,10 +6,18 @@ from base_aux.clients.m1_client_0__base import ClientBase
 
 
 # ======================================================================================================================
-class SshClient(ClientBase):
+class ClientSsh(ClientBase):
     """
     SSH client implementation that follows the same interface as ClientSerial.
     Uses paramiko for SSH connections.
+
+    REFACTOR NOTE
+    -------------
+    Класс реализует ТОЛЬКО транспортную логику (paramiko).
+    Терминальная логика (read_bytes/write_bytes/EOL/ANSI) — в ClientBase.
+
+    Ключ мультитона — address + username + port, чтобы два SSH-подключения
+    к одному хосту под разными учётками не конфликтовали.
     """
     # SETTINGS ------------------------------------------------
     PORT: int = 22
@@ -58,6 +66,13 @@ class SshClient(ClientBase):
         )
 
     # ------------------------------------------------------------------
+    @classmethod
+    def _multiton_key(cls, address: str, **kwargs) -> str:
+        username = kwargs.get("username", None)
+        port = kwargs.get("port", None) or cls.PORT
+        return f"{address}:{port}@{username}"
+
+    # ------------------------------------------------------------------
     def init_settings(
             self,
             username: str = None,
@@ -90,7 +105,11 @@ class SshClient(ClientBase):
             return True
         try:
             import paramiko
+        except ImportError:
+            print(f"paramiko module is required for SSH connections")
+            return False
 
+        try:
             self._ssh_client = paramiko.SSHClient()
             self._ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
             self._ssh_client.connect(
@@ -99,23 +118,40 @@ class SshClient(ClientBase):
                 username=self.username,
                 password=self.password,
                 timeout=self.timeout_read_initial,
+                allow_agent=False,
+                look_for_keys=False,
             )
 
             self._channel = self._ssh_client.invoke_shell()
             self._channel.settimeout(self.timeout_read_initial)
+            # combine stderr в тот же поток — как в Serial
+            self._channel.set_combine_stderr(True)
 
             return True
-        except ImportError:
-            print(f"paramiko module is required for SSH connections")
-            return False
         except Exception as e:
             print(f"SSH connection error to {self.ADDRESS}: {e}")
+            # закрываем всё, что могло открыться
+            try:
+                if self._channel:
+                    self._channel.close()
+            except:
+                pass
+            try:
+                if self._ssh_client:
+                    self._ssh_client.close()
+            except:
+                pass
+            self._channel = None
+            self._ssh_client = None
             return False
 
     def disconnect(self) -> None:
         try:
             if self._channel:
                 self._channel.close()
+        except:
+            pass
+        try:
             if self._ssh_client:
                 self._ssh_client.close()
         except:
@@ -127,174 +163,40 @@ class SshClient(ClientBase):
         except:
             return False
 
-    # BUFFERS ----------------------------------------------------------------------------------------------------------
-    def buffers_clear(self) -> None:
-        """useful to drop old previous incorrect send msg! in other words it is clear/reinit write buffer!
+    # ==================================================================================================================
+    # TRANSPORT PRIMITIVES
+    # ==================================================================================================================
+    def _transport__read(self, size: int = 1) -> bytes:
+        try:
+            # recv возвращает b"" при таймауте
+            return self._channel.recv(size)
+        except Exception:
+            return b""
 
-        here we need just finish line by correct/exact EOL if it was previously send without it or with incorrect.
-        """
-        if not self.check__connected():
-            return
+    def _transport__write(self, data: bytes) -> int:
+        return self._channel.send(data)
 
-        # Read and discard any pending data
+    def _transport__set_timeout(self, timeout: float | None) -> float | None:
+        old = self._channel.gettimeout()
+        self._channel.settimeout(timeout)
+        return old
+
+    def _transport__restore_timeout(self, old_timeout: float | None) -> None:
+        self._channel.settimeout(old_timeout)
+
+    def _transport__flush_input(self) -> None:
         try:
             while self._channel.recv_ready():
-                self._channel.recv(1024)
-        except:
+                self._channel.recv(4096)
+        except Exception:
             pass
 
-    def check__buffer_is_blank(self) -> bool:
-        return self._channel.recv_ready()
-
-    # R ================================================================================================================
-    def read_bytes(
-            self,
-            stop_line: AnyStr | Base_EqValid | None = None,
-
-            timeout_start: Optional[float] = None,
-            timeout_continue: Optional[float] = None,
-
-            timeout_full_max: Optional[float] = None,
-            timeout_full_min: Optional[float] = None,
-    ) -> bytes:
-        """
-        MAIN METH!!!
-
-        Прочитать все доступные данные из порта.
-        Сначала ждём появления данных в течение timeout_start.
-        Как только появились – читаем с паузами timeout_continue, пока данные не кончатся.
-        Возвращает прочитанные байты.
-        """
-        with self._lock_r:
-            if not self.check__connected():
-                print("Port not connected")
-                return b""
-
-            if stop_line is not None:
-                if isinstance(stop_line, str):
-                    stop_line = self._to_bytes(stop_line)
-                if not isinstance(stop_line, (Base_EqValid, bytes)):
-                    msg = f"not expected type {stop_line=}"
-                    raise Exception(msg)
-
-            t_start = timeout_start if timeout_start is not None else self.timeout_read_initial
-            t_cont = timeout_continue if timeout_continue is not None else self.timeout_read_continue
-
-            # Сохраняем текущий таймаут, чтобы потом восстановить
-            old_timeout = self._channel.gettimeout()
-
-            time_start = time.time()
-            result: bytes = b""
-            _new_line: bytes = b""
-
-            while True:
-                # self._print_line(process="readSTART")
-
-                # Ждём появления данных или таймаут
-                self._channel.settimeout(t_start if result == b"" else t_cont)
-
-                try:
-                    _new_byte = self._channel.recv(1)
-                except:
-                    _new_byte = b""
-
-                # 1=БАЙТА НЕТ ---------
-                if not _new_byte:
-                    if not timeout_full_min:
-                        break
-                    elif time.time() - time_start > timeout_full_min:
-                        break
-                    else:
-                        pass
-
-                # 2=БАЙТ ЕСТЬ ---------
-                if _new_byte:
-                    # 1=EOL - нет
-                    if _new_byte not in self.EOL__UNI:
-                        # 1.1=COLLECT ---------
-                        _new_line += _new_byte
-                        continue
-
-                    # 2=EOL - получен
-                    if _new_line:
-                        self._print_line(process="readEOL", line=_new_line)
-                        result += b"\n"
-                        result += _new_line
-
-                        # 1.2=STOP ON ---------
-                        if stop_line is not None:
-                            if _new_line == stop_line:
-                                self._print_line(process="stop_line", extra=stop_line)
-                                break
-
-                        _new_line = b""
-
-                # 3=MAX THRESH -----------
-                if timeout_full_max and time.time() - time_start > timeout_full_max:
-                    # if _new_byte in self.EOL__SEND:   # DONT USE IT HERE!!! stop is wary need whatever!!!
-                    break
-
-            # 4=finalize not ended EOL line like password: or terminal prompt
-            if _new_line:
-                self._print_line(process="readNoEOL", line=_new_line)
-                result += _new_line
-                _new_line = b""
-
-            # 5=EXIT ------------------
-            # Восстанавливаем таймаут
-            self._channel.settimeout(old_timeout)
-
-            msg = {"read": result}
-            if self.history_enable:
-                self.history.append(msg)
-
-            return result.strip()
-
-    # W ================================================================================================================
-    def write_bytes(
-            self,
-            data: AnyStr | None = None,
-            eol: bytes | None = None,
-            clear_input_first: bool = True,
-    ) -> bool:
-        """
-        just send data into bus!
-        usually we dont need just send without reading! so it useful for debugging
-
-        :return: result of sent
-
-        args/kwargs - used only for single line!!!
-        """
-        with self._lock_w:
-            if not self.check__connected():
-                print("Port not connected")
-                return False
-
-            if clear_input_first:
-                time.sleep(0.1)  # на всякий случай!!! 0.1 может не хватать!
-                self.buffers_clear()
-
-            raw = self._to_bytes(data)
-            raw = self._eol_ensure(raw, eol)
-
-            if not raw:
-                return False
-
-            written = 0
-            try:
-                written = self._channel.send(raw)
-                self._print_line(process="write", line=raw)
-            except Exception as exc:
-                self._print_line(process="write", line=raw, success=False, extra=f"{exc!r}")
-
-            if written > 0:
-                msg = {"write": raw}
-                if self.history_enable:
-                    self.history.append(msg)
-
-                return written == len(raw)
-            else:
-                return False
+    def _transport__pending(self) -> int:
+        try:
+            # recv_ready() -> bool; приводим к int (0/1)
+            return 1 if self._channel.recv_ready() else 0
+        except Exception:
+            return 0
 
     # W=SPECIAL --------------------------------------------------------------------------------------------------------
     def send__break(self, duration: float = 0.25) -> None:
