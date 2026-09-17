@@ -12,7 +12,7 @@ from base_aux.clients.d1_serial.m1_serial_client import SerialClient2, TYPING__W
 
 
 # ======================================================================================================================
-class SerialManager:
+class SerialClientManager:
     """
     GOAL
     work with serial objects! not simple addresses!!!
@@ -44,29 +44,31 @@ class SerialManager:
         self._initialized = True
 
     # 0=DETECT =========================================================================================================
-    def detect__addresses_system(self) -> list[str]:
+    def detect__addresses(self) -> list[str]:
         with self._lock_detect:
 
             # WORK -------------------------------------------------------
+            # 1=prepare
             if self.__addresses_cached is None:
                 self.__addresses_cached = []
-
             self.__addresses_cached.clear()
-            self.__addresses_cached.extend(self._detect__addresses_system_1__standard_method())
-            for name in self._detect__addresses_system_2__direct_access():
-                if name not in self.__addresses_cached:
-                    self.__addresses_cached.append(name)
+
+            # 2=detect
+            result = set()
+            result.update(self._detect__addresses_1__standard_method())
+            result.update(self._detect__addresses_2__direct_access())
 
             # result -------------------------------------------------------
+            self.__addresses_cached = sorted(result)
             if self.ADDRESSES_CASHED:
                 print(f"[OK] {self.ADDRESSES_CASHED=}")
             else:
-                print("[WARN] detected no serial ports")
+                print("[WARN] detected no addresses")
 
             return self.__addresses_cached
 
     @staticmethod
-    def _detect__addresses_system_1__standard_method() -> list[str] | NoReturn:
+    def _detect__addresses_1__standard_method() -> list[str] | NoReturn:
         """
         WINDOWS - USB
             ==========OBJECTINFO.PRINT==========================================================================
@@ -137,7 +139,7 @@ class SerialManager:
         return result
 
     @classmethod
-    def _detect__addresses_system_2__direct_access(cls) -> list[str] | NoReturn:
+    def _detect__addresses_2__direct_access(cls) -> list[str] | NoReturn:
         """Определяет список портов (НЕОТКРЫТЫХ+ОТКРЫТЫХ!!!) - способом 2 (слепым тестом подключения и анализом исключений)
         Всегда срабатывает!
         """
@@ -162,7 +164,7 @@ class SerialManager:
     @property
     def ADDRESSES_CASHED(self) -> list[str]:
         if self.__addresses_cached is None:
-            self.detect__addresses_system()
+            self.detect__addresses()
 
         return list(self.__addresses_cached)
 
@@ -307,14 +309,14 @@ class SerialManager:
 
 # ======================================================================================================================
 def _explore__shorted():
-    victim = SerialManager().ADDRESSES_CASHED
+    victim = SerialClientManager().ADDRESSES_CASHED
     print(victim)
-    victim = SerialManager().make__not_occupied__shorted()
+    victim = SerialClientManager().make__not_occupied__shorted()
     print(victim)
 
     return
     schema_validate_ate = [("*HELP", EqValid_EQ_StrIc("UNKN")), ]
-    victim = SerialManager().make__not_occupied__validated_first(schema=schema_validate_ate, baudrate=115200, eol=b"\n")
+    victim = SerialClientManager().make__not_occupied__validated_first(schema=schema_validate_ate, baudrate=115200, eol=b"\n")
     print(victim)
 
 
