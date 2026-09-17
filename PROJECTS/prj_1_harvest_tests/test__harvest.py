@@ -1,9 +1,9 @@
-from base_aux.clients.m2_manager_1__serial import SerialClientManager
+from base_aux.clients.m2_manager_1__serial import ClientManager_Serial
 from base_aux.aux_eq.m4_eq_valid2_derivatives import *
 
 
 # ======================================================================================================================
-manager = SerialClientManager()
+manager = ClientManager_Serial()
 
 
 # ======================================================================================================================

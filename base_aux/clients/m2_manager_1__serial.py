@@ -12,7 +12,7 @@ from base_aux.clients.m1_client_0__base import *
 
 
 # ======================================================================================================================
-class SerialClientManager:
+class ClientManager_Serial:
     """
     GOAL
     work with serial objects! not simple addresses!!!
@@ -309,14 +309,14 @@ class SerialClientManager:
 
 # ======================================================================================================================
 def _explore__shorted():
-    victim = SerialClientManager().ADDRESSES_CASHED
+    victim = ClientManager_Serial().ADDRESSES_CASHED
     print(victim)
-    victim = SerialClientManager().make__not_occupied__shorted()
+    victim = ClientManager_Serial().make__not_occupied__shorted()
     print(victim)
 
     return
     schema_validate_ate = [("*HELP", EqValid_EQ_StrIc("UNKN")), ]
-    victim = SerialClientManager().make__not_occupied__validated_first(schema=schema_validate_ate, baudrate=115200, eol=b"\n")
+    victim = ClientManager_Serial().make__not_occupied__validated_first(schema=schema_validate_ate, baudrate=115200, eol=b"\n")
     print(victim)
 
 

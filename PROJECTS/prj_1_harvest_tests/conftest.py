@@ -3,7 +3,7 @@ from datetime import datetime
 
 from .utils import *
 
-from base_aux.clients.m2_manager_1__serial import SerialClientManager
+from base_aux.clients.m2_manager_1__serial import ClientManager_Serial
 from base_aux.aux_eq.m4_eq_valid2_derivatives import *
 
 
@@ -17,7 +17,7 @@ def harvest(request) -> Harvest:
     vest=cdeVFR90!
     """
     found: list[Harvest] = []
-    for conn in SerialClientManager().make__not_occupied(can_open=True, baudrate=115200):
+    for conn in ClientManager_Serial().make__not_occupied(can_open=True, baudrate=115200):
         print(f"try {conn=}")
         with conn:
             dev_new = Harvest(conn)

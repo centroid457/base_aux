@@ -3,7 +3,7 @@ import re
 import time
 from abc import ABC, abstractmethod
 from threading import Lock
-from typing import Any, Self, AnyStr, NoReturn, Optional, Union
+from typing import *
 
 from base_aux.aux_eq.m4_eq_valid1_base import Base_EqValid
 
