@@ -1,10 +1,4 @@
-import re
-import time
-import pytest
-
-from .utils import *
-
-from base_aux.buses.d1_serial2_new.m2_manager import SerialManager
+from base_aux.clients.d1_serial.m2_serial_manager import SerialManager
 from base_aux.aux_eq.m4_eq_valid2_derivatives import *
 
 
