@@ -14,7 +14,12 @@ from base_aux.aux_eq.m4_eq_valid2_derivatives import *
 # ======================================================================================================================
 @pytest.fixture(scope="session")
 def harvest(request) -> Harvest:
-    """Находит устройство Harvest и возвращает авторизованный клиент."""
+    """
+    Находит устройство Harvest и возвращает авторизованный клиент.
+
+    WIFI
+    vest=cdeVFR90!
+    """
     found: list[Harvest] = []
     for conn in SerialManager().make__not_occupied(can_open=True, baudrate=115200):
         print(f"try {conn=}")
