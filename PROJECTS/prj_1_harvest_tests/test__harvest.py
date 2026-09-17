@@ -1222,8 +1222,8 @@ class Test_42__GSMAT:
         print()
         print()
         print()
-        result = harvest.at_param__explore(
-            param="CREG",
+        result = harvest.at_cmd__explore(
+            cmd="CREG",
             port=gsm_at__port,
         )
         # print(f"{result=}")
@@ -1236,8 +1236,8 @@ class Test_42__GSMAT:
         print()
         print()
         print()
-        result = harvest.at_params__explore(
-            params=harvest.AT_PARAMS__LIST,
+        result = harvest.at_cmds__explore(
+            cmds=harvest.AT_CMDS,
             port=gsm_at__port,
         )
         # print(f"{result=}")
