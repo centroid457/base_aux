@@ -549,394 +549,6 @@ class Harvest:
         # ],
     }
 
-    AT_GROUPS: dict[str, dict[str, str]] = {
-        # # =========================================================================
-        # # 1. ИДЕНТИФИКАЦИЯ / ВЕРСИИ / ОБЩИЕ
-        # # =========================================================================
-        # "IDENTITY": {
-        #     "AT": "эхо, проверка связи",
-        #     "ATI": "информация о производителе/модели/ревизии/IMEI",
-        #     "AT+CGMI": "manufacturer identification",
-        #     "AT+CGMM": "model identification",
-        #     "AT+CGGMM": "model identification (SIMCom-вариант)",
-        #     "AT+CGMR": "revision identification",
-        #     "AT+CGGMR": "revision identification (SIMCom-вариант)",
-        #     "AT+CGSN": "IMEI / serial number",
-        #     "AT+GSN": "IMEI (алиас)",
-        #     "AT+CIMI": "IMSI (IMSI SIM-карты)",
-        #     "AT+CIMIM": "IMSI второго аппа (USIM)",
-        #     "AT+GCAP": "список поддерживаемых возможностей (+CGSM, +FCLASS, +DS)",
-        #     # "AT+CSCS": "выбор TE character set (IRA/GSM/UCS2/HEX)", # FIXME: DANGER
-        #     "AT+CMEE": "формат ошибок (+CME ERROR: numeric/verbose)",
-        #     "AT+CPAS": "phone activity status",
-        #     # "AT+SIMEI": "установка IMEI (только для service)", # FIXME: DANGER
-        #     "AT+SMEID": "MEID (CDMA)",
-        #     "AT+CSVM": "voice mail subscriber number",
-        #     # "AT+CUSBPIDSWITCH": "смена USB PID (перезагружает модуль!)", # FIXME: DANGER
-        #     "AT+CICCID": "ICCID SIM-карты",
-        #     "AT+SPIC": "остаток попыток ввода PIN/PUK",
-        #     "AT+CPIN": "статус PIN (READY / SIM PIN / SIM PUK)",
-        #     "AT+CPINR": "остаток попыток PIN (3GPP-вариант)",
-        #     # "AT+CLCK": "facility lock (блокировка SIM/сети)", # FIXME: DANGER
-        #     # "AT+CPWD": "смена пароля (PIN/PUK)", # FIXME: DANGER
-        #     "AT+CCLK": "real time clock",
-        #     "AT+CACM": "accumulated call meter",
-        #     "AT+CAMM": "accumulated call meter maximum",
-        #     "AT+CPUC": "price per unit and currency",
-        #     "AT+CSPN": "service provider name",
-        #     "AT+CATR": "URC destination interface",
-        #     # "AT+CPOF": "power off module", # FIXME: DANGER
-        #     # "AT+CRESET": "reset module", # FIXME: DANGER
-        #     # "AT+CSCLK": "UART sleep control", # FIXME: DANGER
-        #     # "AT+CMUX": "мультиплексор UART (4 виртуальных порта) # DANGER",  # FIXME: DANGER
-        #     # "AT+CUSBPIDSWITCH": "смена USB PID # DANGER (reset)", # FIXME: DANGER
-        # },
-        #
-        # # =========================================================================
-        # # 2. V.25TER БАЗОВЫЕ (управление модемом)
-        # # =========================================================================
-        # "V25TER_BASIC": {
-        #     # "A/": "повторить последнюю команду",  # FIXME: NOT USEFUL
-        #     # "ATD": "dial (голосовой/данные)",
-        #     # "ATD><mem><n>": "dial из памяти (SM/ME/DC...)",
-        #     # "ATD><n>": "dial из активной памяти",
-        #     # "ATD><str>": "dial по имени из памяти",
-        #     # "ATA": "answer (ответ на входящий)", # FIXME: DANGER
-        #     # "ATH": "hang up (положить трубку)", # FIXME: DANGER
-        #     # "ATS0": "auto-answer (число гудков)", # FIXME: DANGER
-        #     # "+++": "escape из data mode в command mode",    # FIXME: NOT USEFUL
-        #     # "ATO": "вернуться в data mode", # FIXME: DANGER
-        #     "AT+IPR": "baud rate (temporarily)",
-        #     "AT+IPREX": "baud rate (permanently)",
-        #     # "AT+ICF": "character framing (data/parity/stop)", # FIXME: DANGER
-        #     # "AT+IFC": "flow control (RTS/CTS)", # FIXME: DANGER
-        #     # "AT&C": "DCD function mode", # FIXME: DANGER
-        #     # "ATE": "echo on/off",    # FIXME: DANGER
-        #     "AT&V": "display current configuration",
-        #     # "AT&D": "DTR function mode", # FIXME: DANGER
-        #     # "AT&S": "DSR function mode", # FIXME: DANGER
-        #     "ATV": "result code format (numeric/verbose)",
-        #     # "AT&F": "factory defaults",  # FIXME: DANGER
-        #     # "ATQ": "result code presentation mode",  # FIXME: DANGER
-        #     "ATX": "CONNECT result code format",
-        #     "AT&E": "CONNECT result code format (speed)",
-        #     # "AT&W": "save user settings",    # FIXME: DANGER
-        #     # "ATZ": "restore user settings",  # FIXME: DANGER
-        # },
-
-        # =========================================================================
-        # 3. STATUS CONTROL (управление состоянием)
-        # =========================================================================
-        "STATUS_CONTROL": {
-            # "AT+CFUN": "уровень функциональности (0=min, 1=full, 4=offline, 7=reset) # DANGER", # FIXME: DANGER
-            "AT+CSIM": "generic SIM access (APDU)",
-            "AT+CRSM": "restricted SIM access (READ/UPDATE BINARY/RECORD)",
-            "AT+CSPN": "service provider name",
-            "AT+CSQ": "signal quality (RSSI, BER)",
-            "AT+AUTOCSQ": "автоматический отчёт CSQ",
-            "AT+CSQDELTA": "порог изменения RSSI",
-            # "AT+CPOF": "power off", # FIXME: DANGER
-            # "AT+CRESET": "reset",   # FIXME: DANGER
-            "AT+CCLK": "real time clock",
-            # "AT+CMEE": "error format", # FIXME: DANGER
-            "AT+CPAS": "phone activity status",
-            # "AT+SIMEI": "set IMEI", # FIXME: DANGER
-            "AT+SMEID": "MEID",
-            "AT+CSVM": "voice mail number",
-        },
-
-        # =========================================================================
-        # 4. СЕТЬ / РЕГИСТРАЦИЯ / ОПЕРАТОР
-        # =========================================================================
-        "NETWORK": {
-            "AT+CREG": "network registration (CS)",
-            "AT+CGREG": "GPRS registration (PS)",
-            "AT+CEREG": "EPS registration (LTE)",
-            # "AT+COPS": "operator selection # DANGER (может долго висеть на =?)", # FIXME: DANGER
-            # "AT+CLCK": "facility lock (network)", # FIXME: DANGER
-            # "AT+CPWD": "change password", # FIXME: DANGER
-            # "AT+CCUG": "closed user group", # FIXME: DANGER
-            "AT+CUSD": "USSD",
-            "AT+CAOC": "advice of charge",
-            "AT+CSSN": "supplementary service notifications",
-            "AT+CPOL": "preferred operator list",
-            "AT+COPN": "read operator names",
-            # "AT+CNMP": "preferred mode selection",# FIXME: DANGER
-            # "AT+CNBP": "preferred band selection",# FIXME: DANGER
-            "AT+CNAOP": "acquisitions order preference",
-            "AT+CPSI": "UE system information",
-            "AT+CSMOD": "show network system mode",
-            "AT+CTZU": "automatic time zone update",
-            "AT+CTZR": "time zone reporting",
-            # "AT+NETMODE": "WCDMA/TDSCDMA mode select",# FIXME: DANGER
-            # "AT+WS46": "RAT selection (12=LTE, 22=..., 28=...)",# FIXME: DANGER
-            "AT+CESQ": "extended signal quality",
-            "AT+CIREG": "IMS registration (может быть не поддержано)",
-            "AT+CIMS": "IMS status (может быть не поддержано)",
-            "AT+CLBS": "base station location (LBS)",
-            "AT+CLBSCFG": "LBS configure",
-            "AT+CASSISTLOC": "base station location for LTE/CDMA",
-        },
-
-        # =========================================================================
-        # 5. CALL CONTROL (управление звонками)
-        # =========================================================================
-        "CALL_CONTROL": {
-            "AT+CVHU": "voice hang up control",
-            "AT+CHUP": "hang up call",
-            "AT+CBST": "bearer service type",
-            "AT+CRLP": "radio link protocol",
-            "AT+CR": "service reporting control",
-            "AT+CRC": "cellular result codes",
-            "AT+CLCC": "list current calls",
-            "AT+CEER": "extended error report",
-            # "AT+CCWA": "call waiting", # FIXME: DANGER
-            "AT+CHLD": "call related supplementary services",
-            "AT+CCFC": "call forwarding",
-            "AT+CLIP": "calling line identification presentation",
-            "AT+CLIR": "calling line identification restriction",
-            "AT+COLP": "connected line identification presentation",
-            # "AT+VTS": "DTMF and tone generation", # FIXME: DANGER
-            "AT+VTD": "tone duration",
-            # "AT+CSTA": "select type of address", # FIXME: DANGER
-            "AT+CMOD": "call mode",
-            "AT+VMUTE": "speaker mute",
-            "AT+CMUT": "microphone mute",
-            "AT+MORING": "MO ring URC",
-            "AT+CSDVC": "switch voice channel device",
-            "AT+CLVL": "loudspeaker volume",
-            "AT+SIDET": "sidetone",
-        },
-
-        # =========================================================================
-        # 6. AUDIO / DSP (голосовые параметры)
-        # =========================================================================
-        "AUDIO_DSP": {
-            # "AT+CACDBFN": "change default ACDB filename", # FIXME: DANGER
-            "AT+CPCMREG": "USB audio control",
-            "AT+CMICGAIN": "mic gain",
-            "AT+COUTGAIN": "out gain",
-            "AT+CTXVOL": "TX voice mic volume",
-            "AT+CTXMICGAIN": "TX voice mic gain",
-            "AT+CRXVOL": "RX voice output speaker volume",
-            "AT+CECH": "inhibit far-end echo",
-            "AT+CECDT": "inhibit echo during doubletalk",
-            "AT+CECWB": "inhibit echo in high band",
-            "AT+CSNS": "MIC noise suppression",
-            "AT+CSLIM": "MIC noise suppression (limit)",
-            "AT+CFNSMOD": "fnsMode of RX_VOICE_FNS",
-            "AT+CFNSIN": "fnsInputGain of RX_VOICE_FNS",
-            "AT+CFNSLVL": "fnsTargetNS of RX_VOICE_FNS",
-            "AT+CECRX": "VOICE_MOD_ENABLE",
-            "AT+CNLPPG": "NLPP_gain",
-            "AT+CNLPPL": "NLPP_limit",
-            "AT+CECM": "echo canceller mode",
-            "AT+CPCMFRM": "USB audio sample rate 16k",
-            "AT+CPTONE": "play tone",
-            "AT+CREC": "record wav",
-            "AT+CCMXPLAYWAV": "play wav",
-            "AT+CCMXSTOPWAV": "stop wav",
-            # "AT+CCMXPLAY": "play audio (mp3/aac/amr/...)", # FIXME: DANGER
-            # "AT+CCMXSTOP": "stop audio", # FIXME: DANGER
-        },
-
-        # =========================================================================
-        # 7. SMS
-        # =========================================================================
-        "SMS": {
-            "AT+CSMS": "select message service",
-            "AT+CPMS": "preferred message storage",
-            # "AT+CMGF": "SMS format (0=PDU, 1=text)", # FIXME: DANGER
-            "AT+CSCA": "SMS service centre address",
-            "AT+CSCB": "cell broadcast message indication",
-            # "AT+CSMP": "text mode parameters", # FIXME: DANGER
-            "AT+CSDH": "show text mode parameters",
-            "AT+CNMA": "new message acknowledgement",
-            "AT+CNMI": "new message indications",
-            "AT+CGMS": "service for MO SMS",
-            "AT+CGSMS": "service for MO SMS (3GPP)",
-            "AT+CMGL": "list SMS",
-            "AT+CMGR": "read SMS",
-            # "AT+CMGS": "send SMS # DANGER (ждёт > и Ctrl+Z)", # FIXME: DANGER
-            # "AT+CMSS": "send SMS from storage", # FIXME: DANGER
-            # "AT+CMGW": "write SMS to memory # DANGER (ждёт >)", # FIXME: DANGER
-            # "AT+CMGD": "delete SMS", # FIXME: DANGER
-            # "AT+CMGMT": "change message status", # FIXME: DANGER
-            "AT+CMVP": "message valid period",
-            # "AT+CMGRD": "read+delete SMS", # FIXME: DANGER
-            # "AT+CMGSEX": "send SMS (extended)", # FIXME: DANGER
-            # "AT+CMSSEX": "send multi SMS from storage", # FIXME: DANGER
-            # "AT+CMGP": "cdma/evdo text mode parameters", # FIXME: DANGER
-        },
-
-        # =========================================================================
-        # 8. PHONEBOOK
-        # =========================================================================
-        "PHONEBOOK": {
-            "AT+CPBS": "select phonebook memory (SM/ME/DC/MC/RC/FD/ON/LD/EN)",
-            "AT+CPBR": "read phonebook entries",
-            # "AT+CPBF": "find phonebook entries", # FIXME: DANGER
-            # "AT+CPBW": "write phonebook entry", # FIXME: DANGER
-            "AT+CNUM": "subscriber number (может быть недоступен на M2M)",
-        },
-
-        # =========================================================================
-        # 9. GPRS / PDP
-        # =========================================================================
-        "GPRS_PDP": {
-            "AT+CGREG": "GPRS registration status",
-            "AT+CGATT": "packet domain attach/detach",
-            # "AT+CGACT": "PDP context activate/deactivate", # FIXME: DANGER
-            # "AT+CGDCONT": "define PDP context (APN, type)", # FIXME: DANGER
-            # "AT+CGDSCONT": "define secondary PDP context", # FIXME: DANGER
-            "AT+CGTFT": "traffic flow template",
-            "AT+CGQREQ": "QoS profile (requested)",
-            "AT+CGEQREQ": "3G QoS profile (requested)",
-            "AT+CGQMIN": "QoS profile (minimum acceptable)",
-            "AT+CGEQMIN": "3G QoS profile (minimum acceptable)",
-            # "AT+CGDATA": "enter data state (PPP) # DANGER", # FIXME: DANGER
-            "AT+CGPADDR": "show PDP address",
-            "AT+CGCLASS": "GPRS mobile station class",
-            "AT+CGEREP": "GPRS event reporting",
-            "AT+CGAUTH": "PDP-IP authentication (PAP/CHAP)",
-            "AT+CGCONTRDP": "PDP context dynamic parameters",
-            "AT+CDNSSRV": "DNS server IP",
-        },
-
-        # =========================================================================
-        # 10. HARDWARE (питание, ADC, GPIO, I2C)
-        # =========================================================================
-        "HARDWARE": {
-            # "AT+CVALARM": "low/high voltage alarm", # FIXME: DANGER
-            "AT+CVAUXS": "state of VREG_AUX1 pin",
-            "AT+CVAUXV": "voltage of VREG_AUX1 pin",
-            "AT+CADC": "read ADC value",
-            "AT+CADC2": "read ADC2 value",
-            # "AT+CMTE": "temperature control / shutdown", # FIXME: DANGER
-            # "AT+CPMVT": "low/high voltage power off", # FIXME: DANGER
-            # "AT+CDELTA": "go to recovery mode # DANGER", # FIXME: DANGER
-            # "AT+CRIIC": "read I2C register", # FIXME: DANGER
-            # "AT+CWIIC": "write I2C register", # FIXME: DANGER
-            "AT+CBC": "battery/voltage",
-            "AT+CPMUTEMP": "module temperature",
-            # "AT+CGFUNC": "GPIO function enable/disable", # FIXME: DANGER
-            # "AT+CGDRT": "GPIO direction (in/out)", # FIXME: DANGER
-            # "AT+CGSETV": "GPIO set value (high/low)", # FIXME: DANGER
-            "AT+CGGETV": "GPIO get value",
-            "AT+CGISR": "GPIO interrupt trigger",
-            "AT+CFGRI": "RI pin on URC",
-            # "AT+CSCLK": "UART sleep", # FIXME: DANGER
-            # "AT+CMUX": "UART multiplexer # DANGER", # FIXME: DANGER
-        },
-
-        # =========================================================================
-        # 11. SIM APPLICATION TOOLKIT (SAT/STK)
-        # =========================================================================
-        "SAT_STK": {
-            "AT+STIN": "SAT indication",
-            "AT+STGI": "get SAT information",
-            "AT+STGR": "SAT respond",
-            # "AT+STK": "STK switch (on/off)", # FIXME: DANGER
-            # "AT+STKFMT": "STK PDU format (0=decoded, 1=PDU) # DANGER (reboot)", # FIXME: DANGER
-            "AT+STENV": "original STK PDU envelope command",
-            # "AT+STSM": "get STK setup menu list (PDU)", # FIXME: DANGER
-        },
-
-        # =========================================================================
-        # 12. FILE SYSTEM
-        # =========================================================================
-        "FILE_SYSTEM": {
-            # "AT+FSCD": "select current directory", # FIXME: DANGER
-            # "AT+FSMKDIR": "make directory", # FIXME: DANGER
-            # "AT+FSRMDIR": "delete directory", # FIXME: DANGER
-            "AT+FSLS": "list directories/files",
-            # "AT+FSDEL": "delete file", # FIXME: DANGER
-            # "AT+FSRENAME": "rename file", # FIXME: DANGER
-            "AT+FSATTRI": "file attributes",
-            "AT+FSMEM": "available memory",
-            # "AT+FSLOCA": "select storage place", # FIXME: DANGER
-            # "AT+FSCOPY": "copy file", # FIXME: DANGER
-            # "AT+CFTRANRX": "transfer file to EFS", # FIXME: DANGER
-            # "AT+CFTRANTX": "transfer file from EFS", # FIXME: DANGER
-        },
-
-        # =========================================================================
-        # 13. INTERNET SERVICE (TCP/IP стек модуля)
-        # =========================================================================
-        "INTERNET_SERVICE": {
-            # "AT+CSOCKSETPN": "set active PDP context profile", # FIXME: DANGER
-            "AT+CIPDNSSET": "DNS query parameters",
-            "AT+CDNSGIP": "query IP by domain name",
-            "AT+CDNSGHNAME": "query domain name by IP",
-            # "AT+CPING": "ping destination", # FIXME: DANGER
-            # "AT+CPINGSTOP": "stop ping", # FIXME: DANGER
-            "AT+CTCPFIN": "TCP FIN config",
-            "AT+CTCPKA": "TCP heartbeat",
-            "AT+CTEUTP": "unknown TCP packet echo",
-            "AT+CUPURE": "UDP port unreachable ICMP echo",
-            "AT+CINICMPALLOW": "ICMP filter",
-            "AT+CDNSSRV": "DNS server IP",
-            "AT+CHTPSERV": "HTP server info",
-            # "AT+CHTPUPDATE": "update time via HTP", # FIXME: DANGER
-            # "AT+CNTP": "update time via NTP", # FIXME: DANGER
-        },
-
-        # =========================================================================
-        # 14. OPEN/CLOSE NETWORK (для сокетов)
-        # =========================================================================
-        "NETWORK_OPEN": {
-            # "AT+CNETSTART": "open packet network # DANGER", # FIXME: DANGER
-            # "AT+CNETSTOP": "close network", # FIXME: DANGER
-            # "AT+CNETIPADDR": "inquire PDP address", # FIXME: DANGER
-        },
-
-        # =========================================================================
-        # 15. GPS / GNSS
-        # =========================================================================
-        "GPS_GNSS": {
-            "AT+CGPS": "start/stop GPS session",
-            "AT+CGPSINFO": "get GPS fixed position",
-            "AT+CGPSCOLD": "cold start GPS",
-            "AT+CGPSHOT": "hot start GPS",
-            "AT+CGPSURL": "AGPS server URL",
-            "AT+CGPSSSL": "AGPS transport security",
-            "AT+CGPSAUTO": "auto-start GPS",
-            "AT+CGPSNMEA": "NMEA sentence type",
-            "AT+CGPSNEMARATE": "NMEA output rate",
-            "AT+CGPSMD": "AGPS MO method",
-            "AT+CGPSFTM": "GPS test mode",
-            # "AT+CGPSDEL": "delete GPS info", # FIXME: DANGER
-            "AT+CGPSXE": "GPS XTRA enable",
-            # "AT+CGPSXD": "download XTRA file", # FIXME: DANGER
-            "AT+CGPSXDAUTO": "auto-download XTRA",
-            "AT+CGPSINFOCFG": "report NMEA-0183 sentence",
-            "AT+CGPSPMD": "positioning mode",
-            "AT+CGPSMSB": "based mode switch to standalone",
-            "AT+CGPSHOR": "positioning accuracy",
-            "AT+CGPSNOTIFY": "LCS respond positioning request",
-            "AT+CGNSSINFO": "GNSS fixed position",
-            "AT+CGNSSMODE": "GNSS support mode",
-        },
-
-        # =========================================================================
-        # 16. РАЗНОЕ / ВЕНДОРСКОЕ (может быть не в мануале)
-        # =========================================================================
-        "MISC_VENDOR": {
-            "AT*CNTI": "vendor: cell info (может отсутствовать)",
-            "AT*CPSI": "vendor: PSI (может отсутствовать)",
-            # "AT*CNETSCAN": "vendor: network scan (может отсутствовать)", # FIXME: DANGER
-            "AT*CELLINFO": "vendor: cell info (может отсутствовать)",
-            "AT+CRUSET": "vendor: RU settings (может отсутствовать)",
-            "AT+CCED": "vendor: cell environment description",
-            "AT+WS46": "RAT selection",
-            "AT+CESQ": "extended signal quality",
-            "AT+CIREG": "IMS registration",
-            "AT+CIMS": "IMS status",
-            "AT+CPINR": "PIN retries",
-            "AT+CGCONTRDP": "PDP context dynamic params",
-        },
-    }
-
     COMPILE_EOF__STR = re.compile(r".+@.+:.*#\s*")
 
     def __init__(self, conn: ClientBase):
@@ -4093,6 +3705,406 @@ A02901810001203000E2806894000050035FD77070430A430A3000E2806894000050035FD7707010
 def test__at_param__parse_variants(source, _EXPECTED):
     func_link = Harvest.at_param__parse_variants
     Lambda(func_link, source).check_expected__assert(_EXPECTED)
+
+
+# ======================================================================================================================
+AT_GROUPS: dict[str, dict[str, str]] = {
+    # =========================================================================
+    # 1. ИДЕНТИФИКАЦИЯ / ВЕРСИИ / ОБЩИЕ
+    # =========================================================================
+    "IDENTITY": {
+        "AT": "эхо, проверка связи",
+        "ATI": "информация о производителе/модели/ревизии/IMEI",
+        "AT+CGMI": "manufacturer identification",
+        "AT+CGMM": "model identification",
+        "AT+CGGMM": "model identification (SIMCom-вариант)",
+        "AT+CGMR": "revision identification",
+        "AT+CGGMR": "revision identification (SIMCom-вариант)",
+        "AT+CGSN": "IMEI / serial number",
+        "AT+GSN": "IMEI (алиас)",
+        "AT+CIMI": "IMSI (IMSI SIM-карты)",
+        "AT+CIMIM": "IMSI второго аппа (USIM)",
+        "AT+GCAP": "список поддерживаемых возможностей (+CGSM, +FCLASS, +DS)",
+        # "AT+CSCS": "выбор TE character set (IRA/GSM/UCS2/HEX)", # FIXME: DANGER
+        "AT+CMEE": "формат ошибок (+CME ERROR: numeric/verbose)",
+        "AT+CPAS": "phone activity status",
+        # "AT+SIMEI": "установка IMEI (только для service)", # FIXME: DANGER
+        "AT+SMEID": "MEID (CDMA)",
+        "AT+CSVM": "voice mail subscriber number",
+        # "AT+CUSBPIDSWITCH": "смена USB PID (перезагружает модуль!)", # FIXME: DANGER
+        "AT+CICCID": "ICCID SIM-карты",
+        "AT+SPIC": "остаток попыток ввода PIN/PUK",
+        "AT+CPIN": "статус PIN (READY / SIM PIN / SIM PUK)",
+        "AT+CPINR": "остаток попыток PIN (3GPP-вариант)",
+        # "AT+CLCK": "facility lock (блокировка SIM/сети)", # FIXME: DANGER
+        # "AT+CPWD": "смена пароля (PIN/PUK)", # FIXME: DANGER
+        "AT+CCLK": "real time clock",
+        "AT+CACM": "accumulated call meter",
+        "AT+CAMM": "accumulated call meter maximum",
+        "AT+CPUC": "price per unit and currency",
+        "AT+CSPN": "service provider name",
+        "AT+CATR": "URC destination interface",
+        # "AT+CPOF": "power off module", # FIXME: DANGER
+        # "AT+CRESET": "reset module", # FIXME: DANGER
+        # "AT+CSCLK": "UART sleep control", # FIXME: DANGER
+        # "AT+CMUX": "мультиплексор UART (4 виртуальных порта) # DANGER",  # FIXME: DANGER
+        # "AT+CUSBPIDSWITCH": "смена USB PID # DANGER (reset)", # FIXME: DANGER
+    },
+
+    # =========================================================================
+    # 2. V.25TER БАЗОВЫЕ (управление модемом)
+    # =========================================================================
+    "V25TER_BASIC": {
+        # "A/": "повторить последнюю команду",  # FIXME: NOT USEFUL
+        # "ATD": "dial (голосовой/данные)",
+        # "ATD><mem><n>": "dial из памяти (SM/ME/DC...)",
+        # "ATD><n>": "dial из активной памяти",
+        # "ATD><str>": "dial по имени из памяти",
+        # "ATA": "answer (ответ на входящий)", # FIXME: DANGER
+        # "ATH": "hang up (положить трубку)", # FIXME: DANGER
+        # "ATS0": "auto-answer (число гудков)", # FIXME: DANGER
+        # "+++": "escape из data mode в command mode",    # FIXME: NOT USEFUL
+        # "ATO": "вернуться в data mode", # FIXME: DANGER
+        "AT+IPR": "baud rate (temporarily)",
+        "AT+IPREX": "baud rate (permanently)",
+        # "AT+ICF": "character framing (data/parity/stop)", # FIXME: DANGER
+        # "AT+IFC": "flow control (RTS/CTS)", # FIXME: DANGER
+        # "AT&C": "DCD function mode", # FIXME: DANGER
+        # "ATE": "echo on/off",    # FIXME: DANGER
+        "AT&V": "display current configuration",
+        # "AT&D": "DTR function mode", # FIXME: DANGER
+        # "AT&S": "DSR function mode", # FIXME: DANGER
+        "ATV": "result code format (numeric/verbose)",
+        # "AT&F": "factory defaults",  # FIXME: DANGER
+        # "ATQ": "result code presentation mode",  # FIXME: DANGER
+        "ATX": "CONNECT result code format",
+        "AT&E": "CONNECT result code format (speed)",
+        # "AT&W": "save user settings",    # FIXME: DANGER
+        # "ATZ": "restore user settings",  # FIXME: DANGER
+    },
+
+    # =========================================================================
+    # 3. STATUS CONTROL (управление состоянием)
+    # =========================================================================
+    "STATUS_CONTROL": {
+        # "AT+CFUN": "уровень функциональности (0=min, 1=full, 4=offline, 7=reset) # DANGER", # FIXME: DANGER
+        "AT+CSIM": "generic SIM access (APDU)",
+        "AT+CRSM": "restricted SIM access (READ/UPDATE BINARY/RECORD)",
+        "AT+CSPN": "service provider name",
+        "AT+CSQ": "signal quality (RSSI, BER)",
+        "AT+AUTOCSQ": "автоматический отчёт CSQ",
+        "AT+CSQDELTA": "порог изменения RSSI",
+        # "AT+CPOF": "power off", # FIXME: DANGER
+        # "AT+CRESET": "reset",   # FIXME: DANGER
+        "AT+CCLK": "real time clock",
+        # "AT+CMEE": "error format", # FIXME: DANGER
+        "AT+CPAS": "phone activity status",
+        # "AT+SIMEI": "set IMEI", # FIXME: DANGER
+        "AT+SMEID": "MEID",
+        "AT+CSVM": "voice mail number",
+    },
+
+    # =========================================================================
+    # 4. СЕТЬ / РЕГИСТРАЦИЯ / ОПЕРАТОР
+    # =========================================================================
+    "NETWORK": {
+        "AT+CREG": "network registration (CS)",
+        "AT+CGREG": "GPRS registration (PS)",
+        "AT+CEREG": "EPS registration (LTE)",
+        # "AT+COPS": "operator selection # DANGER (может долго висеть на =?)", # FIXME: DANGER
+        # "AT+CLCK": "facility lock (network)", # FIXME: DANGER
+        # "AT+CPWD": "change password", # FIXME: DANGER
+        # "AT+CCUG": "closed user group", # FIXME: DANGER
+        "AT+CUSD": "USSD",
+        "AT+CAOC": "advice of charge",
+        "AT+CSSN": "supplementary service notifications",
+        "AT+CPOL": "preferred operator list",
+        "AT+COPN": "read operator names",
+        # "AT+CNMP": "preferred mode selection",# FIXME: DANGER
+        # "AT+CNBP": "preferred band selection",# FIXME: DANGER
+        "AT+CNAOP": "acquisitions order preference",
+        "AT+CPSI": "UE system information",
+        "AT+CSMOD": "show network system mode",
+        "AT+CTZU": "automatic time zone update",
+        "AT+CTZR": "time zone reporting",
+        # "AT+NETMODE": "WCDMA/TDSCDMA mode select",# FIXME: DANGER
+        # "AT+WS46": "RAT selection (12=LTE, 22=..., 28=...)",# FIXME: DANGER
+        "AT+CESQ": "extended signal quality",
+        "AT+CIREG": "IMS registration (может быть не поддержано)",
+        "AT+CIMS": "IMS status (может быть не поддержано)",
+        "AT+CLBS": "base station location (LBS)",
+        "AT+CLBSCFG": "LBS configure",
+        "AT+CASSISTLOC": "base station location for LTE/CDMA",
+    },
+
+    # =========================================================================
+    # 5. CALL CONTROL (управление звонками)
+    # =========================================================================
+    "CALL_CONTROL": {
+        "AT+CVHU": "voice hang up control",
+        "AT+CHUP": "hang up call",
+        "AT+CBST": "bearer service type",
+        "AT+CRLP": "radio link protocol",
+        "AT+CR": "service reporting control",
+        "AT+CRC": "cellular result codes",
+        "AT+CLCC": "list current calls",
+        "AT+CEER": "extended error report",
+        # "AT+CCWA": "call waiting", # FIXME: DANGER
+        "AT+CHLD": "call related supplementary services",
+        "AT+CCFC": "call forwarding",
+        "AT+CLIP": "calling line identification presentation",
+        "AT+CLIR": "calling line identification restriction",
+        "AT+COLP": "connected line identification presentation",
+        # "AT+VTS": "DTMF and tone generation", # FIXME: DANGER
+        "AT+VTD": "tone duration",
+        # "AT+CSTA": "select type of address", # FIXME: DANGER
+        "AT+CMOD": "call mode",
+        "AT+VMUTE": "speaker mute",
+        "AT+CMUT": "microphone mute",
+        "AT+MORING": "MO ring URC",
+        "AT+CSDVC": "switch voice channel device",
+        "AT+CLVL": "loudspeaker volume",
+        "AT+SIDET": "sidetone",
+    },
+
+    # =========================================================================
+    # 6. AUDIO / DSP (голосовые параметры)
+    # =========================================================================
+    "AUDIO_DSP": {
+        # "AT+CACDBFN": "change default ACDB filename", # FIXME: DANGER
+        "AT+CPCMREG": "USB audio control",
+        "AT+CMICGAIN": "mic gain",
+        "AT+COUTGAIN": "out gain",
+        "AT+CTXVOL": "TX voice mic volume",
+        "AT+CTXMICGAIN": "TX voice mic gain",
+        "AT+CRXVOL": "RX voice output speaker volume",
+        "AT+CECH": "inhibit far-end echo",
+        "AT+CECDT": "inhibit echo during doubletalk",
+        "AT+CECWB": "inhibit echo in high band",
+        "AT+CSNS": "MIC noise suppression",
+        "AT+CSLIM": "MIC noise suppression (limit)",
+        "AT+CFNSMOD": "fnsMode of RX_VOICE_FNS",
+        "AT+CFNSIN": "fnsInputGain of RX_VOICE_FNS",
+        "AT+CFNSLVL": "fnsTargetNS of RX_VOICE_FNS",
+        "AT+CECRX": "VOICE_MOD_ENABLE",
+        "AT+CNLPPG": "NLPP_gain",
+        "AT+CNLPPL": "NLPP_limit",
+        "AT+CECM": "echo canceller mode",
+        "AT+CPCMFRM": "USB audio sample rate 16k",
+        "AT+CPTONE": "play tone",
+        "AT+CREC": "record wav",
+        "AT+CCMXPLAYWAV": "play wav",
+        "AT+CCMXSTOPWAV": "stop wav",
+        # "AT+CCMXPLAY": "play audio (mp3/aac/amr/...)", # FIXME: DANGER
+        # "AT+CCMXSTOP": "stop audio", # FIXME: DANGER
+    },
+
+    # =========================================================================
+    # 7. SMS
+    # =========================================================================
+    "SMS": {
+        "AT+CSMS": "select message service",
+        "AT+CPMS": "preferred message storage",
+        # "AT+CMGF": "SMS format (0=PDU, 1=text)", # FIXME: DANGER
+        "AT+CSCA": "SMS service centre address",
+        "AT+CSCB": "cell broadcast message indication",
+        # "AT+CSMP": "text mode parameters", # FIXME: DANGER
+        "AT+CSDH": "show text mode parameters",
+        "AT+CNMA": "new message acknowledgement",
+        "AT+CNMI": "new message indications",
+        "AT+CGMS": "service for MO SMS",
+        "AT+CGSMS": "service for MO SMS (3GPP)",
+        "AT+CMGL": "list SMS",
+        "AT+CMGR": "read SMS",
+        # "AT+CMGS": "send SMS # DANGER (ждёт > и Ctrl+Z)", # FIXME: DANGER
+        # "AT+CMSS": "send SMS from storage", # FIXME: DANGER
+        # "AT+CMGW": "write SMS to memory # DANGER (ждёт >)", # FIXME: DANGER
+        # "AT+CMGD": "delete SMS", # FIXME: DANGER
+        # "AT+CMGMT": "change message status", # FIXME: DANGER
+        "AT+CMVP": "message valid period",
+        # "AT+CMGRD": "read+delete SMS", # FIXME: DANGER
+        # "AT+CMGSEX": "send SMS (extended)", # FIXME: DANGER
+        # "AT+CMSSEX": "send multi SMS from storage", # FIXME: DANGER
+        # "AT+CMGP": "cdma/evdo text mode parameters", # FIXME: DANGER
+    },
+
+    # =========================================================================
+    # 8. PHONEBOOK
+    # =========================================================================
+    "PHONEBOOK": {
+        "AT+CPBS": "select phonebook memory (SM/ME/DC/MC/RC/FD/ON/LD/EN)",
+        "AT+CPBR": "read phonebook entries",
+        # "AT+CPBF": "find phonebook entries", # FIXME: DANGER
+        # "AT+CPBW": "write phonebook entry", # FIXME: DANGER
+        "AT+CNUM": "subscriber number (может быть недоступен на M2M)",
+    },
+
+    # =========================================================================
+    # 9. GPRS / PDP
+    # =========================================================================
+    "GPRS_PDP": {
+        "AT+CGREG": "GPRS registration status",
+        "AT+CGATT": "packet domain attach/detach",
+        # "AT+CGACT": "PDP context activate/deactivate", # FIXME: DANGER
+        # "AT+CGDCONT": "define PDP context (APN, type)", # FIXME: DANGER
+        # "AT+CGDSCONT": "define secondary PDP context", # FIXME: DANGER
+        "AT+CGTFT": "traffic flow template",
+        "AT+CGQREQ": "QoS profile (requested)",
+        "AT+CGEQREQ": "3G QoS profile (requested)",
+        "AT+CGQMIN": "QoS profile (minimum acceptable)",
+        "AT+CGEQMIN": "3G QoS profile (minimum acceptable)",
+        # "AT+CGDATA": "enter data state (PPP) # DANGER", # FIXME: DANGER
+        "AT+CGPADDR": "show PDP address",
+        "AT+CGCLASS": "GPRS mobile station class",
+        "AT+CGEREP": "GPRS event reporting",
+        "AT+CGAUTH": "PDP-IP authentication (PAP/CHAP)",
+        "AT+CGCONTRDP": "PDP context dynamic parameters",
+        "AT+CDNSSRV": "DNS server IP",
+    },
+
+    # =========================================================================
+    # 10. HARDWARE (питание, ADC, GPIO, I2C)
+    # =========================================================================
+    "HARDWARE": {
+        # "AT+CVALARM": "low/high voltage alarm", # FIXME: DANGER
+        "AT+CVAUXS": "state of VREG_AUX1 pin",
+        "AT+CVAUXV": "voltage of VREG_AUX1 pin",
+        "AT+CADC": "read ADC value",
+        "AT+CADC2": "read ADC2 value",
+        # "AT+CMTE": "temperature control / shutdown", # FIXME: DANGER
+        # "AT+CPMVT": "low/high voltage power off", # FIXME: DANGER
+        # "AT+CDELTA": "go to recovery mode # DANGER", # FIXME: DANGER
+        # "AT+CRIIC": "read I2C register", # FIXME: DANGER
+        # "AT+CWIIC": "write I2C register", # FIXME: DANGER
+        "AT+CBC": "battery/voltage",
+        "AT+CPMUTEMP": "module temperature",
+        # "AT+CGFUNC": "GPIO function enable/disable", # FIXME: DANGER
+        # "AT+CGDRT": "GPIO direction (in/out)", # FIXME: DANGER
+        # "AT+CGSETV": "GPIO set value (high/low)", # FIXME: DANGER
+        "AT+CGGETV": "GPIO get value",
+        "AT+CGISR": "GPIO interrupt trigger",
+        "AT+CFGRI": "RI pin on URC",
+        # "AT+CSCLK": "UART sleep", # FIXME: DANGER
+        # "AT+CMUX": "UART multiplexer # DANGER", # FIXME: DANGER
+    },
+
+    # =========================================================================
+    # 11. SIM APPLICATION TOOLKIT (SAT/STK)
+    # =========================================================================
+    "SAT_STK": {
+        "AT+STIN": "SAT indication",
+        "AT+STGI": "get SAT information",
+        "AT+STGR": "SAT respond",
+        # "AT+STK": "STK switch (on/off)", # FIXME: DANGER
+        # "AT+STKFMT": "STK PDU format (0=decoded, 1=PDU) # DANGER (reboot)", # FIXME: DANGER
+        "AT+STENV": "original STK PDU envelope command",
+        # "AT+STSM": "get STK setup menu list (PDU)", # FIXME: DANGER
+    },
+
+    # =========================================================================
+    # 12. FILE SYSTEM
+    # =========================================================================
+    "FILE_SYSTEM": {
+        # "AT+FSCD": "select current directory", # FIXME: DANGER
+        # "AT+FSMKDIR": "make directory", # FIXME: DANGER
+        # "AT+FSRMDIR": "delete directory", # FIXME: DANGER
+        "AT+FSLS": "list directories/files",
+        # "AT+FSDEL": "delete file", # FIXME: DANGER
+        # "AT+FSRENAME": "rename file", # FIXME: DANGER
+        "AT+FSATTRI": "file attributes",
+        "AT+FSMEM": "available memory",
+        # "AT+FSLOCA": "select storage place", # FIXME: DANGER
+        # "AT+FSCOPY": "copy file", # FIXME: DANGER
+        # "AT+CFTRANRX": "transfer file to EFS", # FIXME: DANGER
+        # "AT+CFTRANTX": "transfer file from EFS", # FIXME: DANGER
+    },
+
+    # =========================================================================
+    # 13. INTERNET SERVICE (TCP/IP стек модуля)
+    # =========================================================================
+    "INTERNET_SERVICE": {
+        # "AT+CSOCKSETPN": "set active PDP context profile", # FIXME: DANGER
+        "AT+CIPDNSSET": "DNS query parameters",
+        "AT+CDNSGIP": "query IP by domain name",
+        "AT+CDNSGHNAME": "query domain name by IP",
+        # "AT+CPING": "ping destination", # FIXME: DANGER
+        # "AT+CPINGSTOP": "stop ping", # FIXME: DANGER
+        "AT+CTCPFIN": "TCP FIN config",
+        "AT+CTCPKA": "TCP heartbeat",
+        "AT+CTEUTP": "unknown TCP packet echo",
+        "AT+CUPURE": "UDP port unreachable ICMP echo",
+        "AT+CINICMPALLOW": "ICMP filter",
+        "AT+CDNSSRV": "DNS server IP",
+        "AT+CHTPSERV": "HTP server info",
+        # "AT+CHTPUPDATE": "update time via HTP", # FIXME: DANGER
+        # "AT+CNTP": "update time via NTP", # FIXME: DANGER
+    },
+
+    # =========================================================================
+    # 14. OPEN/CLOSE NETWORK (для сокетов)
+    # =========================================================================
+    "NETWORK_OPEN": {
+        # "AT+CNETSTART": "open packet network # DANGER", # FIXME: DANGER
+        # "AT+CNETSTOP": "close network", # FIXME: DANGER
+        # "AT+CNETIPADDR": "inquire PDP address", # FIXME: DANGER
+    },
+
+    # =========================================================================
+    # 15. GPS / GNSS
+    # =========================================================================
+    "GPS_GNSS": {
+        "AT+CGPS": "start/stop GPS session",
+        "AT+CGPSINFO": "get GPS fixed position",
+        "AT+CGPSCOLD": "cold start GPS",
+        "AT+CGPSHOT": "hot start GPS",
+        "AT+CGPSURL": "AGPS server URL",
+        "AT+CGPSSSL": "AGPS transport security",
+        "AT+CGPSAUTO": "auto-start GPS",
+        "AT+CGPSNMEA": "NMEA sentence type",
+        "AT+CGPSNEMARATE": "NMEA output rate",
+        "AT+CGPSMD": "AGPS MO method",
+        "AT+CGPSFTM": "GPS test mode",
+        # "AT+CGPSDEL": "delete GPS info", # FIXME: DANGER
+        "AT+CGPSXE": "GPS XTRA enable",
+        # "AT+CGPSXD": "download XTRA file", # FIXME: DANGER
+        "AT+CGPSXDAUTO": "auto-download XTRA",
+        "AT+CGPSINFOCFG": "report NMEA-0183 sentence",
+        "AT+CGPSPMD": "positioning mode",
+        "AT+CGPSMSB": "based mode switch to standalone",
+        "AT+CGPSHOR": "positioning accuracy",
+        "AT+CGPSNOTIFY": "LCS respond positioning request",
+        "AT+CGNSSINFO": "GNSS fixed position",
+        "AT+CGNSSMODE": "GNSS support mode",
+    },
+
+    # =========================================================================
+    # 16. РАЗНОЕ / ВЕНДОРСКОЕ (может быть не в мануале)
+    # =========================================================================
+    "MISC_VENDOR": {
+        "AT*CNTI": "vendor: cell info (может отсутствовать)",
+        "AT*CPSI": "vendor: PSI (может отсутствовать)",
+        # "AT*CNETSCAN": "vendor: network scan (может отсутствовать)", # FIXME: DANGER
+        "AT*CELLINFO": "vendor: cell info (может отсутствовать)",
+        "AT+CRUSET": "vendor: RU settings (может отсутствовать)",
+        "AT+CCED": "vendor: cell environment description",
+        "AT+WS46": "RAT selection",
+        "AT+CESQ": "extended signal quality",
+        "AT+CIREG": "IMS registration",
+        "AT+CIMS": "IMS status",
+        "AT+CPINR": "PIN retries",
+        "AT+CGCONTRDP": "PDP context dynamic params",
+    },
+}
+
+
+# @pytest.mark.skip
+@pytest.mark.parametrize(
+    argnames="group_name, cmds",
+    argvalues=list(AT_GROUPS.items()),
+    ids=list(AT_GROUPS.keys()),
+)
+def test__at_param__GROUPS(group_name, cmds, harvest, gsm_at__port):
+    harvest.at_cmds__explore(cmds=cmds, port=gsm_at__port)
 
 
 # ======================================================================================================================
