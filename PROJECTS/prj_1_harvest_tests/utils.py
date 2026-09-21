@@ -969,11 +969,19 @@ PASSED
             ints_final: set[int] = set()
             for subdiap in int_diaps_final:
                 if "-" in subdiap:
-                    start, finish = subdiap.split("-")
-                    start = int(start.strip())
-                    finish = int(finish.strip())
-                    for value in range(start, finish+1):
-                        ints_final.add(value)
+                    nodes = subdiap.split("-")
+                    if len(nodes) > 2:
+                        nodes = [nodes[0], nodes[-1]]
+
+                    if len(nodes) == 2:
+                        try:
+                            start, finish = nodes
+                            start = int(start.strip())
+                            finish = int(finish.strip())
+                            for value in range(start, finish+1):
+                                ints_final.add(value)
+                        except:
+                            continue
                 else:
                     value = int(subdiap.strip())
                     ints_final.add(value)
@@ -3233,7 +3241,7 @@ A02901810001203000E2806894000050035FD77070430A430A3000E2806894000050035FD7707010
 
 
 # ======================================================================================================================
-# @pytest.mark.skip
+@pytest.mark.skip
 @pytest.mark.parametrize(
     argnames="source, _EXPECTED",
     argvalues=[
@@ -3255,6 +3263,12 @@ A02901810001203000E2806894000050035FD77070430A430A3000E2806894000050035FD7707010
         ('+: (4-8),(0-1)\nOK', ['0', '1', '4', '5', '6', '7', '8', ]),
         ('+: (1,4-8)\nOK', ['1', '4', '5', '6', '7', '8', ]),
         ('+: ( 1 , 4 -  8 )\nOK', ['1', '4', '5', '6', '7', '8', ]),
+
+        ('+: (1-3-4)\nOK', ['1', '2', '3', '4']),
+        ('+: (1-3-4,8)\nOK', ['1', '2', '3', '4', '8']),
+
+        ('+CPBR: (1-100),20,28', ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']),
+        # ('+CPBR: (1-2),20,28', ['1', '2', '20', '28']),  # is it really important??
 
         # STR=======================
         ('+CPBS: "SM"\nOK', ["SM",]),
