@@ -1,3 +1,5 @@
+import json
+
 from base_aux.clients.m2_manager_1__serial import ClientManager_Serial
 from base_aux.aux_eq.m4_eq_valid2_derivatives import *
 
@@ -1231,19 +1233,48 @@ class Test_42__GSMAT:
         # result = list(filter(lambda x: x[0].endswith("?"), result))
         # print(json.dumps(result, indent=2, ensure_ascii=False))
 
-    # @pytest.mark.skip
+    @pytest.mark.skip
     def test_gsmat_0__explore2_several(self, harvest, gsm_at__port):
         print()
         print()
         print()
         result = harvest.at_cmds__explore(
-            cmds=harvest.AT_CMDS,
+            cmds=harvest.AT_CMDS__GROUPED,
             port=gsm_at__port,
         )
         # print(f"{result=}")
         assert result, "не удалось получить данные"
         # result = list(filter(lambda x: x[0].endswith("?"), result))
         # print(json.dumps(result, indent=2, ensure_ascii=False))
+
+    # @pytest.mark.skip
+    def test_gsmat_0__explore3_groups(self, harvest, gsm_at__port):
+        result_full = dict()
+
+        for group_name, group_values in harvest.AT_GROUPS.items():
+            print()
+            print()
+            print()
+            print(f"=========={group_name=}==========")
+            result = harvest.at_cmds__explore(
+                cmds=group_values,
+                port=gsm_at__port,
+            )
+            # print(f"{result=}")
+            result_full[group_name] = result
+
+        print()
+        print()
+        print()
+        print(f"==========FINAL GROUPS==========")
+        print(json.dumps(result_full, indent=2))
+
+        print("{\n")
+        for group_name, group_results in result_full.items():
+            print(f"\t'{group_name}': " + "{\n")
+            # for cmd,
+
+        print(f"==========FINAL GROUPS==========")
 
     # ------------------------------------------------------------------------------------------------------------------
     @pytest.mark.dependency(name="gsmat_present")

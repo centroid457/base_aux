@@ -15,7 +15,7 @@ PATTERN_MAC = r"[0-9A-F:]{17}"
 
 # ======================================================================================================================
 class Harvest:
-    AT_CMDS__short: Iterable[str] = [
+    AT_CMDS__FLAT: Iterable[str] = [
         # =========================================================================
         "AT",  # ответ эхо - проверка функционирования модема на канал
 
@@ -129,424 +129,813 @@ class Harvest:
         "AT+GCAP",
     ]
 
-    AT_CMDS: Iterable[str] = {
-            'AT': [
-                ('AT=?', 'ERROR'),
-                ('AT', 'OK'),
-                ('AT?', 'ERROR'),
-            ],
-            'AT+CNUM': [
-                ('AT+CNUM=?', 'ERROR'),
-                ('AT+CNUM', 'ERROR'),
-                ('AT+CNUM?', 'ERROR'),
-            ],
-            'AT+CPBS': [
-                ('AT+CPBS=?', 'ERROR'),
-                ('AT+CPBS', 'ERROR'),
-                ('AT+CPBS?', 'ERROR'),
-            ],
-            'AT+CPBR': [
-                ('AT+CPBR=?', '+CME ERROR: unknown error'),
-                ('AT+CPBR', 'ERROR'),
-                ('AT+CPBR?', '+CME ERROR: unknown error'),
-            ],
-            'AT+CRSM': [
-                ('AT+CRSM=?', 'OK'),
-                ('AT+CRSM', 'ERROR'),
-                ('AT+CRSM?', '+CME ERROR: Operation not supported'),
-            ],
-            'ATI': [
-                ('ATI=?', 'ERROR'),
-                ('ATI',
-                 'Manufacturer: INCORPORATED\nModel: A7682E-R\nRevision: A7682M6_V1.11.1\nIMEI1: 865286077380516\nIMEI2: 865286076965218\n+GCAP: +CGSM,+FCLASS,+DS\nOK'),
-                ('ATI?', 'ERROR'),
-            ],
-            'ATI1': [
-                ('ATI1=?', 'ERROR'),
-                ('ATI1', 'ERROR'),
-                ('ATI1?', 'ERROR'),
-            ],
-            'ATI2': [
-                ('ATI2=?', 'ERROR'),
-                ('ATI2', 'ERROR'),
-                ('ATI2?', 'ERROR'),
-            ],
-            'ATI3': [
-                ('ATI3=?', 'ERROR'),
-                ('ATI3', 'ERROR'),
-                ('ATI3?', 'ERROR'),
-            ],
-            'ATI4': [
-                ('ATI4=?', 'ERROR'),
-                ('ATI4', 'ERROR'),
-                ('ATI4?', 'ERROR'),
-            ],
-            'ATI5': [
-                ('ATI5=?', 'ERROR'),
-                ('ATI5', 'ERROR'),
-                ('ATI5?', 'ERROR'),
-            ],
-            'ATI6': [
-                ('ATI6=?', 'ERROR'),
-                ('ATI6', 'ERROR'),
-                ('ATI6?', 'ERROR'),
-            ],
-            'ATI7': [
-                ('ATI7=?', 'ERROR'),
-                ('ATI7', 'ERROR'),
-                ('ATI7?', 'ERROR'),
-            ],
-            'ATI8': [
-                ('ATI8=?', 'ERROR'),
-                ('ATI8', 'ERROR'),
-                ('ATI8?', 'ERROR'),
-            ],
-            'ATI9': [
-                ('ATI9=?', 'ERROR'),
-                ('ATI9', 'ERROR'),
-                ('ATI9?', 'ERROR'),
-            ],
-            'AT+CGMI': [
-                ('AT+CGMI=?', 'OK'),
-                ('AT+CGMI', 'INCORPORATED\nOK'),
-                ('AT+CGMI?', 'INCORPORATED\nOK'),
-            ],
-            'AT+CGMM': [
-                ('AT+CGMM=?', 'OK'),
-                ('AT+CGMM', 'A7682E-R\nOK'),
-                ('AT+CGMM?', 'A7682E-R\nOK'),
-            ],
-            'AT+CGMR': [
-                ('AT+CGMR=?', 'OK'),
-                ('AT+CGMR', '+CGMR: A011B02A7682M6_DS_FOTA\nOK'),
-                ('AT+CGMR?', '+CGMR: A011B02A7682M6_DS_FOTA\nOK'),
-            ],
-            'AT+CGSN': [
-                ('AT+CGSN=?', 'OK'),
-                ('AT+CGSN', '865286077380516\nOK'),
-                ('AT+CGSN?', 'ERROR'),
-            ],
-            'AT+CIMI': [
-                ('AT+CIMI=?', 'OK'),
-                ('AT+CIMI', '+CME ERROR: SIM failure'),
-                ('AT+CIMI?', '+CME ERROR: Operation not supported'),
-            ],
-            'AT+GSN': [
-                ('AT+GSN=?', 'OK'),
-                ('AT+GSN', '865286077380516\nOK'),
-                ('AT+GSN?', 'ERROR'),
-            ],
-            'AT+CPIN': [
-                ('AT+CPIN=?', 'OK'),
-                ('AT+CPIN', 'ERROR'),
-                ('AT+CPIN?', '+CME ERROR: SIM not inserted'),
-            ],
-            'AT+CPINR': [
-                ('AT+CPINR=?', '+CPINR: (0-3),(0-3),(0-10),(0-10)\nOK'),
-                ('AT+CPINR', '+CME ERROR: Operation not supported'),
-                ('AT+CPINR?', '+CME ERROR: SIM not inserted'),
-                ('AT+CPINR=0', 'ERROR'),
-                ('AT+CPINR?', '+CME ERROR: SIM not inserted'),
-                ('AT+CPINR=1', 'ERROR'),
-                ('AT+CPINR?', '+CME ERROR: SIM not inserted'),
-                ('AT+CPINR=2', 'ERROR'),
-                ('AT+CPINR?', '+CME ERROR: SIM not inserted'),
-                ('AT+CPINR=3', 'ERROR'),
-                ('AT+CPINR?', '+CME ERROR: SIM not inserted'),
-                ('AT+CPINR=4', 'ERROR'),
-                ('AT+CPINR?', '+CME ERROR: SIM not inserted'),
-                ('AT+CPINR=5', 'ERROR'),
-                ('AT+CPINR?', '+CME ERROR: SIM not inserted'),
-                ('AT+CPINR=6', 'ERROR'),
-                ('AT+CPINR?', '+CME ERROR: SIM not inserted'),
-                ('AT+CPINR=7', 'ERROR'),
-                ('AT+CPINR?', '+CME ERROR: SIM not inserted'),
-                ('AT+CPINR=8', 'ERROR'),
-                ('AT+CPINR?', '+CME ERROR: SIM not inserted'),
-                ('AT+CPINR=9', 'ERROR'),
-                ('AT+CPINR?', '+CME ERROR: SIM not inserted'),
-            ],
-            'AT+CCID': [
-                ('AT+CCID=?', 'ERROR'),
-                ('AT+CCID', 'ERROR'),
-                ('AT+CCID?', 'ERROR'),
-            ],
-            'AT+ICCID': [
-                ('AT+ICCID=?', 'ERROR'),
-                ('AT+ICCID', 'ERROR'),
-                ('AT+ICCID?', 'ERROR'),
-            ],
-            'AT+CREG': [
-                ('AT+CREG=?', '+CREG: (0-2)\nOK'),
-                ('AT+CREG', 'OK'),
-                ('AT+CREG?', '+CREG: 0,0\nOK'),
-                ('AT+CREG=0', 'OK'),
-                ('AT+CREG?', '+CREG: 0,0\nOK'),
-                ('AT+CREG=1', 'OK'),
-                ('AT+CREG?', '+CREG: 1,0\nOK'),
-                ('AT+CREG=2', 'OK'),
-                ('AT+CREG?', '+CREG: 2,0\nOK'),
-            ],
-            'AT+CGREG': [
-                ('AT+CGREG=?', '+CGREG: (0-2)\nOK'),
-                ('AT+CGREG', 'OK'),
-                ('AT+CGREG?', '+CGREG: 0,0\nOK'),
-                ('AT+CGREG=0', 'OK'),
-                ('AT+CGREG?', '+CGREG: 0,0\nOK'),
-                ('AT+CGREG=1', 'OK'),
-                ('AT+CGREG?', '+CGREG: 1,0\nOK'),
-                ('AT+CGREG=2', 'OK'),
-                ('AT+CGREG?', '+CGREG: 2,0,"0000","00000000"\nOK'),
-            ],
-            'AT+CEREG': [
-                ('AT+CEREG=?', '+CEREG: (0-2)\nOK'),
-                ('AT+CEREG', 'OK'),
-                ('AT+CEREG?', '+CEREG: 0,0\nOK'),
-                ('AT+CEREG=0', 'OK'),
-                ('AT+CEREG?', '+CEREG: 0,0\nOK'),
-                ('AT+CEREG=1', 'OK'),
-                ('AT+CEREG?', '+CEREG: 1,0\nOK'),
-                ('AT+CEREG=2', 'OK'),
-                ('AT+CEREG?', '+CEREG: 2,0,0000,00000000\nOK'),
-            ],
-            'AT+CSQ': [
-                ('AT+CSQ=?', '+CSQ: (0-31,99),(0-7,99)\nOK'),
-                ('AT+CSQ', '+CSQ: 29,99\nOK'),
-                ('AT+CSQ?', 'ERROR'),
-                ('AT+CSQ=0', 'ERROR'),
-                ('AT+CSQ?', 'ERROR'),
-                ('AT+CSQ=1', 'ERROR'),
-                ('AT+CSQ?', 'ERROR'),
-                ('AT+CSQ=2', 'ERROR'),
-                ('AT+CSQ?', 'ERROR'),
-                ('AT+CSQ=3', 'ERROR'),
-                ('AT+CSQ?', 'ERROR'),
-                ('AT+CSQ=4', 'ERROR'),
-                ('AT+CSQ?', 'ERROR'),
-                ('AT+CSQ=5', 'ERROR'),
-                ('AT+CSQ?', 'ERROR'),
-                ('AT+CSQ=6', 'ERROR'),
-                ('AT+CSQ?', 'ERROR'),
-                ('AT+CSQ=7', 'ERROR'),
-                ('AT+CSQ?', 'ERROR'),
-                ('AT+CSQ=8', 'ERROR'),
-                ('AT+CSQ?', 'ERROR'),
-                ('AT+CSQ=9', 'ERROR'),
-                ('AT+CSQ?', 'ERROR'),
-            ],
-            'AT+CESQ': [
-                ('AT+CESQ=?', '+CESQ: (0-63,99),(0-7,99),(0-96,255),(0-49,255),(0-34,255),(0-97,255)\nOK'),
-                ('AT+CESQ', '+CESQ: 99,99,255,255,9,52\nOK'),
-                ('AT+CESQ?', '+CME ERROR: 100'),
-                ('AT+CESQ=0', '+CME ERROR: 100'),
-                ('AT+CESQ?', '+CME ERROR: 100'),
-                ('AT+CESQ=1', '+CME ERROR: 100'),
-                ('AT+CESQ?', '+CME ERROR: 100'),
-                ('AT+CESQ=2', '+CME ERROR: 100'),
-                ('AT+CESQ?', '+CME ERROR: 100'),
-                ('AT+CESQ=3', '+CME ERROR: 100'),
-                ('AT+CESQ?', '+CME ERROR: 100'),
-                ('AT+CESQ=4', '+CME ERROR: 100'),
-                ('AT+CESQ?', '+CME ERROR: 100'),
-                ('AT+CESQ=5', '+CME ERROR: 100'),
-                ('AT+CESQ?', '+CME ERROR: 100'),
-                ('AT+CESQ=6', '+CME ERROR: 100'),
-                ('AT+CESQ?', '+CME ERROR: 100'),
-                ('AT+CESQ=7', '+CME ERROR: 100'),
-                ('AT+CESQ?', '+CME ERROR: 100'),
-                ('AT+CESQ=8', '+CME ERROR: 100'),
-                ('AT+CESQ?', '+CME ERROR: 100'),
-                ('AT+CESQ=9', '+CME ERROR: 100'),
-                ('AT+CESQ?', '+CME ERROR: 100'),
-            ],
-            'AT*CNTI': [
-                ('AT*CNTI=?', 'ERROR'),
-                ('AT*CNTI', 'ERROR'),
-                ('AT*CNTI?', 'ERROR'),
-            ],
-            'AT*CPSI': [
-                ('AT*CPSI=?', 'ERROR'),
-                ('AT*CPSI', 'ERROR'),
-                ('AT*CPSI?', 'ERROR'),
-            ],
-            'AT*CNETSCAN': [
-                ('AT*CNETSCAN=?', 'ERROR'),
-                ('AT*CNETSCAN', 'ERROR'),
-                ('AT*CNETSCAN?', 'ERROR'),
-            ],
-            'AT+CRUSET': [
-                ('AT+CRUSET=?', 'ERROR'),
-                ('AT+CRUSET', 'ERROR'),
-                ('AT+CRUSET?', 'ERROR'),
-            ],
-            'AT+WS46': [
-                ('AT+WS46=?', '+WS46: (12,22,25,28,29,30,31)\nOK'),
-                ('AT+WS46', 'OK\n+CGEV: ME DETACH'),
-                ('AT+WS46?', '+WS46:12\nOK'),
-                ('AT+WS46=12', 'OK'),
-                ('AT+WS46?', '+WS46:12\nOK'),
-                ('AT+WS46=22', 'OK'),
-                ('AT+WS46?', '+WS46:12\nOK'),
-                ('AT+WS46=25', 'OK'),
-                ('AT+WS46?', '+WS46:12\nOK'),
-                ('AT+WS46=28', 'OK\n+CGEV: ME DETACH'),
-                ('AT+WS46?', '+WS46:28\nOK'),
-                ('AT+WS46=29', 'OK'),
-                ('AT+WS46?', '+WS46:28\nOK'),
-                ('AT+WS46=30', 'OK\n+CGEV: ME DETACH'),
-                ('AT+WS46?', '+WS46:30\nOK'),
-                ('AT+WS46=31', 'OK'),
-                ('AT+WS46?', '+WS46:30\nOK'),
-            ],
-            'AT+CGDCONT': [
-                ('AT+CGDCONT=?',
-                 '+CGDCONT: (1-15),"IP",,,(0-2),(0-1),(0-1),(0-2)\n+CGDCONT: (1-15),"IPV6",,,(0-2),(0-1),(0-1),(0-2)\n+CGDCONT: (1-15),"IPV4V6",,,(0-2),(0-1),(0-1),(0-2)\nOK'),
-                ('AT+CGDCONT', 'OK'),
-                ('AT+CGDCONT?', 'OK'),
-                ('AT+CGDCONT=0', 'ERROR'),
-                ('AT+CGDCONT?', 'OK'),
-                ('AT+CGDCONT=1', 'OK'),
-                ('AT+CGDCONT?', 'OK'),
-                ('AT+CGDCONT=2', 'OK'),
-                ('AT+CGDCONT?', 'OK'),
-                ('AT+CGDCONT=3', 'OK'),
-                ('AT+CGDCONT?', 'OK'),
-                ('AT+CGDCONT=4', 'OK'),
-                ('AT+CGDCONT?', 'OK'),
-                ('AT+CGDCONT=5', 'OK'),
-                ('AT+CGDCONT?', 'OK'),
-                ('AT+CGDCONT=6', 'OK'),
-                ('AT+CGDCONT?', 'OK'),
-                ('AT+CGDCONT=7', 'OK'),
-                ('AT+CGDCONT?', 'OK'),
-                ('AT+CGDCONT=8', 'OK'),
-                ('AT+CGDCONT?', 'OK'),
-                ('AT+CGDCONT=9', 'OK'),
-                ('AT+CGDCONT?', 'OK'),
-            ],
-            'AT+CGCONTRDP': [
-                ('AT+CGCONTRDP=?', 'OK'),
-                ('AT+CGCONTRDP', 'OK'),
-                ('AT+CGCONTRDP?',
-                 '+CGCONTRDP: (<p_cid>), (<bearer_id>),(<apn>),(<source_addr and subnet_mask>),(<gw_addr>), (<DNS_prim_addr>), (<DNS_sec_addr>), (<P-CSCF_prim_addr>), (<P-CSCF_sec_addr>),(<IM_CN_Signalling_Flag>)r\nOK'),
-            ],
-            'AT+CGPADDR': [
-                ('AT+CGPADDR=?', '+CGPADDR: ()\nOK'),
-                ('AT+CGPADDR', 'OK'),
-                ('AT+CGPADDR?', 'ERROR'),
-            ],
-            'AT+CGACT': [
-                ('AT+CGACT=?', '+CGACT: (0,1)\nOK'),
-                ('AT+CGACT', 'ERROR'),
-                ('AT+CGACT?', 'OK'),
-                ('AT+CGACT=0', 'OK'),
-                ('AT+CGACT?', 'OK'),
-                ('AT+CGACT=1', 'OK'),
-                ('AT+CGACT?', 'OK'),
-            ],
-            'AT+CGATT': [
-                ('AT+CGATT=?', '+CGATT: (0-1)\nOK'),
-                ('AT+CGATT', 'ERROR'),
-                ('AT+CGATT?', '+CGATT: 0\nOK'),
-                ('AT+CGATT=0', 'OK'),
-                ('AT+CGATT?', '+CGATT: 0\nOK'),
-                ('AT+CGATT=1', '+CME ERROR: 3'),
-                ('AT+CGATT?', '+CGATT: 0\nOK'),
-            ],
-            'AT+CGDATA': [
-                ('AT+CGDATA=?', '+CGDATA: ("")\nOK'),
-                ('AT+CGDATA', '+CME ERROR: 4'),
-                ('AT+CGDATA?', '+CME ERROR: 4'),
-            ],
-            'AT+CIMS': [
-                ('AT+CIMS=?', 'ERROR'),
-                ('AT+CIMS', 'ERROR'),
-                ('AT+CIMS?', 'ERROR'),
-            ],
-            'AT+CIREG': [
-                ('AT+CIREG=?', '+CIREG: (0-3)\nOK'),
-                ('AT+CIREG', '+CME ERROR: Operation not supported'),
-                ('AT+CIREG?', '+CME ERROR: Operation not supported'),
-                ('AT+CIREG=0', '+CME ERROR: Operation not supported'),
-                ('AT+CIREG?', '+CME ERROR: Operation not supported'),
-                ('AT+CIREG=1', '+CME ERROR: Operation not supported'),
-                ('AT+CIREG?', '+CME ERROR: Operation not supported'),
-                ('AT+CIREG=2', '+CME ERROR: Operation not supported'),
-                ('AT+CIREG?', '+CME ERROR: Operation not supported'),
-                ('AT+CIREG=3', '+CME ERROR: Operation not supported'),
-                ('AT+CIREG?', '+CME ERROR: Operation not supported'),
-            ],
-            'AT+CSCLK': [
-                ('AT+CSCLK=?', '+CSCLK: (0-2)\nOK'),
-                ('AT+CSCLK', 'OK'),
-                ('AT+CSCLK?', '+CSCLK: 0\nOK'),
-                ('AT+CSCLK=0', 'OK'),
-                ('AT+CSCLK?', '+CSCLK: 0\nOK'),
-                ('AT+CSCLK=1', 'OK'),
-                ('AT+CSCLK?', '+CSCLK: 1\nOK'),
-                ('AT+CSCLK=2', 'OK'),
-                ('AT+CSCLK?', '+CSCLK: 2\nOK'),
-            ],
-            'AT+CPMUTEMP': [
-                ('AT+CPMUTEMP=?', 'ERROR'),
-                ('AT+CPMUTEMP', '+CPMUTEMP: 28\nOK'),
-                ('AT+CPMUTEMP?', 'ERROR'),
-            ],
-            'AT+CBC': [
-                ('AT+CBC=?', 'ERROR'),
-                ('AT+CBC', '+CBC: 3.830V\nOK'),
-                ('AT+CBC?', 'ERROR'),
-            ],
-            'AT+CCED': [
-                ('AT+CCED=?', 'ERROR'),
-                ('AT+CCED', 'ERROR'),
-                ('AT+CCED?', 'ERROR'),
-            ],
-            'AT*CELLINFO': [
-                ('AT*CELLINFO=?', 'ERROR'),
-                ('AT*CELLINFO', 'ERROR'),
-                ('AT*CELLINFO?', 'ERROR'),
-            ],
-            'AT+CEER': [
-                ('AT+CEER=?', 'OK'),
-                ('AT+CEER', '+CEER: "0 Unknown"\nOK'),
-                ('AT+CEER?', 'ERROR'),
-            ],
-            'AT+GCAP': [
-                ('AT+GCAP=?', 'OK'),
-                ('AT+GCAP', 'ERROR'),
-                ('AT+GCAP?', 'ERROR'),
-            ],
+    AT_CMDS__GROUPED: Iterable[str] = {
+        # NO SIM
+        'AT': [
+            ('AT=?', 'ERROR'),
+            ('AT', 'OK'),
+            ('AT?', 'ERROR'),
+        ],
+        'AT+CNUM': [
+            ('AT+CNUM=?', 'ERROR'),
+            ('AT+CNUM', 'ERROR'),
+            ('AT+CNUM?', 'ERROR'),
+        ],
+        'AT+CPBS': [
+            ('AT+CPBS=?', 'ERROR'),
+            ('AT+CPBS', 'ERROR'),
+            ('AT+CPBS?', 'ERROR'),
+        ],
+        'AT+CPBR': [
+            ('AT+CPBR=?', '+CME ERROR: unknown error'),
+            ('AT+CPBR', 'ERROR'),
+            ('AT+CPBR?', '+CME ERROR: unknown error'),
+        ],
+        'AT+CRSM': [
+            ('AT+CRSM=?', 'OK'),
+            ('AT+CRSM', 'ERROR'),
+            ('AT+CRSM?', '+CME ERROR: Operation not supported'),
+        ],
+        'ATI': [
+            ('ATI=?', 'ERROR'),
+            ('ATI',
+             'Manufacturer: INCORPORATED\nModel: A7682E-R\nRevision: A7682M6_V1.11.1\nIMEI1: 865286077380516\nIMEI2: 865286076965218\n+GCAP: +CGSM,+FCLASS,+DS\nOK'),
+            ('ATI?', 'ERROR'),
+        ],
+        'ATI1': [
+            ('ATI1=?', 'ERROR'),
+            ('ATI1', 'ERROR'),
+            ('ATI1?', 'ERROR'),
+        ],
+        'ATI2': [
+            ('ATI2=?', 'ERROR'),
+            ('ATI2', 'ERROR'),
+            ('ATI2?', 'ERROR'),
+        ],
+        'ATI3': [
+            ('ATI3=?', 'ERROR'),
+            ('ATI3', 'ERROR'),
+            ('ATI3?', 'ERROR'),
+        ],
+        'ATI4': [
+            ('ATI4=?', 'ERROR'),
+            ('ATI4', 'ERROR'),
+            ('ATI4?', 'ERROR'),
+        ],
+        'ATI5': [
+            ('ATI5=?', 'ERROR'),
+            ('ATI5', 'ERROR'),
+            ('ATI5?', 'ERROR'),
+        ],
+        'ATI6': [
+            ('ATI6=?', 'ERROR'),
+            ('ATI6', 'ERROR'),
+            ('ATI6?', 'ERROR'),
+        ],
+        'ATI7': [
+            ('ATI7=?', 'ERROR'),
+            ('ATI7', 'ERROR'),
+            ('ATI7?', 'ERROR'),
+        ],
+        'ATI8': [
+            ('ATI8=?', 'ERROR'),
+            ('ATI8', 'ERROR'),
+            ('ATI8?', 'ERROR'),
+        ],
+        'ATI9': [
+            ('ATI9=?', 'ERROR'),
+            ('ATI9', 'ERROR'),
+            ('ATI9?', 'ERROR'),
+        ],
+        'AT+CGMI': [
+            ('AT+CGMI=?', 'OK'),
+            ('AT+CGMI', 'INCORPORATED\nOK'),
+            ('AT+CGMI?', 'INCORPORATED\nOK'),
+        ],
+        'AT+CGMM': [
+            ('AT+CGMM=?', 'OK'),
+            ('AT+CGMM', 'A7682E-R\nOK'),
+            ('AT+CGMM?', 'A7682E-R\nOK'),
+        ],
+        'AT+CGMR': [
+            ('AT+CGMR=?', 'OK'),
+            ('AT+CGMR', '+CGMR: A011B02A7682M6_DS_FOTA\nOK'),
+            ('AT+CGMR?', '+CGMR: A011B02A7682M6_DS_FOTA\nOK'),
+        ],
+        'AT+CGSN': [
+            ('AT+CGSN=?', 'OK'),
+            ('AT+CGSN', '865286077380516\nOK'),
+            ('AT+CGSN?', 'ERROR'),
+        ],
+        'AT+CIMI': [
+            ('AT+CIMI=?', 'OK'),
+            ('AT+CIMI', '+CME ERROR: SIM failure'),
+            ('AT+CIMI?', '+CME ERROR: Operation not supported'),
+        ],
+        'AT+GSN': [
+            ('AT+GSN=?', 'OK'),
+            ('AT+GSN', '865286077380516\nOK'),
+            ('AT+GSN?', 'ERROR'),
+        ],
+        'AT+CPIN': [
+            ('AT+CPIN=?', 'OK'),
+            ('AT+CPIN', 'ERROR'),
+            ('AT+CPIN?', '+CME ERROR: SIM not inserted'),
+        ],
+        'AT+CPINR': [
+            ('AT+CPINR=?', '+CPINR: (0-3),(0-3),(0-10),(0-10)\nOK'),
+            ('AT+CPINR', '+CME ERROR: Operation not supported'),
+            ('AT+CPINR?', '+CME ERROR: SIM not inserted'),
+            ('AT+CPINR=0', 'ERROR'),
+            ('AT+CPINR?', '+CME ERROR: SIM not inserted'),
+            ('AT+CPINR=1', 'ERROR'),
+            ('AT+CPINR?', '+CME ERROR: SIM not inserted'),
+            ('AT+CPINR=2', 'ERROR'),
+            ('AT+CPINR?', '+CME ERROR: SIM not inserted'),
+            ('AT+CPINR=3', 'ERROR'),
+            ('AT+CPINR?', '+CME ERROR: SIM not inserted'),
+            ('AT+CPINR=4', 'ERROR'),
+            ('AT+CPINR?', '+CME ERROR: SIM not inserted'),
+            ('AT+CPINR=5', 'ERROR'),
+            ('AT+CPINR?', '+CME ERROR: SIM not inserted'),
+            ('AT+CPINR=6', 'ERROR'),
+            ('AT+CPINR?', '+CME ERROR: SIM not inserted'),
+            ('AT+CPINR=7', 'ERROR'),
+            ('AT+CPINR?', '+CME ERROR: SIM not inserted'),
+            ('AT+CPINR=8', 'ERROR'),
+            ('AT+CPINR?', '+CME ERROR: SIM not inserted'),
+            ('AT+CPINR=9', 'ERROR'),
+            ('AT+CPINR?', '+CME ERROR: SIM not inserted'),
+        ],
+        'AT+CCID': [
+            ('AT+CCID=?', 'ERROR'),
+            ('AT+CCID', 'ERROR'),
+            ('AT+CCID?', 'ERROR'),
+        ],
+        'AT+ICCID': [
+            ('AT+ICCID=?', 'ERROR'),
+            ('AT+ICCID', 'ERROR'),
+            ('AT+ICCID?', 'ERROR'),
+        ],
+        'AT+CREG': [
+            ('AT+CREG=?', '+CREG: (0-2)\nOK'),
+            ('AT+CREG', 'OK'),
+            ('AT+CREG?', '+CREG: 0,0\nOK'),
+            ('AT+CREG=0', 'OK'),
+            ('AT+CREG?', '+CREG: 0,0\nOK'),
+            ('AT+CREG=1', 'OK'),
+            ('AT+CREG?', '+CREG: 1,0\nOK'),
+            ('AT+CREG=2', 'OK'),
+            ('AT+CREG?', '+CREG: 2,0\nOK'),
+        ],
+        'AT+CGREG': [
+            ('AT+CGREG=?', '+CGREG: (0-2)\nOK'),
+            ('AT+CGREG', 'OK'),
+            ('AT+CGREG?', '+CGREG: 0,0\nOK'),
+            ('AT+CGREG=0', 'OK'),
+            ('AT+CGREG?', '+CGREG: 0,0\nOK'),
+            ('AT+CGREG=1', 'OK'),
+            ('AT+CGREG?', '+CGREG: 1,0\nOK'),
+            ('AT+CGREG=2', 'OK'),
+            ('AT+CGREG?', '+CGREG: 2,0,"0000","00000000"\nOK'),
+        ],
+        'AT+CEREG': [
+            ('AT+CEREG=?', '+CEREG: (0-2)\nOK'),
+            ('AT+CEREG', 'OK'),
+            ('AT+CEREG?', '+CEREG: 0,0\nOK'),
+            ('AT+CEREG=0', 'OK'),
+            ('AT+CEREG?', '+CEREG: 0,0\nOK'),
+            ('AT+CEREG=1', 'OK'),
+            ('AT+CEREG?', '+CEREG: 1,0\nOK'),
+            ('AT+CEREG=2', 'OK'),
+            ('AT+CEREG?', '+CEREG: 2,0,0000,00000000\nOK'),
+        ],
+        'AT+CSQ': [
+            ('AT+CSQ=?', '+CSQ: (0-31,99),(0-7,99)\nOK'),
+            ('AT+CSQ', '+CSQ: 29,99\nOK'),
+            ('AT+CSQ?', 'ERROR'),
+            ('AT+CSQ=0', 'ERROR'),
+            ('AT+CSQ?', 'ERROR'),
+            ('AT+CSQ=1', 'ERROR'),
+            ('AT+CSQ?', 'ERROR'),
+            ('AT+CSQ=2', 'ERROR'),
+            ('AT+CSQ?', 'ERROR'),
+            ('AT+CSQ=3', 'ERROR'),
+            ('AT+CSQ?', 'ERROR'),
+            ('AT+CSQ=4', 'ERROR'),
+            ('AT+CSQ?', 'ERROR'),
+            ('AT+CSQ=5', 'ERROR'),
+            ('AT+CSQ?', 'ERROR'),
+            ('AT+CSQ=6', 'ERROR'),
+            ('AT+CSQ?', 'ERROR'),
+            ('AT+CSQ=7', 'ERROR'),
+            ('AT+CSQ?', 'ERROR'),
+            ('AT+CSQ=8', 'ERROR'),
+            ('AT+CSQ?', 'ERROR'),
+            ('AT+CSQ=9', 'ERROR'),
+            ('AT+CSQ?', 'ERROR'),
+        ],
+        'AT+CESQ': [
+            ('AT+CESQ=?', '+CESQ: (0-63,99),(0-7,99),(0-96,255),(0-49,255),(0-34,255),(0-97,255)\nOK'),
+            ('AT+CESQ', '+CESQ: 99,99,255,255,9,52\nOK'),
+            ('AT+CESQ?', '+CME ERROR: 100'),
+            ('AT+CESQ=0', '+CME ERROR: 100'),
+            ('AT+CESQ?', '+CME ERROR: 100'),
+            ('AT+CESQ=1', '+CME ERROR: 100'),
+            ('AT+CESQ?', '+CME ERROR: 100'),
+            ('AT+CESQ=2', '+CME ERROR: 100'),
+            ('AT+CESQ?', '+CME ERROR: 100'),
+            ('AT+CESQ=3', '+CME ERROR: 100'),
+            ('AT+CESQ?', '+CME ERROR: 100'),
+            ('AT+CESQ=4', '+CME ERROR: 100'),
+            ('AT+CESQ?', '+CME ERROR: 100'),
+            ('AT+CESQ=5', '+CME ERROR: 100'),
+            ('AT+CESQ?', '+CME ERROR: 100'),
+            ('AT+CESQ=6', '+CME ERROR: 100'),
+            ('AT+CESQ?', '+CME ERROR: 100'),
+            ('AT+CESQ=7', '+CME ERROR: 100'),
+            ('AT+CESQ?', '+CME ERROR: 100'),
+            ('AT+CESQ=8', '+CME ERROR: 100'),
+            ('AT+CESQ?', '+CME ERROR: 100'),
+            ('AT+CESQ=9', '+CME ERROR: 100'),
+            ('AT+CESQ?', '+CME ERROR: 100'),
+        ],
+        'AT*CNTI': [
+            ('AT*CNTI=?', 'ERROR'),
+            ('AT*CNTI', 'ERROR'),
+            ('AT*CNTI?', 'ERROR'),
+        ],
+        'AT*CPSI': [
+            ('AT*CPSI=?', 'ERROR'),
+            ('AT*CPSI', 'ERROR'),
+            ('AT*CPSI?', 'ERROR'),
+        ],
+        'AT*CNETSCAN': [
+            ('AT*CNETSCAN=?', 'ERROR'),
+            ('AT*CNETSCAN', 'ERROR'),
+            ('AT*CNETSCAN?', 'ERROR'),
+        ],
+        'AT+CRUSET': [
+            ('AT+CRUSET=?', 'ERROR'),
+            ('AT+CRUSET', 'ERROR'),
+            ('AT+CRUSET?', 'ERROR'),
+        ],
+        'AT+WS46': [
+            ('AT+WS46=?', '+WS46: (12,22,25,28,29,30,31)\nOK'),
+            ('AT+WS46', 'OK\n+CGEV: ME DETACH'),
+            ('AT+WS46?', '+WS46:12\nOK'),
+            ('AT+WS46=12', 'OK'),
+            ('AT+WS46?', '+WS46:12\nOK'),
+            ('AT+WS46=22', 'OK'),
+            ('AT+WS46?', '+WS46:12\nOK'),
+            ('AT+WS46=25', 'OK'),
+            ('AT+WS46?', '+WS46:12\nOK'),
+            ('AT+WS46=28', 'OK\n+CGEV: ME DETACH'),
+            ('AT+WS46?', '+WS46:28\nOK'),
+            ('AT+WS46=29', 'OK'),
+            ('AT+WS46?', '+WS46:28\nOK'),
+            ('AT+WS46=30', 'OK\n+CGEV: ME DETACH'),
+            ('AT+WS46?', '+WS46:30\nOK'),
+            ('AT+WS46=31', 'OK'),
+            ('AT+WS46?', '+WS46:30\nOK'),
+        ],
+        'AT+CGDCONT': [
+            ('AT+CGDCONT=?',
+             '+CGDCONT: (1-15),"IP",,,(0-2),(0-1),(0-1),(0-2)\n+CGDCONT: (1-15),"IPV6",,,(0-2),(0-1),(0-1),(0-2)\n+CGDCONT: (1-15),"IPV4V6",,,(0-2),(0-1),(0-1),(0-2)\nOK'),
+            ('AT+CGDCONT', 'OK'),
+            ('AT+CGDCONT?', 'OK'),
+            ('AT+CGDCONT=0', 'ERROR'),
+            ('AT+CGDCONT?', 'OK'),
+            ('AT+CGDCONT=1', 'OK'),
+            ('AT+CGDCONT?', 'OK'),
+            ('AT+CGDCONT=2', 'OK'),
+            ('AT+CGDCONT?', 'OK'),
+            ('AT+CGDCONT=3', 'OK'),
+            ('AT+CGDCONT?', 'OK'),
+            ('AT+CGDCONT=4', 'OK'),
+            ('AT+CGDCONT?', 'OK'),
+            ('AT+CGDCONT=5', 'OK'),
+            ('AT+CGDCONT?', 'OK'),
+            ('AT+CGDCONT=6', 'OK'),
+            ('AT+CGDCONT?', 'OK'),
+            ('AT+CGDCONT=7', 'OK'),
+            ('AT+CGDCONT?', 'OK'),
+            ('AT+CGDCONT=8', 'OK'),
+            ('AT+CGDCONT?', 'OK'),
+            ('AT+CGDCONT=9', 'OK'),
+            ('AT+CGDCONT?', 'OK'),
+        ],
+        'AT+CGCONTRDP': [
+            ('AT+CGCONTRDP=?', 'OK'),
+            ('AT+CGCONTRDP', 'OK'),
+            ('AT+CGCONTRDP?',
+             '+CGCONTRDP: (<p_cid>), (<bearer_id>),(<apn>),(<source_addr and subnet_mask>),(<gw_addr>), (<DNS_prim_addr>), (<DNS_sec_addr>), (<P-CSCF_prim_addr>), (<P-CSCF_sec_addr>),(<IM_CN_Signalling_Flag>)r\nOK'),
+        ],
+        'AT+CGPADDR': [
+            ('AT+CGPADDR=?', '+CGPADDR: ()\nOK'),
+            ('AT+CGPADDR', 'OK'),
+            ('AT+CGPADDR?', 'ERROR'),
+        ],
+        'AT+CGACT': [
+            ('AT+CGACT=?', '+CGACT: (0,1)\nOK'),
+            ('AT+CGACT', 'ERROR'),
+            ('AT+CGACT?', 'OK'),
+            ('AT+CGACT=0', 'OK'),
+            ('AT+CGACT?', 'OK'),
+            ('AT+CGACT=1', 'OK'),
+            ('AT+CGACT?', 'OK'),
+        ],
+        'AT+CGATT': [
+            ('AT+CGATT=?', '+CGATT: (0-1)\nOK'),
+            ('AT+CGATT', 'ERROR'),
+            ('AT+CGATT?', '+CGATT: 0\nOK'),
+            ('AT+CGATT=0', 'OK'),
+            ('AT+CGATT?', '+CGATT: 0\nOK'),
+            ('AT+CGATT=1', '+CME ERROR: 3'),
+            ('AT+CGATT?', '+CGATT: 0\nOK'),
+        ],
+        'AT+CGDATA': [
+            ('AT+CGDATA=?', '+CGDATA: ("")\nOK'),
+            ('AT+CGDATA', '+CME ERROR: 4'),
+            ('AT+CGDATA?', '+CME ERROR: 4'),
+        ],
+        'AT+CIMS': [
+            ('AT+CIMS=?', 'ERROR'),
+            ('AT+CIMS', 'ERROR'),
+            ('AT+CIMS?', 'ERROR'),
+        ],
+        'AT+CIREG': [
+            ('AT+CIREG=?', '+CIREG: (0-3)\nOK'),
+            ('AT+CIREG', '+CME ERROR: Operation not supported'),
+            ('AT+CIREG?', '+CME ERROR: Operation not supported'),
+            ('AT+CIREG=0', '+CME ERROR: Operation not supported'),
+            ('AT+CIREG?', '+CME ERROR: Operation not supported'),
+            ('AT+CIREG=1', '+CME ERROR: Operation not supported'),
+            ('AT+CIREG?', '+CME ERROR: Operation not supported'),
+            ('AT+CIREG=2', '+CME ERROR: Operation not supported'),
+            ('AT+CIREG?', '+CME ERROR: Operation not supported'),
+            ('AT+CIREG=3', '+CME ERROR: Operation not supported'),
+            ('AT+CIREG?', '+CME ERROR: Operation not supported'),
+        ],
+        'AT+CSCLK': [
+            ('AT+CSCLK=?', '+CSCLK: (0-2)\nOK'),
+            ('AT+CSCLK', 'OK'),
+            ('AT+CSCLK?', '+CSCLK: 0\nOK'),
+            ('AT+CSCLK=0', 'OK'),
+            ('AT+CSCLK?', '+CSCLK: 0\nOK'),
+            ('AT+CSCLK=1', 'OK'),
+            ('AT+CSCLK?', '+CSCLK: 1\nOK'),
+            ('AT+CSCLK=2', 'OK'),
+            ('AT+CSCLK?', '+CSCLK: 2\nOK'),
+        ],
+        'AT+CPMUTEMP': [
+            ('AT+CPMUTEMP=?', 'ERROR'),
+            ('AT+CPMUTEMP', '+CPMUTEMP: 28\nOK'),
+            ('AT+CPMUTEMP?', 'ERROR'),
+        ],
+        'AT+CBC': [
+            ('AT+CBC=?', 'ERROR'),
+            ('AT+CBC', '+CBC: 3.830V\nOK'),
+            ('AT+CBC?', 'ERROR'),
+        ],
+        'AT+CCED': [
+            ('AT+CCED=?', 'ERROR'),
+            ('AT+CCED', 'ERROR'),
+            ('AT+CCED?', 'ERROR'),
+        ],
+        'AT*CELLINFO': [
+            ('AT*CELLINFO=?', 'ERROR'),
+            ('AT*CELLINFO', 'ERROR'),
+            ('AT*CELLINFO?', 'ERROR'),
+        ],
+        'AT+CEER': [
+            ('AT+CEER=?', 'OK'),
+            ('AT+CEER', '+CEER: "0 Unknown"\nOK'),
+            ('AT+CEER?', 'ERROR'),
+        ],
+        'AT+GCAP': [
+            ('AT+GCAP=?', 'OK'),
+            ('AT+GCAP', 'ERROR'),
+            ('AT+GCAP?', 'ERROR'),
+        ],
 
-            # ==================================================
-            # FIXME: DANGER!! can block AT console for times!
-            # 'AT+COPS': [
-            #     ('AT+COPS=?', ''),
-            #     ('AT+COPS', ''),
-            #     ('AT+COPS?', ''),
-            # ],
+        # ==================================================
+        # FIXME: DANGER!! can block AT console for times!
+        # 'AT+COPS': [
+        #     ('AT+COPS=?', ''),
+        #     ('AT+COPS', ''),
+        #     ('AT+COPS?', ''),
+        # ],
 
-            # 'AT+CFUN': [
-            #     ('AT+CFUN=?', '+CFUN: (0-1,4-8),(0-1)\nOK'),
-            #     ('AT+CFUN', 'ERROR'),
-            #     ('AT+CFUN?', '+CFUN: 1\nOK'),
-            #     ('AT+CFUN=0', '+SIMCARD: NOT AVAILABLE\n+CGEV: ME DETACH\nOK'),
-            #     ('AT+CFUN?', '+CFUN: 0\nOK'),
-            #     ('AT+CFUN=1', 'OK\n+CPIN: SIM REMOVED\nOK'),
-            #     ('AT+CFUN?', '+CFUN: 1\nOK'),
-            #     ('AT+CFUN=4', '+CGEV: ME DETACH\nOK'),
-            #     ('AT+CFUN?', '+CFUN: 4\nOK'),
-            #     ('AT+CFUN=5', 'OK'),
-            #     ('AT+CFUN?', '+CFUN: 5\nOK'),
-            #     ('AT+CFUN=6', 'OK\n+CGEV: ME DETACH'),
-            #     ('AT+CFUN?',
-            #      'cat: /dev/ttyUSB4: No such file or directory\n[1]+  Exit 1                  timeout 5.0 cat /dev/ttyUSB4'),
-            #     ('AT+CFUN=7', 'AT+CFUN?\n[1]+  Done                    timeout 5.0 cat /dev/ttyUSB4'),
-            #     ('AT+CFUN?', 'AT+CFUN=7\n[1]+  Done                    timeout 5.0 cat /dev/ttyUSB4'),
-            #     ('AT+CFUN=8', 'AT+CFUN?\n[1]+  Done                    timeout 5.0 cat /dev/ttyUSB4'),
-            #     ('AT+CFUN?', 'AT+CFUN=8\n[1]+  Done                    timeout 5.0 cat /dev/ttyUSB4'),
-            # ],
-        }
+        # 'AT+CFUN': [
+        #     ('AT+CFUN=?', '+CFUN: (0-1,4-8),(0-1)\nOK'),
+        #     ('AT+CFUN', 'ERROR'),
+        #     ('AT+CFUN?', '+CFUN: 1\nOK'),
+        #     ('AT+CFUN=0', '+SIMCARD: NOT AVAILABLE\n+CGEV: ME DETACH\nOK'),
+        #     ('AT+CFUN?', '+CFUN: 0\nOK'),
+        #     ('AT+CFUN=1', 'OK\n+CPIN: SIM REMOVED\nOK'),
+        #     ('AT+CFUN?', '+CFUN: 1\nOK'),
+        #     ('AT+CFUN=4', '+CGEV: ME DETACH\nOK'),
+        #     ('AT+CFUN?', '+CFUN: 4\nOK'),
+        #     ('AT+CFUN=5', 'OK'),
+        #     ('AT+CFUN?', '+CFUN: 5\nOK'),
+        #     ('AT+CFUN=6', 'OK\n+CGEV: ME DETACH'),
+        #     ('AT+CFUN?',
+        #      'cat: /dev/ttyUSB4: No such file or directory\n[1]+  Exit 1                  timeout 5.0 cat /dev/ttyUSB4'),
+        #     ('AT+CFUN=7', 'AT+CFUN?\n[1]+  Done                    timeout 5.0 cat /dev/ttyUSB4'),
+        #     ('AT+CFUN?', 'AT+CFUN=7\n[1]+  Done                    timeout 5.0 cat /dev/ttyUSB4'),
+        #     ('AT+CFUN=8', 'AT+CFUN?\n[1]+  Done                    timeout 5.0 cat /dev/ttyUSB4'),
+        #     ('AT+CFUN?', 'AT+CFUN=8\n[1]+  Done                    timeout 5.0 cat /dev/ttyUSB4'),
+        # ],
+    }
+
+    AT_GROUPS: dict[str, dict[str, str]] = {
+        # # =========================================================================
+        # # 1. ИДЕНТИФИКАЦИЯ / ВЕРСИИ / ОБЩИЕ
+        # # =========================================================================
+        # "IDENTITY": {
+        #     "AT": "эхо, проверка связи",
+        #     "ATI": "информация о производителе/модели/ревизии/IMEI",
+        #     "AT+CGMI": "manufacturer identification",
+        #     "AT+CGMM": "model identification",
+        #     "AT+CGGMM": "model identification (SIMCom-вариант)",
+        #     "AT+CGMR": "revision identification",
+        #     "AT+CGGMR": "revision identification (SIMCom-вариант)",
+        #     "AT+CGSN": "IMEI / serial number",
+        #     "AT+GSN": "IMEI (алиас)",
+        #     "AT+CIMI": "IMSI (IMSI SIM-карты)",
+        #     "AT+CIMIM": "IMSI второго аппа (USIM)",
+        #     "AT+GCAP": "список поддерживаемых возможностей (+CGSM, +FCLASS, +DS)",
+        #     # "AT+CSCS": "выбор TE character set (IRA/GSM/UCS2/HEX)", # FIXME: DANGER
+        #     "AT+CMEE": "формат ошибок (+CME ERROR: numeric/verbose)",
+        #     "AT+CPAS": "phone activity status",
+        #     # "AT+SIMEI": "установка IMEI (только для service)", # FIXME: DANGER
+        #     "AT+SMEID": "MEID (CDMA)",
+        #     "AT+CSVM": "voice mail subscriber number",
+        #     # "AT+CUSBPIDSWITCH": "смена USB PID (перезагружает модуль!)", # FIXME: DANGER
+        #     "AT+CICCID": "ICCID SIM-карты",
+        #     "AT+SPIC": "остаток попыток ввода PIN/PUK",
+        #     "AT+CPIN": "статус PIN (READY / SIM PIN / SIM PUK)",
+        #     "AT+CPINR": "остаток попыток PIN (3GPP-вариант)",
+        #     # "AT+CLCK": "facility lock (блокировка SIM/сети)", # FIXME: DANGER
+        #     # "AT+CPWD": "смена пароля (PIN/PUK)", # FIXME: DANGER
+        #     "AT+CCLK": "real time clock",
+        #     "AT+CACM": "accumulated call meter",
+        #     "AT+CAMM": "accumulated call meter maximum",
+        #     "AT+CPUC": "price per unit and currency",
+        #     "AT+CSPN": "service provider name",
+        #     "AT+CATR": "URC destination interface",
+        #     # "AT+CPOF": "power off module", # FIXME: DANGER
+        #     # "AT+CRESET": "reset module", # FIXME: DANGER
+        #     # "AT+CSCLK": "UART sleep control", # FIXME: DANGER
+        #     # "AT+CMUX": "мультиплексор UART (4 виртуальных порта) # DANGER",  # FIXME: DANGER
+        #     # "AT+CUSBPIDSWITCH": "смена USB PID # DANGER (reset)", # FIXME: DANGER
+        # },
+        #
+        # # =========================================================================
+        # # 2. V.25TER БАЗОВЫЕ (управление модемом)
+        # # =========================================================================
+        # "V25TER_BASIC": {
+        #     # "A/": "повторить последнюю команду",  # FIXME: NOT USEFUL
+        #     # "ATD": "dial (голосовой/данные)",
+        #     # "ATD><mem><n>": "dial из памяти (SM/ME/DC...)",
+        #     # "ATD><n>": "dial из активной памяти",
+        #     # "ATD><str>": "dial по имени из памяти",
+        #     # "ATA": "answer (ответ на входящий)", # FIXME: DANGER
+        #     # "ATH": "hang up (положить трубку)", # FIXME: DANGER
+        #     # "ATS0": "auto-answer (число гудков)", # FIXME: DANGER
+        #     # "+++": "escape из data mode в command mode",    # FIXME: NOT USEFUL
+        #     # "ATO": "вернуться в data mode", # FIXME: DANGER
+        #     "AT+IPR": "baud rate (temporarily)",
+        #     "AT+IPREX": "baud rate (permanently)",
+        #     # "AT+ICF": "character framing (data/parity/stop)", # FIXME: DANGER
+        #     # "AT+IFC": "flow control (RTS/CTS)", # FIXME: DANGER
+        #     # "AT&C": "DCD function mode", # FIXME: DANGER
+        #     # "ATE": "echo on/off",    # FIXME: DANGER
+        #     "AT&V": "display current configuration",
+        #     # "AT&D": "DTR function mode", # FIXME: DANGER
+        #     # "AT&S": "DSR function mode", # FIXME: DANGER
+        #     "ATV": "result code format (numeric/verbose)",
+        #     # "AT&F": "factory defaults",  # FIXME: DANGER
+        #     # "ATQ": "result code presentation mode",  # FIXME: DANGER
+        #     "ATX": "CONNECT result code format",
+        #     "AT&E": "CONNECT result code format (speed)",
+        #     # "AT&W": "save user settings",    # FIXME: DANGER
+        #     # "ATZ": "restore user settings",  # FIXME: DANGER
+        # },
+
+        # =========================================================================
+        # 3. STATUS CONTROL (управление состоянием)
+        # =========================================================================
+        "STATUS_CONTROL": {
+            # "AT+CFUN": "уровень функциональности (0=min, 1=full, 4=offline, 7=reset) # DANGER", # FIXME: DANGER
+            "AT+CSIM": "generic SIM access (APDU)",
+            "AT+CRSM": "restricted SIM access (READ/UPDATE BINARY/RECORD)",
+            "AT+CSPN": "service provider name",
+            "AT+CSQ": "signal quality (RSSI, BER)",
+            "AT+AUTOCSQ": "автоматический отчёт CSQ",
+            "AT+CSQDELTA": "порог изменения RSSI",
+            # "AT+CPOF": "power off", # FIXME: DANGER
+            # "AT+CRESET": "reset",   # FIXME: DANGER
+            "AT+CCLK": "real time clock",
+            # "AT+CMEE": "error format", # FIXME: DANGER
+            "AT+CPAS": "phone activity status",
+            # "AT+SIMEI": "set IMEI", # FIXME: DANGER
+            "AT+SMEID": "MEID",
+            "AT+CSVM": "voice mail number",
+        },
+
+        # =========================================================================
+        # 4. СЕТЬ / РЕГИСТРАЦИЯ / ОПЕРАТОР
+        # =========================================================================
+        "NETWORK": {
+            "AT+CREG": "network registration (CS)",
+            "AT+CGREG": "GPRS registration (PS)",
+            "AT+CEREG": "EPS registration (LTE)",
+            # "AT+COPS": "operator selection # DANGER (может долго висеть на =?)", # FIXME: DANGER
+            # "AT+CLCK": "facility lock (network)", # FIXME: DANGER
+            # "AT+CPWD": "change password", # FIXME: DANGER
+            # "AT+CCUG": "closed user group", # FIXME: DANGER
+            "AT+CUSD": "USSD",
+            "AT+CAOC": "advice of charge",
+            "AT+CSSN": "supplementary service notifications",
+            "AT+CPOL": "preferred operator list",
+            "AT+COPN": "read operator names",
+            # "AT+CNMP": "preferred mode selection",# FIXME: DANGER
+            # "AT+CNBP": "preferred band selection",# FIXME: DANGER
+            "AT+CNAOP": "acquisitions order preference",
+            "AT+CPSI": "UE system information",
+            "AT+CSMOD": "show network system mode",
+            "AT+CTZU": "automatic time zone update",
+            "AT+CTZR": "time zone reporting",
+            # "AT+NETMODE": "WCDMA/TDSCDMA mode select",# FIXME: DANGER
+            # "AT+WS46": "RAT selection (12=LTE, 22=..., 28=...)",# FIXME: DANGER
+            "AT+CESQ": "extended signal quality",
+            "AT+CIREG": "IMS registration (может быть не поддержано)",
+            "AT+CIMS": "IMS status (может быть не поддержано)",
+            "AT+CLBS": "base station location (LBS)",
+            "AT+CLBSCFG": "LBS configure",
+            "AT+CASSISTLOC": "base station location for LTE/CDMA",
+        },
+
+        # =========================================================================
+        # 5. CALL CONTROL (управление звонками)
+        # =========================================================================
+        "CALL_CONTROL": {
+            "AT+CVHU": "voice hang up control",
+            "AT+CHUP": "hang up call",
+            "AT+CBST": "bearer service type",
+            "AT+CRLP": "radio link protocol",
+            "AT+CR": "service reporting control",
+            "AT+CRC": "cellular result codes",
+            "AT+CLCC": "list current calls",
+            "AT+CEER": "extended error report",
+            # "AT+CCWA": "call waiting", # FIXME: DANGER
+            "AT+CHLD": "call related supplementary services",
+            "AT+CCFC": "call forwarding",
+            "AT+CLIP": "calling line identification presentation",
+            "AT+CLIR": "calling line identification restriction",
+            "AT+COLP": "connected line identification presentation",
+            # "AT+VTS": "DTMF and tone generation", # FIXME: DANGER
+            "AT+VTD": "tone duration",
+            # "AT+CSTA": "select type of address", # FIXME: DANGER
+            "AT+CMOD": "call mode",
+            "AT+VMUTE": "speaker mute",
+            "AT+CMUT": "microphone mute",
+            "AT+MORING": "MO ring URC",
+            "AT+CSDVC": "switch voice channel device",
+            "AT+CLVL": "loudspeaker volume",
+            "AT+SIDET": "sidetone",
+        },
+
+        # =========================================================================
+        # 6. AUDIO / DSP (голосовые параметры)
+        # =========================================================================
+        "AUDIO_DSP": {
+            # "AT+CACDBFN": "change default ACDB filename", # FIXME: DANGER
+            "AT+CPCMREG": "USB audio control",
+            "AT+CMICGAIN": "mic gain",
+            "AT+COUTGAIN": "out gain",
+            "AT+CTXVOL": "TX voice mic volume",
+            "AT+CTXMICGAIN": "TX voice mic gain",
+            "AT+CRXVOL": "RX voice output speaker volume",
+            "AT+CECH": "inhibit far-end echo",
+            "AT+CECDT": "inhibit echo during doubletalk",
+            "AT+CECWB": "inhibit echo in high band",
+            "AT+CSNS": "MIC noise suppression",
+            "AT+CSLIM": "MIC noise suppression (limit)",
+            "AT+CFNSMOD": "fnsMode of RX_VOICE_FNS",
+            "AT+CFNSIN": "fnsInputGain of RX_VOICE_FNS",
+            "AT+CFNSLVL": "fnsTargetNS of RX_VOICE_FNS",
+            "AT+CECRX": "VOICE_MOD_ENABLE",
+            "AT+CNLPPG": "NLPP_gain",
+            "AT+CNLPPL": "NLPP_limit",
+            "AT+CECM": "echo canceller mode",
+            "AT+CPCMFRM": "USB audio sample rate 16k",
+            "AT+CPTONE": "play tone",
+            "AT+CREC": "record wav",
+            "AT+CCMXPLAYWAV": "play wav",
+            "AT+CCMXSTOPWAV": "stop wav",
+            # "AT+CCMXPLAY": "play audio (mp3/aac/amr/...)", # FIXME: DANGER
+            # "AT+CCMXSTOP": "stop audio", # FIXME: DANGER
+        },
+
+        # =========================================================================
+        # 7. SMS
+        # =========================================================================
+        "SMS": {
+            "AT+CSMS": "select message service",
+            "AT+CPMS": "preferred message storage",
+            # "AT+CMGF": "SMS format (0=PDU, 1=text)", # FIXME: DANGER
+            "AT+CSCA": "SMS service centre address",
+            "AT+CSCB": "cell broadcast message indication",
+            # "AT+CSMP": "text mode parameters", # FIXME: DANGER
+            "AT+CSDH": "show text mode parameters",
+            "AT+CNMA": "new message acknowledgement",
+            "AT+CNMI": "new message indications",
+            "AT+CGMS": "service for MO SMS",
+            "AT+CGSMS": "service for MO SMS (3GPP)",
+            "AT+CMGL": "list SMS",
+            "AT+CMGR": "read SMS",
+            # "AT+CMGS": "send SMS # DANGER (ждёт > и Ctrl+Z)", # FIXME: DANGER
+            # "AT+CMSS": "send SMS from storage", # FIXME: DANGER
+            # "AT+CMGW": "write SMS to memory # DANGER (ждёт >)", # FIXME: DANGER
+            # "AT+CMGD": "delete SMS", # FIXME: DANGER
+            # "AT+CMGMT": "change message status", # FIXME: DANGER
+            "AT+CMVP": "message valid period",
+            # "AT+CMGRD": "read+delete SMS", # FIXME: DANGER
+            # "AT+CMGSEX": "send SMS (extended)", # FIXME: DANGER
+            # "AT+CMSSEX": "send multi SMS from storage", # FIXME: DANGER
+            # "AT+CMGP": "cdma/evdo text mode parameters", # FIXME: DANGER
+        },
+
+        # =========================================================================
+        # 8. PHONEBOOK
+        # =========================================================================
+        "PHONEBOOK": {
+            "AT+CPBS": "select phonebook memory (SM/ME/DC/MC/RC/FD/ON/LD/EN)",
+            "AT+CPBR": "read phonebook entries",
+            # "AT+CPBF": "find phonebook entries", # FIXME: DANGER
+            # "AT+CPBW": "write phonebook entry", # FIXME: DANGER
+            "AT+CNUM": "subscriber number (может быть недоступен на M2M)",
+        },
+
+        # =========================================================================
+        # 9. GPRS / PDP
+        # =========================================================================
+        "GPRS_PDP": {
+            "AT+CGREG": "GPRS registration status",
+            "AT+CGATT": "packet domain attach/detach",
+            # "AT+CGACT": "PDP context activate/deactivate", # FIXME: DANGER
+            # "AT+CGDCONT": "define PDP context (APN, type)", # FIXME: DANGER
+            # "AT+CGDSCONT": "define secondary PDP context", # FIXME: DANGER
+            "AT+CGTFT": "traffic flow template",
+            "AT+CGQREQ": "QoS profile (requested)",
+            "AT+CGEQREQ": "3G QoS profile (requested)",
+            "AT+CGQMIN": "QoS profile (minimum acceptable)",
+            "AT+CGEQMIN": "3G QoS profile (minimum acceptable)",
+            # "AT+CGDATA": "enter data state (PPP) # DANGER", # FIXME: DANGER
+            "AT+CGPADDR": "show PDP address",
+            "AT+CGCLASS": "GPRS mobile station class",
+            "AT+CGEREP": "GPRS event reporting",
+            "AT+CGAUTH": "PDP-IP authentication (PAP/CHAP)",
+            "AT+CGCONTRDP": "PDP context dynamic parameters",
+            "AT+CDNSSRV": "DNS server IP",
+        },
+
+        # =========================================================================
+        # 10. HARDWARE (питание, ADC, GPIO, I2C)
+        # =========================================================================
+        "HARDWARE": {
+            # "AT+CVALARM": "low/high voltage alarm", # FIXME: DANGER
+            "AT+CVAUXS": "state of VREG_AUX1 pin",
+            "AT+CVAUXV": "voltage of VREG_AUX1 pin",
+            "AT+CADC": "read ADC value",
+            "AT+CADC2": "read ADC2 value",
+            # "AT+CMTE": "temperature control / shutdown", # FIXME: DANGER
+            # "AT+CPMVT": "low/high voltage power off", # FIXME: DANGER
+            # "AT+CDELTA": "go to recovery mode # DANGER", # FIXME: DANGER
+            # "AT+CRIIC": "read I2C register", # FIXME: DANGER
+            # "AT+CWIIC": "write I2C register", # FIXME: DANGER
+            "AT+CBC": "battery/voltage",
+            "AT+CPMUTEMP": "module temperature",
+            # "AT+CGFUNC": "GPIO function enable/disable", # FIXME: DANGER
+            # "AT+CGDRT": "GPIO direction (in/out)", # FIXME: DANGER
+            # "AT+CGSETV": "GPIO set value (high/low)", # FIXME: DANGER
+            "AT+CGGETV": "GPIO get value",
+            "AT+CGISR": "GPIO interrupt trigger",
+            "AT+CFGRI": "RI pin on URC",
+            # "AT+CSCLK": "UART sleep", # FIXME: DANGER
+            # "AT+CMUX": "UART multiplexer # DANGER", # FIXME: DANGER
+        },
+
+        # =========================================================================
+        # 11. SIM APPLICATION TOOLKIT (SAT/STK)
+        # =========================================================================
+        "SAT_STK": {
+            "AT+STIN": "SAT indication",
+            "AT+STGI": "get SAT information",
+            "AT+STGR": "SAT respond",
+            # "AT+STK": "STK switch (on/off)", # FIXME: DANGER
+            # "AT+STKFMT": "STK PDU format (0=decoded, 1=PDU) # DANGER (reboot)", # FIXME: DANGER
+            "AT+STENV": "original STK PDU envelope command",
+            # "AT+STSM": "get STK setup menu list (PDU)", # FIXME: DANGER
+        },
+
+        # =========================================================================
+        # 12. FILE SYSTEM
+        # =========================================================================
+        "FILE_SYSTEM": {
+            # "AT+FSCD": "select current directory", # FIXME: DANGER
+            # "AT+FSMKDIR": "make directory", # FIXME: DANGER
+            # "AT+FSRMDIR": "delete directory", # FIXME: DANGER
+            "AT+FSLS": "list directories/files",
+            # "AT+FSDEL": "delete file", # FIXME: DANGER
+            # "AT+FSRENAME": "rename file", # FIXME: DANGER
+            "AT+FSATTRI": "file attributes",
+            "AT+FSMEM": "available memory",
+            # "AT+FSLOCA": "select storage place", # FIXME: DANGER
+            # "AT+FSCOPY": "copy file", # FIXME: DANGER
+            # "AT+CFTRANRX": "transfer file to EFS", # FIXME: DANGER
+            # "AT+CFTRANTX": "transfer file from EFS", # FIXME: DANGER
+        },
+
+        # =========================================================================
+        # 13. INTERNET SERVICE (TCP/IP стек модуля)
+        # =========================================================================
+        "INTERNET_SERVICE": {
+            # "AT+CSOCKSETPN": "set active PDP context profile", # FIXME: DANGER
+            "AT+CIPDNSSET": "DNS query parameters",
+            "AT+CDNSGIP": "query IP by domain name",
+            "AT+CDNSGHNAME": "query domain name by IP",
+            # "AT+CPING": "ping destination", # FIXME: DANGER
+            # "AT+CPINGSTOP": "stop ping", # FIXME: DANGER
+            "AT+CTCPFIN": "TCP FIN config",
+            "AT+CTCPKA": "TCP heartbeat",
+            "AT+CTEUTP": "unknown TCP packet echo",
+            "AT+CUPURE": "UDP port unreachable ICMP echo",
+            "AT+CINICMPALLOW": "ICMP filter",
+            "AT+CDNSSRV": "DNS server IP",
+            "AT+CHTPSERV": "HTP server info",
+            # "AT+CHTPUPDATE": "update time via HTP", # FIXME: DANGER
+            # "AT+CNTP": "update time via NTP", # FIXME: DANGER
+        },
+
+        # =========================================================================
+        # 14. OPEN/CLOSE NETWORK (для сокетов)
+        # =========================================================================
+        "NETWORK_OPEN": {
+            # "AT+CNETSTART": "open packet network # DANGER", # FIXME: DANGER
+            # "AT+CNETSTOP": "close network", # FIXME: DANGER
+            # "AT+CNETIPADDR": "inquire PDP address", # FIXME: DANGER
+        },
+
+        # =========================================================================
+        # 15. GPS / GNSS
+        # =========================================================================
+        "GPS_GNSS": {
+            "AT+CGPS": "start/stop GPS session",
+            "AT+CGPSINFO": "get GPS fixed position",
+            "AT+CGPSCOLD": "cold start GPS",
+            "AT+CGPSHOT": "hot start GPS",
+            "AT+CGPSURL": "AGPS server URL",
+            "AT+CGPSSSL": "AGPS transport security",
+            "AT+CGPSAUTO": "auto-start GPS",
+            "AT+CGPSNMEA": "NMEA sentence type",
+            "AT+CGPSNEMARATE": "NMEA output rate",
+            "AT+CGPSMD": "AGPS MO method",
+            "AT+CGPSFTM": "GPS test mode",
+            # "AT+CGPSDEL": "delete GPS info", # FIXME: DANGER
+            "AT+CGPSXE": "GPS XTRA enable",
+            # "AT+CGPSXD": "download XTRA file", # FIXME: DANGER
+            "AT+CGPSXDAUTO": "auto-download XTRA",
+            "AT+CGPSINFOCFG": "report NMEA-0183 sentence",
+            "AT+CGPSPMD": "positioning mode",
+            "AT+CGPSMSB": "based mode switch to standalone",
+            "AT+CGPSHOR": "positioning accuracy",
+            "AT+CGPSNOTIFY": "LCS respond positioning request",
+            "AT+CGNSSINFO": "GNSS fixed position",
+            "AT+CGNSSMODE": "GNSS support mode",
+        },
+
+        # =========================================================================
+        # 16. РАЗНОЕ / ВЕНДОРСКОЕ (может быть не в мануале)
+        # =========================================================================
+        "MISC_VENDOR": {
+            "AT*CNTI": "vendor: cell info (может отсутствовать)",
+            "AT*CPSI": "vendor: PSI (может отсутствовать)",
+            # "AT*CNETSCAN": "vendor: network scan (может отсутствовать)", # FIXME: DANGER
+            "AT*CELLINFO": "vendor: cell info (может отсутствовать)",
+            "AT+CRUSET": "vendor: RU settings (может отсутствовать)",
+            "AT+CCED": "vendor: cell environment description",
+            "AT+WS46": "RAT selection",
+            "AT+CESQ": "extended signal quality",
+            "AT+CIREG": "IMS registration",
+            "AT+CIMS": "IMS status",
+            "AT+CPINR": "PIN retries",
+            "AT+CGCONTRDP": "PDP context dynamic params",
+        },
+    }
 
     COMPILE_EOF__STR = re.compile(r".+@.+:.*#\s*")
 
@@ -1203,7 +1592,7 @@ PASSED
             return_sequence: bool | None = None,
     ) -> dict[str, str] | list[tuple[str, str]]:
         """
-        Опрашивает AT-команды из AT_CMDS
+        Опрашивает AT-команды из AT_CMDS__FLAT
         ----------------------------
         M2M SIM
         я запустил симку на телефоне
@@ -1329,7 +1718,7 @@ PASSED
         method_send = self.at_cmd__simple if method_simple else self.at_cmd__raw
 
         if cmds is None:
-            cmds = self.AT_CMDS
+            cmds = self.AT_CMDS__FLAT
 
         for cmd in cmds:
             try:
