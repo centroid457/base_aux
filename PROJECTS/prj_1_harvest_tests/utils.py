@@ -941,7 +941,7 @@ PASSED
 
     # AT EXPLORE =======================================================================================================
     @staticmethod
-    def at_param__parse_variants(response: str, max_count: int | None = 10) -> list[int]:
+    def at_param__parse_variants(response: str, max_count: int | None = 10) -> list[str]:
         """
         ВАРИАНТЫ
             1=RANGES
@@ -954,34 +954,43 @@ PASSED
 
                 [AT]AT+CPBR=?--->+CPBR: (1-100),20,28\nOK
             2=VALUES
-                # TODO:
             	('AT+CPBS=?', '+CPBS: ("SM","FD","ON","AP")\nOK')
         """
+        result: list[str] = []
 
+        # 1=INTS -----------------------------
+        int_diaps_final: list[str] = []
 
-        diaps_final: list[str] = []
+        int_diaps_pretend: list[str] = re.findall(r"\(([ 0-9,-]+)\)", response)
+        if int_diaps_pretend:
+            for diap in int_diaps_pretend:
+                int_diaps_final.extend(diap.split(","))
 
-        diapasones: list[str] = re.findall(r"\(([ 0-9,-]+)\)", response)
-        for diapason in diapasones:
-            diaps_final.extend(diapason.split(","))
+            ints_final: set[int] = set()
+            for subdiap in int_diaps_final:
+                if "-" in subdiap:
+                    start, finish = subdiap.split("-")
+                    start = int(start.strip())
+                    finish = int(finish.strip())
+                    for value in range(start, finish+1):
+                        ints_final.add(value)
+                else:
+                    value = int(subdiap.strip())
+                    ints_final.add(value)
 
-        values_final: set[int] = set()
-        for subdiap in diaps_final:
-            if "-" in subdiap:
-                start, finish = subdiap.split("-")
-                start = int(start.strip())
-                finish = int(finish.strip())
-                for value in range(start, finish+1):
-                    values_final.add(value)
-            else:
-                value = int(subdiap.strip())
-                values_final.add(value)
+            result.extend(map(str, sorted(ints_final)))
 
-        # slice -------------
+        # 2=STR -----------------------------
+        str_values: list[str] = re.findall(r'"([^"]+)"', response)
+        for value in str_values:
+            if value not in result:
+                result.append(value)
+
+        # FINAL=slice -------------
         if max_count:
-            return sorted(values_final)[:max_count]
+            return result[:max_count]
         else:
-            return sorted(values_final)
+            return result
 
     # ------------------------------------------------------------------------------------------------------------------
     def at_cmd__explore(
@@ -3224,7 +3233,7 @@ A02901810001203000E2806894000050035FD77070430A430A3000E2806894000050035FD7707010
 
 
 # ======================================================================================================================
-@pytest.mark.skip
+# @pytest.mark.skip
 @pytest.mark.parametrize(
     argnames="source, _EXPECTED",
     argvalues=[
@@ -3232,19 +3241,29 @@ A02901810001203000E2806894000050035FD77070430A430A3000E2806894000050035FD7707010
         ('ERROR', []),
         ('+CGDATA: ("")\nOK', []),
 
+        # INT=======================
         # SINGLE ------
-        ('+CGATT: (0-1)\nOK', [0, 1]),
-        ('+CREG: (0-2)\nOK', [0, 1, 2]),
-        ('+CREG: ( 0 -  2 )\nOK', [0, 1, 2]),
+        ('+CGATT: (0-1)\nOK', ['0', '1']),
+        ('+CREG: (0-2)\nOK', ['0', '1', '2']),
+        ('+CREG: ( 0 -  2 )\nOK', ['0', '1', '2']),
 
-        ('+CGACT: (0,1)\nOK', [0, 1]),
-        ('+CGACT: ( 0 , 1  )\nOK', [0, 1]),
+        ('+CGACT: (0,1)\nOK', ['0', '1']),
+        ('+CGACT: ( 0 , 1  )\nOK', ['0', '1']),
 
         # SOFISTICATED ------
-        ('+CFUN: (0-1,4-8),(0-1)\nOK', [0, 1, 4, 5, 6, 7, 8, ]),
-        ('+: (4-8),(0-1)\nOK', [0, 1, 4, 5, 6, 7, 8, ]),
-        ('+: (1,4-8)\nOK', [1, 4, 5, 6, 7, 8, ]),
-        ('+: ( 1 , 4 -  8 )\nOK', [1, 4, 5, 6, 7, 8, ]),
+        ('+CFUN: (0-1,4-8),(0-1)\nOK', ['0', '1', '4', '5', '6', '7', '8', ]),
+        ('+: (4-8),(0-1)\nOK', ['0', '1', '4', '5', '6', '7', '8', ]),
+        ('+: (1,4-8)\nOK', ['1', '4', '5', '6', '7', '8', ]),
+        ('+: ( 1 , 4 -  8 )\nOK', ['1', '4', '5', '6', '7', '8', ]),
+
+        # STR=======================
+        ('+CPBS: "SM"\nOK', ["SM",]),
+        ('+CPBS: ("SM")\nOK', ["SM",]),
+        ('+CPBS: ("SM","FD")\nOK', ["SM","FD"]),
+        ('+CPBS: "SM", ("FD")\nOK', ["SM", "FD"]),
+
+        # INT+STR=======================
+        ('+CPBS: "SM", (2,0-1)\nOK', ["0", "1", "2" ,"SM"]),
     ]
 )
 def test__at_param__parse_variants(source, _EXPECTED):
