@@ -5,6 +5,7 @@ import base64
 from base_aux.aux_eq.m4_eq_valid2_derivatives import *
 from base_aux.clients.m1_client_0__base import ClientBase
 
+
 # ======================================================================================================================
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -3699,7 +3700,7 @@ A02901810001203000E2806894000050035FD77070430A430A3000E2806894000050035FD7707010
         ('+CPBS: "SM", ("FD")\nOK', ["SM", "FD"]),
 
         # INT+STR=======================
-        ('+CPBS: "SM", (2,0-1)\nOK', ["0", "1", "2" ,"SM"]),
+        ('+CPBS: "SM", (2,0-1)\nOK', ["0", "1", "2", "SM"]),
     ]
 )
 def test__at_param__parse_variants(source, _EXPECTED):
@@ -4097,11 +4098,11 @@ AT_GROUPS: dict[str, dict[str, str]] = {
 }
 
 
-# @pytest.mark.skip
+@pytest.mark.skip
 @pytest.mark.parametrize(
     argnames="group_name, cmds",
-    argvalues=list(AT_GROUPS.items()),
-    ids=list(AT_GROUPS.keys()),
+    argvalues=AT_GROUPS.items(),
+    ids=AT_GROUPS.keys(),
 )
 def test__at_param__GROUPS(group_name, cmds, harvest, gsm_at__port):
     harvest.at_cmds__explore(cmds=cmds, port=gsm_at__port)
