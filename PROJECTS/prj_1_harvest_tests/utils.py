@@ -1464,7 +1464,7 @@ PASSED
 
     def at_cmds__explore(
             self,
-            cmds: Iterable[str],
+            cmds: Iterable[str] | dict,
             **kwargs,
     ) -> dict[str, list[tuple[str, str]]]:
         result = {}
@@ -1480,7 +1480,11 @@ PASSED
         print(f"=========at_cmds__explore===========[")
         print("{")
         for cmd, values in result.items():
-            print(f"'{cmd}': [")
+            try:
+                print(f"'{cmd}': ['{cmds[cmd]}',")
+            except:
+                print(f"'{cmd}': [")
+
             for line in values or []:
                 print(f"\t{line},")
             print("],")
@@ -4098,7 +4102,7 @@ AT_GROUPS: dict[str, dict[str, str]] = {
 }
 
 
-@pytest.mark.skip
+# @pytest.mark.skip
 @pytest.mark.parametrize(
     argnames="group_name, cmds",
     argvalues=AT_GROUPS.items(),
