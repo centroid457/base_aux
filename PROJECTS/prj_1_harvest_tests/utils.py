@@ -3730,81 +3730,81 @@ AT_GROUPS: dict[str, dict[str, str]] = {
         "AT+CIMI": "IMSI (IMSI SIM-карты)",
         "AT+CIMIM": "IMSI второго аппа (USIM)",
         "AT+GCAP": "список поддерживаемых возможностей (+CGSM, +FCLASS, +DS)",
-        # "AT+CSCS": "выбор TE character set (IRA/GSM/UCS2/HEX)", # FIXME: DANGER
+        # "AT+CSCS": "[DANGER]выбор TE character set (IRA/GSM/UCS2/HEX)",
         "AT+CMEE": "формат ошибок (+CME ERROR: numeric/verbose)",
         "AT+CPAS": "phone activity status",
-        # "AT+SIMEI": "установка IMEI (только для service)", # FIXME: DANGER
+        # "AT+SIMEI": "[DANGER]установка IMEI (только для service)",
         "AT+SMEID": "MEID (CDMA)",
         "AT+CSVM": "voice mail subscriber number",
-        # "AT+CUSBPIDSWITCH": "смена USB PID (перезагружает модуль!)", # FIXME: DANGER
+        # "AT+CUSBPIDSWITCH": "[DANGER]смена USB PID (перезагружает модуль!)",
         "AT+CICCID": "ICCID SIM-карты",
         "AT+SPIC": "остаток попыток ввода PIN/PUK",
         "AT+CPIN": "статус PIN (READY / SIM PIN / SIM PUK)",
         "AT+CPINR": "остаток попыток PIN (3GPP-вариант)",
-        # "AT+CLCK": "facility lock (блокировка SIM/сети)", # FIXME: DANGER
-        # "AT+CPWD": "смена пароля (PIN/PUK)", # FIXME: DANGER
+        # "AT+CLCK": "[DANGER]facility lock (блокировка SIM/сети)",
+        # "AT+CPWD": "[DANGER]смена пароля (PIN/PUK)",
         "AT+CCLK": "real time clock",
         "AT+CACM": "accumulated call meter",
         "AT+CAMM": "accumulated call meter maximum",
         "AT+CPUC": "price per unit and currency",
         "AT+CSPN": "service provider name",
         "AT+CATR": "URC destination interface",
-        # "AT+CPOF": "power off module", # FIXME: DANGER
-        # "AT+CRESET": "reset module", # FIXME: DANGER
-        # "AT+CSCLK": "UART sleep control", # FIXME: DANGER
-        # "AT+CMUX": "мультиплексор UART (4 виртуальных порта) # DANGER",  # FIXME: DANGER
-        # "AT+CUSBPIDSWITCH": "смена USB PID # DANGER (reset)", # FIXME: DANGER
+        # "AT+CPOF": "[DANGER]power off module",
+        # "AT+CRESET": "[DANGER]reset module",
+        # "AT+CSCLK": "[DANGER]UART sleep control",
+        # "AT+CMUX": "[DANGER]мультиплексор UART (4 виртуальных порта) # DANGER",
+        # "AT+CUSBPIDSWITCH": "[DANGER]смена USB PID # DANGER (reset)",
     },
 
     # =========================================================================
     # 2. V.25TER БАЗОВЫЕ (управление модемом)
     # =========================================================================
     "V25TER_BASIC": {
-        # "A/": "повторить последнюю команду",  # FIXME: NOT USEFUL
+        # "A/": "[DANGER]повторить последнюю команду",
         # "ATD": "dial (голосовой/данные)",
         # "ATD><mem><n>": "dial из памяти (SM/ME/DC...)",
         # "ATD><n>": "dial из активной памяти",
         # "ATD><str>": "dial по имени из памяти",
-        # "ATA": "answer (ответ на входящий)", # FIXME: DANGER
-        # "ATH": "hang up (положить трубку)", # FIXME: DANGER
-        # "ATS0": "auto-answer (число гудков)", # FIXME: DANGER
-        # "+++": "escape из data mode в command mode",    # FIXME: NOT USEFUL
-        # "ATO": "вернуться в data mode", # FIXME: DANGER
+        # "ATA": "[DANGER]answer (ответ на входящий)",
+        # "ATH": "[DANGER]hang up (положить трубку)",
+        # "ATS0": "[DANGER]auto-answer (число гудков)",
+        # "+++": "[DANGER]escape из data mode в command mode",
+        # "ATO": "[DANGER]вернуться в data mode",
         "AT+IPR": "baud rate (temporarily)",
         "AT+IPREX": "baud rate (permanently)",
-        # "AT+ICF": "character framing (data/parity/stop)", # FIXME: DANGER
-        # "AT+IFC": "flow control (RTS/CTS)", # FIXME: DANGER
-        # "AT&C": "DCD function mode", # FIXME: DANGER
-        # "ATE": "echo on/off",    # FIXME: DANGER
+        # "AT+ICF": "[DANGER]character framing (data/parity/stop)",
+        # "AT+IFC": "[DANGER]flow control (RTS/CTS)",
+        # "AT&C": "[DANGER]DCD function mode",
+        # "ATE": "[DANGER]echo on/off",
         "AT&V": "display current configuration",
-        # "AT&D": "DTR function mode", # FIXME: DANGER
-        # "AT&S": "DSR function mode", # FIXME: DANGER
+        # "AT&D": "[DANGER]DTR function mode",
+        # "AT&S": "[DANGER]DSR function mode",
         "ATV": "result code format (numeric/verbose)",
-        # "AT&F": "factory defaults",  # FIXME: DANGER
-        # "ATQ": "result code presentation mode",  # FIXME: DANGER
+        # "AT&F": "[DANGER]factory defaults",
+        # "ATQ": "[DANGER]result code presentation mode",
         "ATX": "CONNECT result code format",
         "AT&E": "CONNECT result code format (speed)",
-        # "AT&W": "save user settings",    # FIXME: DANGER
-        # "ATZ": "restore user settings",  # FIXME: DANGER
+        # "AT&W": "[DANGER]save user settings",
+        # "ATZ": "[DANGER]restore user settings",
     },
 
     # =========================================================================
     # 3. STATUS CONTROL (управление состоянием)
     # =========================================================================
     "STATUS_CONTROL": {
-        # "AT+CFUN": "уровень функциональности (0=min, 1=full, 4=offline, 7=reset) # DANGER", # FIXME: DANGER
+        # "AT+CFUN": "[DANGER]уровень функциональности (0=min, 1=full, 4=offline, 7=reset) # DANGER",
         "AT+CSIM": "generic SIM access (APDU)",
         "AT+CRSM": "restricted SIM access (READ/UPDATE BINARY/RECORD)",
         "AT+CSPN": "service provider name",
         "AT+CSQ": "signal quality (RSSI, BER)",
         "AT+AUTOCSQ": "автоматический отчёт CSQ",
         "AT+CSQDELTA": "порог изменения RSSI",
-        # "AT+CPOF": "power off", # FIXME: DANGER
-        # "AT+CRESET": "reset",   # FIXME: DANGER
+        # "AT+CPOF": "[DANGER]power off",
+        # "AT+CRESET": "[DANGER]reset",
         "AT+CCLK": "real time clock",
-        # "AT+CMEE": "error format", # FIXME: DANGER
+        # "AT+CMEE": "[DANGER]error format",
         "AT+CPAS": "phone activity status",
-        # "AT+SIMEI": "set IMEI", # FIXME: DANGER
+        # "AT+SIMEI": "[DANGER]set IMEI",
         "AT+SMEID": "MEID",
         "AT+CSVM": "voice mail number",
     },
@@ -3816,24 +3816,24 @@ AT_GROUPS: dict[str, dict[str, str]] = {
         "AT+CREG": "network registration (CS)",
         "AT+CGREG": "GPRS registration (PS)",
         "AT+CEREG": "EPS registration (LTE)",
-        # "AT+COPS": "operator selection # DANGER (может долго висеть на =?)", # FIXME: DANGER
-        # "AT+CLCK": "facility lock (network)", # FIXME: DANGER
-        # "AT+CPWD": "change password", # FIXME: DANGER
-        # "AT+CCUG": "closed user group", # FIXME: DANGER
+        # "AT+COPS": "[DANGER]operator selection # DANGER (может долго висеть на =?)",
+        # "AT+CLCK": "[DANGER]facility lock (network)",
+        # "AT+CPWD": "[DANGER]change password",
+        # "AT+CCUG": "[DANGER]closed user group",
         "AT+CUSD": "USSD",
         "AT+CAOC": "advice of charge",
         "AT+CSSN": "supplementary service notifications",
         "AT+CPOL": "preferred operator list",
         "AT+COPN": "read operator names",
-        # "AT+CNMP": "preferred mode selection",# FIXME: DANGER
-        # "AT+CNBP": "preferred band selection",# FIXME: DANGER
+        # "AT+CNMP": "[DANGER]preferred mode selection",
+        # "AT+CNBP": "[DANGER]preferred band selection",
         "AT+CNAOP": "acquisitions order preference",
         "AT+CPSI": "UE system information",
         "AT+CSMOD": "show network system mode",
         "AT+CTZU": "automatic time zone update",
         "AT+CTZR": "time zone reporting",
-        # "AT+NETMODE": "WCDMA/TDSCDMA mode select",# FIXME: DANGER
-        # "AT+WS46": "RAT selection (12=LTE, 22=..., 28=...)",# FIXME: DANGER
+        # "AT+NETMODE": "[DANGER]WCDMA/TDSCDMA mode select",
+        # "AT+WS46": "[DANGER]RAT selection (12=LTE, 22=..., 28=...)",
         "AT+CESQ": "extended signal quality",
         "AT+CIREG": "IMS registration (может быть не поддержано)",
         "AT+CIMS": "IMS status (может быть не поддержано)",
@@ -3854,15 +3854,15 @@ AT_GROUPS: dict[str, dict[str, str]] = {
         "AT+CRC": "cellular result codes",
         "AT+CLCC": "list current calls",
         "AT+CEER": "extended error report",
-        # "AT+CCWA": "call waiting", # FIXME: DANGER
+        # "AT+CCWA": "[DANGER]call waiting",
         "AT+CHLD": "call related supplementary services",
         "AT+CCFC": "call forwarding",
         "AT+CLIP": "calling line identification presentation",
         "AT+CLIR": "calling line identification restriction",
         "AT+COLP": "connected line identification presentation",
-        # "AT+VTS": "DTMF and tone generation", # FIXME: DANGER
+        # "AT+VTS": "[DANGER]DTMF and tone generation",
         "AT+VTD": "tone duration",
-        # "AT+CSTA": "select type of address", # FIXME: DANGER
+        # "AT+CSTA": "[DANGER]select type of address",
         "AT+CMOD": "call mode",
         "AT+VMUTE": "speaker mute",
         "AT+CMUT": "microphone mute",
@@ -3876,7 +3876,7 @@ AT_GROUPS: dict[str, dict[str, str]] = {
     # 6. AUDIO / DSP (голосовые параметры)
     # =========================================================================
     "AUDIO_DSP": {
-        # "AT+CACDBFN": "change default ACDB filename", # FIXME: DANGER
+        # "AT+CACDBFN": "[DANGER]change default ACDB filename",
         "AT+CPCMREG": "USB audio control",
         "AT+CMICGAIN": "mic gain",
         "AT+COUTGAIN": "out gain",
@@ -3900,8 +3900,8 @@ AT_GROUPS: dict[str, dict[str, str]] = {
         "AT+CREC": "record wav",
         "AT+CCMXPLAYWAV": "play wav",
         "AT+CCMXSTOPWAV": "stop wav",
-        # "AT+CCMXPLAY": "play audio (mp3/aac/amr/...)", # FIXME: DANGER
-        # "AT+CCMXSTOP": "stop audio", # FIXME: DANGER
+        # "AT+CCMXPLAY": "[DANGER]play audio (mp3/aac/amr/...)",
+        # "AT+CCMXSTOP": "[DANGER]stop audio",
     },
 
     # =========================================================================
@@ -3910,10 +3910,10 @@ AT_GROUPS: dict[str, dict[str, str]] = {
     "SMS": {
         "AT+CSMS": "select message service",
         "AT+CPMS": "preferred message storage",
-        # "AT+CMGF": "SMS format (0=PDU, 1=text)", # FIXME: DANGER
+        # "AT+CMGF": "[DANGER]SMS format (0=PDU, 1=text)",
         "AT+CSCA": "SMS service centre address",
         "AT+CSCB": "cell broadcast message indication",
-        # "AT+CSMP": "text mode parameters", # FIXME: DANGER
+        # "AT+CSMP": "[DANGER]text mode parameters",
         "AT+CSDH": "show text mode parameters",
         "AT+CNMA": "new message acknowledgement",
         "AT+CNMI": "new message indications",
@@ -3921,16 +3921,16 @@ AT_GROUPS: dict[str, dict[str, str]] = {
         "AT+CGSMS": "service for MO SMS (3GPP)",
         "AT+CMGL": "list SMS",
         "AT+CMGR": "read SMS",
-        # "AT+CMGS": "send SMS # DANGER (ждёт > и Ctrl+Z)", # FIXME: DANGER
-        # "AT+CMSS": "send SMS from storage", # FIXME: DANGER
-        # "AT+CMGW": "write SMS to memory # DANGER (ждёт >)", # FIXME: DANGER
-        # "AT+CMGD": "delete SMS", # FIXME: DANGER
-        # "AT+CMGMT": "change message status", # FIXME: DANGER
+        # "AT+CMGS": "[DANGER]send SMS # DANGER (ждёт > и Ctrl+Z)",
+        # "AT+CMSS": "[DANGER]send SMS from storage",
+        # "AT+CMGW": "[DANGER]write SMS to memory # DANGER (ждёт >)",
+        # "AT+CMGD": "[DANGER]delete SMS",
+        # "AT+CMGMT": "[DANGER]change message status",
         "AT+CMVP": "message valid period",
-        # "AT+CMGRD": "read+delete SMS", # FIXME: DANGER
-        # "AT+CMGSEX": "send SMS (extended)", # FIXME: DANGER
-        # "AT+CMSSEX": "send multi SMS from storage", # FIXME: DANGER
-        # "AT+CMGP": "cdma/evdo text mode parameters", # FIXME: DANGER
+        # "AT+CMGRD": "[DANGER]read+delete SMS",
+        # "AT+CMGSEX": "[DANGER]send SMS (extended)",
+        # "AT+CMSSEX": "[DANGER]send multi SMS from storage",
+        # "AT+CMGP": "[DANGER]cdma/evdo text mode parameters",
     },
 
     # =========================================================================
@@ -3939,8 +3939,8 @@ AT_GROUPS: dict[str, dict[str, str]] = {
     "PHONEBOOK": {
         "AT+CPBS": "select phonebook memory (SM/ME/DC/MC/RC/FD/ON/LD/EN)",
         "AT+CPBR": "read phonebook entries",
-        # "AT+CPBF": "find phonebook entries", # FIXME: DANGER
-        # "AT+CPBW": "write phonebook entry", # FIXME: DANGER
+        # "AT+CPBF": "[DANGER]find phonebook entries",
+        # "AT+CPBW": "[DANGER]write phonebook entry",
         "AT+CNUM": "subscriber number (может быть недоступен на M2M)",
     },
 
@@ -3950,15 +3950,15 @@ AT_GROUPS: dict[str, dict[str, str]] = {
     "GPRS_PDP": {
         "AT+CGREG": "GPRS registration status",
         "AT+CGATT": "packet domain attach/detach",
-        # "AT+CGACT": "PDP context activate/deactivate", # FIXME: DANGER
-        # "AT+CGDCONT": "define PDP context (APN, type)", # FIXME: DANGER
-        # "AT+CGDSCONT": "define secondary PDP context", # FIXME: DANGER
+        # "AT+CGACT": "[DANGER]PDP context activate/deactivate",
+        # "AT+CGDCONT": "[DANGER]define PDP context (APN, type)",
+        # "AT+CGDSCONT": "[DANGER]define secondary PDP context",
         "AT+CGTFT": "traffic flow template",
         "AT+CGQREQ": "QoS profile (requested)",
         "AT+CGEQREQ": "3G QoS profile (requested)",
         "AT+CGQMIN": "QoS profile (minimum acceptable)",
         "AT+CGEQMIN": "3G QoS profile (minimum acceptable)",
-        # "AT+CGDATA": "enter data state (PPP) # DANGER", # FIXME: DANGER
+        # "AT+CGDATA": "[DANGER]enter data state (PPP)",
         "AT+CGPADDR": "show PDP address",
         "AT+CGCLASS": "GPRS mobile station class",
         "AT+CGEREP": "GPRS event reporting",
@@ -3971,26 +3971,26 @@ AT_GROUPS: dict[str, dict[str, str]] = {
     # 10. HARDWARE (питание, ADC, GPIO, I2C)
     # =========================================================================
     "HARDWARE": {
-        # "AT+CVALARM": "low/high voltage alarm", # FIXME: DANGER
+        # "AT+CVALARM": "[DANGER]low/high voltage alarm",
         "AT+CVAUXS": "state of VREG_AUX1 pin",
         "AT+CVAUXV": "voltage of VREG_AUX1 pin",
         "AT+CADC": "read ADC value",
         "AT+CADC2": "read ADC2 value",
-        # "AT+CMTE": "temperature control / shutdown", # FIXME: DANGER
-        # "AT+CPMVT": "low/high voltage power off", # FIXME: DANGER
-        # "AT+CDELTA": "go to recovery mode # DANGER", # FIXME: DANGER
-        # "AT+CRIIC": "read I2C register", # FIXME: DANGER
-        # "AT+CWIIC": "write I2C register", # FIXME: DANGER
+        # "AT+CMTE": "[DANGER]temperature control / shutdown",
+        # "AT+CPMVT": "[DANGER]low/high voltage power off",
+        # "AT+CDELTA": "[DANGER]go to recovery mode",
+        # "AT+CRIIC": "[DANGER]read I2C register",
+        # "AT+CWIIC": "[DANGER]write I2C register",
         "AT+CBC": "battery/voltage",
         "AT+CPMUTEMP": "module temperature",
-        # "AT+CGFUNC": "GPIO function enable/disable", # FIXME: DANGER
-        # "AT+CGDRT": "GPIO direction (in/out)", # FIXME: DANGER
-        # "AT+CGSETV": "GPIO set value (high/low)", # FIXME: DANGER
+        # "AT+CGFUNC": "[DANGER]GPIO function enable/disable",
+        # "AT+CGDRT": "[DANGER]GPIO direction (in/out)",
+        # "AT+CGSETV": "[DANGER]GPIO set value (high/low)",
         "AT+CGGETV": "GPIO get value",
         "AT+CGISR": "GPIO interrupt trigger",
         "AT+CFGRI": "RI pin on URC",
-        # "AT+CSCLK": "UART sleep", # FIXME: DANGER
-        # "AT+CMUX": "UART multiplexer # DANGER", # FIXME: DANGER
+        # "AT+CSCLK": "[DANGER]UART sleep",
+        # "AT+CMUX": "[DANGER]UART multiplexer # DANGER",
     },
 
     # =========================================================================
@@ -4000,40 +4000,40 @@ AT_GROUPS: dict[str, dict[str, str]] = {
         "AT+STIN": "SAT indication",
         "AT+STGI": "get SAT information",
         "AT+STGR": "SAT respond",
-        # "AT+STK": "STK switch (on/off)", # FIXME: DANGER
-        # "AT+STKFMT": "STK PDU format (0=decoded, 1=PDU) # DANGER (reboot)", # FIXME: DANGER
+        # "AT+STK": "[DANGER]STK switch (on/off)",
+        # "AT+STKFMT": "[DANGER]STK PDU format (0=decoded, 1=PDU) # DANGER (reboot)",
         "AT+STENV": "original STK PDU envelope command",
-        # "AT+STSM": "get STK setup menu list (PDU)", # FIXME: DANGER
+        # "AT+STSM": "[DANGER]get STK setup menu list (PDU)",
     },
 
     # =========================================================================
     # 12. FILE SYSTEM
     # =========================================================================
     "FILE_SYSTEM": {
-        # "AT+FSCD": "select current directory", # FIXME: DANGER
-        # "AT+FSMKDIR": "make directory", # FIXME: DANGER
-        # "AT+FSRMDIR": "delete directory", # FIXME: DANGER
+        # "AT+FSCD": "[DANGER]select current directory",
+        # "AT+FSMKDIR": "[DANGER]make directory",
+        # "AT+FSRMDIR": "[DANGER]delete directory",
         "AT+FSLS": "list directories/files",
-        # "AT+FSDEL": "delete file", # FIXME: DANGER
-        # "AT+FSRENAME": "rename file", # FIXME: DANGER
+        # "AT+FSDEL": "[DANGER]delete file",
+        # "AT+FSRENAME": "[DANGER]rename file",
         "AT+FSATTRI": "file attributes",
         "AT+FSMEM": "available memory",
-        # "AT+FSLOCA": "select storage place", # FIXME: DANGER
-        # "AT+FSCOPY": "copy file", # FIXME: DANGER
-        # "AT+CFTRANRX": "transfer file to EFS", # FIXME: DANGER
-        # "AT+CFTRANTX": "transfer file from EFS", # FIXME: DANGER
+        # "AT+FSLOCA": "[DANGER]select storage place",
+        # "AT+FSCOPY": "[DANGER]copy file",
+        # "AT+CFTRANRX": "[DANGER]transfer file to EFS",
+        # "AT+CFTRANTX": "[DANGER]transfer file from EFS",
     },
 
     # =========================================================================
     # 13. INTERNET SERVICE (TCP/IP стек модуля)
     # =========================================================================
     "INTERNET_SERVICE": {
-        # "AT+CSOCKSETPN": "set active PDP context profile", # FIXME: DANGER
+        # "AT+CSOCKSETPN": "[DANGER]set active PDP context profile",
         "AT+CIPDNSSET": "DNS query parameters",
         "AT+CDNSGIP": "query IP by domain name",
         "AT+CDNSGHNAME": "query domain name by IP",
-        # "AT+CPING": "ping destination", # FIXME: DANGER
-        # "AT+CPINGSTOP": "stop ping", # FIXME: DANGER
+        # "AT+CPING": "[DANGER]ping destination",
+        # "AT+CPINGSTOP": "[DANGER]stop ping",
         "AT+CTCPFIN": "TCP FIN config",
         "AT+CTCPKA": "TCP heartbeat",
         "AT+CTEUTP": "unknown TCP packet echo",
@@ -4041,17 +4041,17 @@ AT_GROUPS: dict[str, dict[str, str]] = {
         "AT+CINICMPALLOW": "ICMP filter",
         "AT+CDNSSRV": "DNS server IP",
         "AT+CHTPSERV": "HTP server info",
-        # "AT+CHTPUPDATE": "update time via HTP", # FIXME: DANGER
-        # "AT+CNTP": "update time via NTP", # FIXME: DANGER
+        # "AT+CHTPUPDATE": "[DANGER]update time via HTP",
+        # "AT+CNTP": "[DANGER]update time via NTP",
     },
 
     # =========================================================================
     # 14. OPEN/CLOSE NETWORK (для сокетов)
     # =========================================================================
     "NETWORK_OPEN": {
-        # "AT+CNETSTART": "open packet network # DANGER", # FIXME: DANGER
-        # "AT+CNETSTOP": "close network", # FIXME: DANGER
-        # "AT+CNETIPADDR": "inquire PDP address", # FIXME: DANGER
+        # "AT+CNETSTART": "[DANGER]open packet network # DANGER",
+        # "AT+CNETSTOP": "[DANGER]close network",
+        # "AT+CNETIPADDR": "[DANGER]inquire PDP address",
     },
 
     # =========================================================================
@@ -4069,9 +4069,9 @@ AT_GROUPS: dict[str, dict[str, str]] = {
         "AT+CGPSNEMARATE": "NMEA output rate",
         "AT+CGPSMD": "AGPS MO method",
         "AT+CGPSFTM": "GPS test mode",
-        # "AT+CGPSDEL": "delete GPS info", # FIXME: DANGER
+        # "AT+CGPSDEL": "[DANGER]delete GPS info",
         "AT+CGPSXE": "GPS XTRA enable",
-        # "AT+CGPSXD": "download XTRA file", # FIXME: DANGER
+        # "AT+CGPSXD": "[DANGER]download XTRA file",
         "AT+CGPSXDAUTO": "auto-download XTRA",
         "AT+CGPSINFOCFG": "report NMEA-0183 sentence",
         "AT+CGPSPMD": "positioning mode",
@@ -4088,7 +4088,7 @@ AT_GROUPS: dict[str, dict[str, str]] = {
     "MISC_VENDOR": {
         "AT*CNTI": "vendor: cell info (может отсутствовать)",
         "AT*CPSI": "vendor: PSI (может отсутствовать)",
-        # "AT*CNETSCAN": "vendor: network scan (может отсутствовать)", # FIXME: DANGER
+        # "AT*CNETSCAN": "[DANGER]vendor: network scan (может отсутствовать)",
         "AT*CELLINFO": "vendor: cell info (может отсутствовать)",
         "AT+CRUSET": "vendor: RU settings (может отсутствовать)",
         "AT+CCED": "vendor: cell environment description",
@@ -4102,6 +4102,7 @@ AT_GROUPS: dict[str, dict[str, str]] = {
 }
 
 
+# ----------------------------------------------------------------------------------------------------------------------
 # @pytest.mark.skip
 @pytest.mark.parametrize(
     argnames="group_name, cmds",
