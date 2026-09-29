@@ -1,20 +1,36 @@
 import os
+import socket
 from datetime import datetime
 
 from .utils import *
 
-from base_aux.clients.m2_manager_1__serial import ClientManager_Serial
+from base_aux.clients.m2_manager_1__serial import ClientManager_Serial, ClientSerial
 from base_aux.aux_eq.m4_eq_valid2_derivatives import *
 
 
 # ======================================================================================================================
-@pytest.fixture(scope="session")
-def harvest(request) -> Harvest:
-    """
-    Находит устройство Harvest и возвращает авторизованный клиент.
+# TRANSPORT SELECTION
+# ----------------------------------------------------------------------------------------------------------------------
+# Флаг директа: имя хоста начинается с "harvest" — значит тесты запущены
+# прямо на самом устройстве (локально), и Serial-прослойка не нужна.
+#
+# Также можно переопределить через env HARVEST_TRANSPORT:
+#     HARVEST_TRANSPORT=direct  → принудительно ClientDirect
+#     HARVEST_TRANSPORT=serial  → принудительно SerialManager (для отладки)
+# ======================================================================================================================
+def _make_con_1__direct() -> 'ClientDirect':
+    """Создать ClientDirect и подключиться. Используется в direct-режиме."""
+    from base_aux.clients.m1_client_3__direct import ClientDirect
 
-    WIFI
-    vest=cdeVFR90!
+    conn = ClientDirect(address=socket.gethostname(), _raise_if_occupied=False)
+    assert conn.connect(), "не удалось запустить ClientDirect (pty+shell)"
+    return conn
+
+
+def _make_dev_2__serial() -> Harvest | None:
+    """
+    Найти первый свободный Serial-порт, к которому цепляется Harvest.
+    Логика — вынесена из старого conftest, чтобы не дублировать.
     """
     found: list[Harvest] = []
     for conn in ClientManager_Serial().make__not_occupied(can_open=True, baudrate=115200):
@@ -32,6 +48,39 @@ def harvest(request) -> Harvest:
         pytest.exit("Устройств Harvest более чем 1!")
 
     device = found[0]
+    return device
+
+
+# ======================================================================================================================
+@pytest.fixture(scope="session")
+def harvest(request) -> Harvest:
+    """
+    Возвращает авторизованный Harvest-клиент.
+
+    Автоматически выбирает транспорт:
+        - ClientDirect, если мы уже на устройстве (hostname ~ "harvest...");
+        - ClientSerial через ClientManager_Serial — иначе.
+
+    Переопределение — env HARVEST_TRANSPORT=direct|serial.
+
+    WIFI
+    vest=cdeVFR90!
+    """
+    # 1=TRANSPORT------------------------------------------
+    if socket.gethostname().startswith("harvest"):
+        # ============ DIRECT ============
+        print("\n[HARVEST_TRANSPORT] using ClientDirect (local pty)")
+        conn = _make_con_1__direct()
+        device = Harvest(conn)
+
+        dev_id = device.get_hostname_and_occupy()
+        print(f"\n[HARVEST_FOUND__DIRECT]{conn}/{dev_id=}")
+    else:
+        # ============ SERIAL ============
+        device = _make_dev_2__serial()
+        dev_id = device.hostname
+
+    # 2=DEVICE------------------------------------------
     with device.conn:
         device.prepare__stop__kernel_terminal_logs()
         device.prepare__services(start=False)
