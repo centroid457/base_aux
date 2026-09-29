@@ -9,6 +9,10 @@ from base_aux.aux_eq.m4_eq_valid2_derivatives import *
 
 
 # ======================================================================================================================
+SSH_DEF_ADDRESS = "harvest05"
+
+
+# ======================================================================================================================
 # TRANSPORT SELECTION
 # ----------------------------------------------------------------------------------------------------------------------
 # Флаг директа: имя хоста начинается с "harvest" — значит тесты запущены
@@ -18,9 +22,15 @@ from base_aux.aux_eq.m4_eq_valid2_derivatives import *
 #     HARVEST_TRANSPORT=direct  → принудительно ClientDirect
 #     HARVEST_TRANSPORT=serial  → принудительно SerialManager (для отладки)
 # ======================================================================================================================
-def _make_dev_1__direct() -> 'ClientDirect':
-    """Создать ClientDirect и подключиться. Используется в direct-режиме."""
-    from base_aux.clients.m1_client_3__direct import ClientDirect
+def _make_dev_1__direct() -> Harvest | None:
+    """
+    NOTE: DONT MESS WITH IT!!!
+    1. need to prepare IOT (install pytest at least) even in case of internet off
+    2. need to keep actual test version and conpare it always!
+
+    on IOT host as on localhost
+    """
+    from base_aux.clients.m1_client_3__direct import ClientDirect   # NOTE: placed here cause not working on Windows!
 
     conn = ClientDirect(address=socket.gethostname(), _raise_if_occupied=False)
     assert conn.connect(), "не удалось запустить ClientDirect (pty+shell)"
@@ -53,6 +63,14 @@ def _make_dev_2__serial() -> Harvest | None:
     return device
 
 
+def _make_dev_3__ssh(address: str) -> Harvest | None:
+    """
+    address = "harvest05" | "192.168.137.58"
+    """
+    pass
+    # TODO: create
+
+
 # ======================================================================================================================
 @pytest.fixture(scope="session")
 def harvest(request) -> Harvest:
@@ -76,6 +94,10 @@ def harvest(request) -> Harvest:
     else:
         print("\n[HARVEST_TRANSPORT] using ClientSerial")
         device = _make_dev_2__serial()
+
+    if device is None:
+        address = request.config.getoption("--ssh", default=None) or SSH_DEF_ADDRESS
+        device = _make_dev_3__ssh(address)
 
     # 2=DEVICE------------------------------------------
     dev_id = device.hostname
