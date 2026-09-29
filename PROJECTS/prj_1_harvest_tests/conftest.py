@@ -18,13 +18,15 @@ from base_aux.aux_eq.m4_eq_valid2_derivatives import *
 #     HARVEST_TRANSPORT=direct  → принудительно ClientDirect
 #     HARVEST_TRANSPORT=serial  → принудительно SerialManager (для отладки)
 # ======================================================================================================================
-def _make_con_1__direct() -> 'ClientDirect':
+def _make_dev_1__direct() -> 'ClientDirect':
     """Создать ClientDirect и подключиться. Используется в direct-режиме."""
     from base_aux.clients.m1_client_3__direct import ClientDirect
 
     conn = ClientDirect(address=socket.gethostname(), _raise_if_occupied=False)
     assert conn.connect(), "не удалось запустить ClientDirect (pty+shell)"
-    return conn
+    device = Harvest(conn)
+    device.get_hostname_and_occupy()
+    return device
 
 
 def _make_dev_2__serial() -> Harvest | None:
@@ -70,17 +72,13 @@ def harvest(request) -> Harvest:
     if socket.gethostname().startswith("harvest"):
         # ============ DIRECT ============
         print("\n[HARVEST_TRANSPORT] using ClientDirect (local pty)")
-        conn = _make_con_1__direct()
-        device = Harvest(conn)
-
-        dev_id = device.get_hostname_and_occupy()
-        print(f"\n[HARVEST_FOUND__DIRECT]{conn}/{dev_id=}")
+        device = _make_dev_1__direct()
     else:
-        # ============ SERIAL ============
+        print("\n[HARVEST_TRANSPORT] using ClientSerial")
         device = _make_dev_2__serial()
-        dev_id = device.hostname
 
     # 2=DEVICE------------------------------------------
+    dev_id = device.hostname
     with device.conn:
         device.prepare__stop__kernel_terminal_logs()
         device.prepare__services(start=False)
