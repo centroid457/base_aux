@@ -1,10 +1,6 @@
 # =============================================================================
 # 47. ПЕРЕДАЧА ПАРАМЕТРОВ В PYTEST ИЗ КОМАНДНОЙ СТРОКИ
 # =============================================================================
-# Задача: передать в тесты значения вроде uart=com3, ssh=harvest05 и т.п.
-# Рассмотрим все способы: пользовательские опции (--key value), позиционные
-# аргументы, переменные окружения, ini-файлы и комбинированные схемы.
-
 import pytest
 import os
 
@@ -12,28 +8,56 @@ import os
 # 47.1 ПОЛЬЗОВАТЕЛЬСКИЕ ОПЦИИ ЧЕРЕЗ pytest_addoption (рекомендуемый способ)
 # =============================================================================
 # Определяем свои опции в conftest.py: parser.addoption(...)
-# Затем читаем их через request.config.getoption(...).
 
-# --- conftest.py ---
+# 1=DEFINE =============================================================================================================
+# --- conftest.py + pytest_addoption(parser) ---
 def pytest_addoption(parser):
     # Именованная опция с обязательным значением
-    parser.addoption("--uart", action="store", default=None,
-                     help="UART-порт, например: com3 или ttyUSB0")
+    parser.addoption(
+        "--uart",
+        action="store",
+        default=None,
+        help="UART-порт, например: com3 или ttyUSB0"
+    )
     # Опция с выбором из списка
-    parser.addoption("--ssh-host", action="store", default=None,
-                     help="SSH-хост: имя или IP")
+    parser.addoption(
+        "--ssh-host",
+        action="store",
+        default=None,
+        help="SSH-хост: имя или IP")
     # Опция с фиксированным набором значений
-    parser.addoption("--channel", action="store", default="uart",
-                     choices=["uart", "ssh", "usb"],
-                     help="Канал соединения")
-    # Опция с флагом (без значения)
-    parser.addoption("--debug-mode", action="store_true", default=False,
-                     help="Режим отладки")
-    # Опция, которая может повторяться (список значений)
-    parser.addoption("--tag", action="append", default=[],
-                     help="Тег (можно указать несколько раз)")
+    parser.addoption(
+        "--channel",
+        action="store",
+        default="uart",
+        choices=["uart", "ssh", "usb"],
+        help="Канал соединения"
+    )
+    # FLAG=BOOL
+    parser.addoption(
+        "--debug-mode",
+        action="store_true",
+        default=False,
+        help="Режим отладки"
+    )
+    # ПОВТОРЯЮЩИЕСЯ ОПЦИИ (несколько значений)
+    parser.addoption(
+        "--tag",
+        action="append",
+        efault=[],
+        help="Тег (можно указать несколько раз)"
+    )
 
-# Использование в тестах:
+# 2=PASS/WRITE =========================================================================================================
+# Запуск из консоли:
+# pytest --uart=com3
+# pytest --uart=ttyUSB0 --channel=uart
+# pytest --ssh-host=harvest05 --channel=ssh
+# pytest --ssh-host=192.168.1.64 --channel=ssh
+# pytest --debug-mode --tag=smoke --tag=fast
+
+# 3=READING ============================================================================================================
+# читаем через request.config.getoption(...).
 
 @pytest.fixture(scope="session")
 def uart_port(request):
@@ -55,17 +79,33 @@ def test_connection(uart_port, ssh_host, channel):
         assert ssh_host is not None, "Не задан --ssh-host"
         print(f"\nРаботаем по SSH: {ssh_host}")
 
-# Запуск из консоли:
-# pytest --uart=com3
-# pytest --uart=ttyUSB0 --channel=uart
-# pytest --ssh-host=harvest05 --channel=ssh
-# pytest --ssh-host=192.168.1.64 --channel=ssh
-# pytest --debug-mode --tag=smoke --tag=fast
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # =============================================================================
-# 47.2 ПЕРЕМЕННЫЕ ОКРУЖЕНИЯ (быстро, но неявно)
+# 47.2 ПЕРЕМЕННЫЕ ОКРУЖЕНИЯ (быстро, но неявно) чтение через фикстуры
 # =============================================================================
 # Подходит для значений, которые часто меняются в CI/CD.
+# ЧТЕНИЕ ЧЕРЕЗ ФИКСТУРЫ
+
+# Плюс: не требует правки pytest_addoption.
+# Минус: не видно в pytest --help, легко забыть.
+
+# Запуск:
+# Linux/Mac:      TEST_CHANNEL=ssh TEST_UART=ttyUSB0 pytest
+# Windows cmd:    set TEST_CHANNEL=ssh && set TEST_UART=ttyUSB0 && pytest
+# PowerShell:     $env:TEST_CHANNEL="ssh"; $env:TEST_UART="ttyUSB0"; pytest
 
 @pytest.fixture(scope="session")
 def channel_from_env():
@@ -75,13 +115,7 @@ def channel_from_env():
 def uart_from_env():
     return os.environ.get("TEST_UART", None)
 
-# Запуск:
-# Linux/Mac:      TEST_CHANNEL=ssh TEST_UART=ttyUSB0 pytest
-# Windows cmd:    set TEST_CHANNEL=ssh && set TEST_UART=ttyUSB0 && pytest
-# PowerShell:     $env:TEST_CHANNEL="ssh"; $env:TEST_UART="ttyUSB0"; pytest
 
-# Плюс: не требует правки pytest_addoption.
-# Минус: не видно в pytest --help, легко забыть.
 
 # =============================================================================
 # 47.3 INI-ФАЙЛ (pytest.ini / pyproject.toml) — для значений по умолчанию
@@ -118,7 +152,7 @@ def uart(request):
     return request.config.getvalue("uart")
 
 # =============================================================================
-# 47.4 ПОЗИЦИОННЫЕ АРГУМЕНТЫ (свободные строки после опций)
+# 47.4 ПОЗИЦИОННЫЕ АРГУМЕНТЫ (свободные строки после опций) - НЕ ИСПОЛЬЗОВАТЬ
 # =============================================================================
 # Всё, что не распознано как опция, попадает в config.args (список строк).
 # Подходит для простых случаев вида: pytest uart=com3 ssh=harvest05
@@ -146,6 +180,21 @@ def test_positional(positional_params):
 # к тестовым файлам. Поэтому лучше использовать префикс, например:
 #   pytest --uart=com3 --ssh=harvest05
 # Так надёжнее — не путается с путями к тестам.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # =============================================================================
 # 47.5 ИМЕНОВАННЫЕ АРГУМЕНТЫ В СТИЛЕ key=value (собственный парсер)
