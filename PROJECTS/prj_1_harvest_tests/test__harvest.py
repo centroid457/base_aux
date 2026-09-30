@@ -9,6 +9,14 @@ manager = ClientManager_Serial()
 
 
 # ======================================================================================================================
+
+
+
+def test__1(config):
+    assert config.getoption("--opt1")
+
+
+# ======================================================================================================================
 @pytest.mark.skipif(True, reason="used for exploring executions/methods")
 class Test_000__Explore:
     # WARN!!! DONT FORGET TURN OFF IT!!! else more of tests would failed!

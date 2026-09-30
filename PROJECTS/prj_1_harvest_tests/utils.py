@@ -1360,7 +1360,7 @@ PASSED
             pass
         return self.at_cmd__dump(*args, return_sequence=False, **kwargs)
 
-    # AT EXPLORE =======================================================================================================
+    # AT 0=EXPLORE =======================================================================================================
     @staticmethod
     def at_param__parse_variants(response: str, max_count: int | None = 10) -> list[str]:
         """

@@ -81,22 +81,41 @@ pytest -k "login or logout"
 # =============================================================================
 # 1.3 ФИЛЬТРАЦИЯ по МАРКЕРАМ
 # =============================================================================
+# 1=DEFINITION
+pyproject.toml
 
-# задание маркеров
-# class TestWiFi:
-#    @pytest.mark.mvp
-#    def test_connection(self):
-#       assert True
-#
-#   @pytest.mark.info
-#   def test_mac_address(self):
-#       assert True
-#
-#   @pytest.mark.mvp
-#   @pytest.mark.info
-#   @pytest.mark.long
-#   def test_throughput(self):
-#       assert True
+    [tool.pytest.ini_options]
+    markers = [
+        "DET: detection",
+        "PRE: preinstallation",
+        "GNSS: gnss",
+        "BT: bluetooth",
+        "WIFI: wifi",
+        "GSM: gsm",
+        "RFID: rfid",
+    ]
+
+# 2=APPLY on test
+
+    class TestWiFi:
+       @pytest.mark.mvp
+       def test_connection(self):
+          assert True
+    
+      @pytest.mark.info
+      def test_mac_address(self):
+          assert True
+    
+      @pytest.mark.mvp
+      @pytest.mark.info
+      @pytest.mark.long
+      def test_throughput(self):
+          assert True
+
+# 3=START SELECTION
+    pytest -m RFID
+
+
 
 # Показать все доступные маркеры (определённые в pytest.ini или в коде)
 pytest --markers
