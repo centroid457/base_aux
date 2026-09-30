@@ -11,7 +11,4 @@ def pytest_addoption(parser):
         # default=False,
         help="обязательное указание"
     )
-
-def test__1(config):
-    assert config.getoption("--opt1")
 ```

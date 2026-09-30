@@ -22,7 +22,15 @@ import os
 
 # --- conftest.py + pytest_addoption(parser) ---
 def pytest_addoption(parser):
-    # 0=ОБЯЗАТЕЛЬНОЕ УКАЗАНИЕ
+    # *arg=УКАЗАНИЕ ИМЕНИ!!! без имени параметра в функции!!!
+    parser.addoption(
+        "--ssh-host",
+        action="store",
+        default=None,
+        help="SSH-хост: имя или IP"
+    )
+
+    # 0=ОБЯЗАТЕЛЬНОЕ УКАЗАНИЕ параметра при запуске=тоесть если нет дефолтного???
     parser.addoption(
         "--pass_always",
         action="store_true",
@@ -30,6 +38,7 @@ def pytest_addoption(parser):
         help="обязательное указание"
     )
 
+    # ACTION=
     # 1=FLAG=BOOL
     parser.addoption(
         "--debug-mode",
@@ -53,8 +62,21 @@ def pytest_addoption(parser):
         help="SSH-хост: имя или IP"
     )
 
-    # 3=ВАРИАНТЫ ЗНАЧЕНИЙ
-    # pytest --ssh-host=harvest05 --channel=ssh
+    # 3=APPEND=НЕСКОЛЬКО ЗНАЧЕНИЙ
+    # pytest --debug-mode --tag=smoke --tag=fast
+    # 5. Для передачи нескольких значений (например, нескольких портов)
+    #    используйте action="append" и получайте список.
+    parser.addoption(
+        "--tag",
+        action="append",
+        default=[],
+        help="Тег (можно указать несколько раз)"
+    )
+
+    # CHOICES=ВАРИАНТЫ ЗНАЧЕНИЙ
+    # если указаны то сверяется пир получении!
+    # если не совпадает - ошибка
+    # pytest --channel=ssh
     parser.addoption(
         "--channel",
         action="store",
@@ -63,16 +85,17 @@ def pytest_addoption(parser):
         help="Канал соединения"
     )
 
-    # 4=НЕСКОЛЬКО ЗНАЧЕНИЙ
-    # pytest --debug-mode --tag=smoke --tag=fast
-    # 5. Для передачи нескольких значений (например, нескольких портов)
-    #    используйте action="append" и получайте список.
+    # TYPE=преобразование типа
+    # по умолчанию дает всегда STR!!!
+    # Параметр type= может быть int, float, str или функцией.
+    # Внутри: request.config.getoption("--timeout") вернёт указанный тип int.
     parser.addoption(
-        "--tag",
-        action="append",
-        efault=[],
-        help="Тег (можно указать несколько раз)"
+        "--timeout",
+        action="store",
+        type=int,
+        default=5
     )
+
 
 # 2=PASS/WRITE =========================================================================================================
 # Запуск из консоли:
@@ -288,13 +311,6 @@ def test_conn(connection):
     #         pytest --channel=ssh --host=192.168.1.64
     assert connection["channel"] in ("uart", "ssh", "usb")
 
-# =============================================================================
-# 47.7 PARSER TYPE: автоматическое преобразование
-# =============================================================================
-# Параметр type= может быть int, float, str или функцией.
-def params_type(parser):
-    parser.addoption("--timeout", action="store", type=int, default=5)
-    # Внутри: request.config.getoption("--timeout") вернёт int.
 
 # =============================================================================
 # 47.8 ЧАСТЫЕ ОШИБКИ И ВАЖНЫЕ ЗАМЕЧАНИЯ

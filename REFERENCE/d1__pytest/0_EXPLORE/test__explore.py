@@ -1,7 +1,7 @@
 import pytest
 
 def test_1__wrong_fixname(config):
-    """
+    r"""
     WRONG NAME
 
     test setup failed
@@ -22,4 +22,7 @@ def test_2__good_pytestconfig(pytestconfig):
 def test_3__good_request(request):
     assert request.config.getoption("--opt1")
 
-
+def test_1(pytestconfig):
+    value = pytestconfig.getoption("--opt1")
+    print(f"{value=}")
+    assert value == 123

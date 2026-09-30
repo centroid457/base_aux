@@ -1,3 +1,4 @@
+# [conftest.py]
 def pytest_addoption(parser):
     parser.addoption(
         "--opt1",
@@ -5,3 +6,9 @@ def pytest_addoption(parser):
         default=True,
         help="..."
     )
+
+# [test.py]
+def test_1(pytestconfig):
+    value = pytestconfig.getoption("--opt1")
+    print(f"{value=}")
+    assert value
