@@ -131,6 +131,16 @@ class Harvest:
     ]
 
     AT_CMDS__GROUPED: Iterable[str] = {
+        # TODO: DELETE and use another!!!!
+        # TODO: DELETE and use another!!!!
+        # TODO: DELETE and use another!!!!
+        # TODO: DELETE and use another!!!!
+        # TODO: DELETE and use another!!!!
+        # TODO: DELETE and use another!!!!
+        # TODO: DELETE and use another!!!!
+        # TODO: DELETE and use another!!!!
+        # TODO: DELETE and use another!!!!
+        # TODO: DELETE and use another!!!!
         # NO SIM
         'AT': [
             ('AT=?', 'ERROR'),

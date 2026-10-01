@@ -9,15 +9,14 @@ from base_aux.aux_eq.m4_eq_valid2_derivatives import *
 
 
 # ======================================================================================================================
-SSH_DEF_ADDRESS = "harvest05"
-
-
 def pytest_addoption(parser):
     parser.addoption(
-        "--ssh",
+        '--ssh',
         action="store",
-        default=SSH_DEF_ADDRESS,
-        help="SSH-хост: имя или IP"
+        nargs="?",
+        const="harvest05",
+        default=None,
+        help="SSH-хост: без значения → harvest05",
     )
 
 
@@ -73,6 +72,8 @@ def _make_dev_3__ssh(address: str) -> Harvest | None:
     address = "harvest05" | "192.168.137.58"
     """
     pass
+    # device.get_hostname_and_occupy()
+
     # TODO: create
 
 
