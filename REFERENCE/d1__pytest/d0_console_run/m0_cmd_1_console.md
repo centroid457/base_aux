@@ -3,6 +3,8 @@
 # =============================================================================
 # !=ИТОГ
 pytest -v --html=report_results.html
+pytest conftest.py -v --capture=fd
+
 
 # 1=ВСЕГДА-1=ОПТИМАЛЬНЫЙ ВЫВОД информации о пройденных тестах - ИСПОЛЬЗОВАТЬ ВСЕГДА!!!
 pytest -v
@@ -16,7 +18,11 @@ pytest -v --html=report_results.html
 # 10=только метку
 pytest -v -m DET
 
+# отображение stdout из команд PRINT 
+pytest --capture=fd
 
+# запуск тестов из конкретного файла (нестандартного conftest - для тестирования хуков)
+pytest conftest.py
 
 
 

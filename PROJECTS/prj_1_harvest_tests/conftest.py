@@ -12,6 +12,15 @@ from base_aux.aux_eq.m4_eq_valid2_derivatives import *
 SSH_DEF_ADDRESS = "harvest05"
 
 
+def pytest_addoption(parser):
+    parser.addoption(
+        "--ssh",
+        action="store",
+        default=SSH_DEF_ADDRESS,
+        help="SSH-хост: имя или IP"
+    )
+
+
 # ======================================================================================================================
 # TRANSPORT SELECTION
 # ----------------------------------------------------------------------------------------------------------------------
@@ -84,16 +93,15 @@ def harvest(request) -> Harvest:
     """
     # 1=TRANSPORT------------------------------------------
     if socket.gethostname().startswith("harvest"):
-        # ============ DIRECT ============
         print("\n[HARVEST_TRANSPORT] using ClientDirect (local pty)")
         device = _make_dev_1__direct()
     else:
-        print("\n[HARVEST_TRANSPORT] using ClientSerial")
-        device = _make_dev_2__serial()
-
-    if device is None:
-        address = request.config.getoption("--ssh", default=None) or SSH_DEF_ADDRESS
-        device = _make_dev_3__ssh(address)
+        ssh_address = request.config.getoption("--ssh", default=None)
+        if ssh_address:
+            device = _make_dev_3__ssh(ssh_address)
+        else:
+            print("\n[HARVEST_TRANSPORT] using ClientSerial")
+            device = _make_dev_2__serial()
 
     # 2=DEVICE------------------------------------------
     dev_id = device.hostname

@@ -31,6 +31,15 @@ def pytest_addoption(parser):
     )
 
     # 0=ОБЯЗАТЕЛЬНОЕ УКАЗАНИЕ параметра при запуске=тоесть если нет дефолтного???
+    """
+    если не указана default и значение не передано в команде - будет ошибка запуска!!!
+    
+    C:\__STARICHENKO_Element\PROJECTS\abc=base_aux\REFERENCE\d1__pytest\0_EXPLORE>pytest -v --capture=fd --opt1 
+    ERROR: usage: pytest [options] [file_or_dir] [file_or_dir] [...]
+    pytest: error: argument --opt1: expected one argument
+      inifile: C:\__STARICHENKO_Element\PROJECTS\abc=base_aux\.pytest.ini
+      rootdir: C:\__STARICHENKO_Element\PROJECTS\abc=base_aux   
+    """
     parser.addoption(
         "--pass_always",
         action="store_true",
@@ -89,12 +98,14 @@ def pytest_addoption(parser):
     # по умолчанию дает всегда STR!!!
     # Параметр type= может быть int, float, str или функцией.
     # Внутри: request.config.getoption("--timeout") вернёт указанный тип int.
+    # pytest -v --capture=fd --opt1=123 -->value='123'
     parser.addoption(
         "--timeout",
         action="store",
         type=int,
         default=5
     )
+
 
 
 # 2=PASS/WRITE =========================================================================================================

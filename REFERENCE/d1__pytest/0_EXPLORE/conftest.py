@@ -2,13 +2,13 @@
 def pytest_addoption(parser):
     parser.addoption(
         "--opt1",
-        action="store",
-        default=True,
+        action="store_true",
+        # default=True,
         help="..."
     )
 
 # [test.py]
-def test_1(pytestconfig):
+def test__in_congtest(pytestconfig):
     value = pytestconfig.getoption("--opt1")
     print(f"{value=}")
     assert value

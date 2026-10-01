@@ -1,2 +1,1 @@
-pytest -v --capture=fd --opt1=123
-pause
+pytest conftest.py -v --capture=fd --opt1
