@@ -59,6 +59,7 @@ pyserial_asyncio    # serial_asyncio
 # aioserial #OSI Approved (MPL-2.0)    =pyserial-asyncio
 smbus2      #MIT/linuxOnly
 telebot     #GPL2
+paramiko
 
 # SERVERS -------------------
 Jinja2      #OSI Approved :: BSD License

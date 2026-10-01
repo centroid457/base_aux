@@ -9,12 +9,14 @@ from base_aux.aux_eq.m4_eq_valid2_derivatives import *
 
 
 # ======================================================================================================================
+SSH_HOST = "harvest05"
+
 def pytest_addoption(parser):
     parser.addoption(
         '--ssh',
         action="store",
         nargs="?",
-        const="harvest05",
+        const=SSH_HOST,
         default=None,
         help="SSH-хост: без значения → harvest05",
     )
@@ -70,11 +72,39 @@ def _make_dev_2__serial() -> Harvest | None:
 def _make_dev_3__ssh(address: str) -> Harvest | None:
     """
     address = "harvest05" | "192.168.137.58"
-    """
-    pass
-    # device.get_hostname_and_occupy()
 
-    # TODO: create
+    SSH — второй транспорт для тестирования НЕподготовленных устройств:
+        - ничего не надо предварительно устанавливать на IoT (pytest гоняется
+          на dev-машине, а к IoT идёт только SSH-сессия);
+        - версия тестов всегда актуальная (не надо ничего «закидывать»);
+        - не тратит ресурсы IoT на запуск pytest.
+
+    Отличие от Serial: SSH даёт PTY, где sshd показывает login: prompt —
+    точно такой же, как на Serial. Поэтому здесь нужен validate_conn()
+    (ввод root / пароля), а не просто get_hostname_and_occupy().
+
+    Отличие от Direct: Direct работает с localhost, где мы уже залогинены.
+    """
+    from base_aux.clients.m1_client_2__ssh import ClientSsh   # NOTE: local import, so tests without --ssh don't require paramiko
+
+    try:
+        conn = ClientSsh(
+            address=address,
+            username="root",
+            password="1",
+            _raise_if_occupied=False,
+        )
+    except:
+        return
+
+    assert conn.connect(), f"не удалось подключиться по SSH к {address}"
+
+    device = Harvest(conn)
+    if not device.validate_conn():
+        pytest.exit(f"SSH: не удалось залогиниться на {address}")
+
+    device.get_hostname_and_occupy()
+    return device
 
 
 # ======================================================================================================================
@@ -85,9 +115,8 @@ def harvest(request) -> Harvest:
 
     Автоматически выбирает транспорт:
         - ClientDirect, если мы уже на устройстве (hostname ~ "harvest...");
+        - ClientSsh, если задан --ssh <address>;
         - ClientSerial через ClientManager_Serial — иначе.
-
-    Переопределение — env HARVEST_TRANSPORT=direct|serial.
 
     WIFI
     vest=cdeVFR90!
@@ -99,6 +128,7 @@ def harvest(request) -> Harvest:
     else:
         ssh_address = request.config.getoption("--ssh", default=None)
         if ssh_address:
+            print(f"\n[HARVEST_TRANSPORT] using ClientSsh({ssh_address})")
             device = _make_dev_3__ssh(ssh_address)
         else:
             print("\n[HARVEST_TRANSPORT] using ClientSerial")

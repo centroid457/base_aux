@@ -68,7 +68,7 @@ class ClientSsh(ClientBase):
     # ------------------------------------------------------------------
     @classmethod
     def _multiton_key(cls, address: str, **kwargs) -> str:
-        username = kwargs.get("username", None)
+        username = kwargs.get("username", None) or "default"
         port = kwargs.get("port", None) or cls.PORT
         return f"{address}:{port}@{username}"
 
@@ -103,6 +103,11 @@ class ClientSsh(ClientBase):
     def connect(self) -> bool:
         if self.check__connected():
             return True
+
+        # Закрываем хвосты предыдущего connect (если были) —
+        # чтобы не накапливать висячие каналы.
+        self.disconnect()
+
         try:
             import paramiko
         except ImportError:
