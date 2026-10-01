@@ -43,7 +43,7 @@ def pytest_addoption(parser):
     parser.addoption(
         "--debug-mode",
         action="store_true",
-        default=False,
+        # default=False,
         help="Режим отладки"
     )
 
