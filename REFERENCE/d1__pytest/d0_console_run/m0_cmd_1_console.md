@@ -2,15 +2,17 @@
 # !. BEST 
 # =============================================================================
 # !=ИТОГ
-pytest -v --html=report_results.html
-pytest conftest.py -v --capture=fd
-
+pytest -v -s --html=report_results.html
+pytest -v -s conftest.py --opt1
 
 # 1=ВСЕГДА-1=ОПТИМАЛЬНЫЙ ВЫВОД информации о пройденных тестах - ИСПОЛЬЗОВАТЬ ВСЕГДА!!!
 pytest -v
 
 # 1=отображение всех print() - отключение перехвата вывода - НУЖНО ТОЛЬКО В IDE PYCHARM для отладки!!! 
+# это правильнее!!!
 pytest -s
+# отображение из команд PRINT - отображает только для FAILED тестов!!!
+pytest --capture=fd
 
 # 2=ГЕНЕРАЦИЯ html ОТЧЕТА
 pytest -v --html=report_results.html
@@ -18,11 +20,12 @@ pytest -v --html=report_results.html
 # 10=только метку
 pytest -v -m DET
 
-# отображение stdout из команд PRINT 
-pytest --capture=fd
-
 # запуск тестов из конкретного файла (нестандартного conftest - для тестирования хуков)
 pytest conftest.py
+
+# передача параметров
+# сначала нужно создать его
+pytest --opt1=123
 
 
 

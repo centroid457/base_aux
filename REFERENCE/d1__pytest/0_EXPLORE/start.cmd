@@ -1,1 +1,1 @@
-pytest conftest.py -v --capture=fd --opt1
+pytest conftest.py -v -s --opt1

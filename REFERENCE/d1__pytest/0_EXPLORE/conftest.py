@@ -8,7 +8,8 @@ def pytest_addoption(parser):
     )
 
 # [test.py]
-def test__in_congtest(pytestconfig):
-    value = pytestconfig.getoption("--opt1")
-    print(f"{value=}")
-    assert value
+def test__in_conftest(pytestconfig):
+    name = "--opt1"
+    value = pytestconfig.getoption(name)
+    print()
+    print(f"{name}=[{value}]")
