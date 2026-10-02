@@ -47,12 +47,17 @@ class Test_000__Explore:
 # ======================================================================================================================
 @pytest.mark.DET
 class Test_01__Detection:
-    def test_det_1__exist_ports(self):
+    def test_det_1__transport_1__serial(self, transport):
+        # 0=serial
+        if transport.lower() != "serial":
+            pytest.skip()
+
+        # 1=exist_ports ------------------------------------
         result = manager.ADDRESSES_CASHED
         print(f"\nPORTS_EXISTED[{result}]")
         assert result != [], "Не обнаружено ни одного последовательного порта."
 
-    def test_det_2__exist_can_open(self):
+        # 2=exist_can_open ------------------------------------
         exist_opening__ok = []
         exist_opening__fail = []
 
@@ -66,7 +71,7 @@ class Test_01__Detection:
         print(f"{exist_opening__fail=}")
         assert exist_opening__ok != [], "Ни один порт не удалось открыть."
 
-    def test_det_3__dev_detection(self, harvest):
+    def test_det_2__dev_0__detection(self, harvest):
         """
         Тест проверяет, что устройство успешно обнаружено,
         и выводит его уникальный идентификатор.
@@ -74,11 +79,11 @@ class Test_01__Detection:
         assert harvest, "Устройство Harvest не обнаружено."
 
     @pytest.mark.skipif(True, reason="bad work!!!")
-    def test_det_4__dev_info(self, harvest_info):
+    def test_det_2__dev_1__info(self, harvest_info):
         print(json.dumps(harvest_info, indent=2, ensure_ascii=False))
         assert harvest_info, "Устройство Harvest не обнаружено."
 
-    def test_det_5__sql_settings(self, sql_settings):
+    def test_det_2__dev_2__sql_settings(self, sql_settings):
         assert sql_settings, "настройки устройства из SQL не получены"
 
 
