@@ -107,9 +107,25 @@ def _make_dev_3__ssh(address: str) -> Harvest | None:
     return device
 
 
+# ----------------------------------------------------------------------------------------------------------------------
+@pytest.fixture(scope="session")
+def transport(request) -> str:
+    if socket.gethostname().startswith("harvest"):
+        result = "direct"
+    else:
+        ssh_address = request.config.getoption("--ssh", default=None)
+        if ssh_address:
+            result = "ssh"
+        else:
+            result = "serial"
+
+    print(f"\n[HARVEST_TRANSPORT] selected [{result}]")
+    return result
+
+
 # ======================================================================================================================
 @pytest.fixture(scope="session")
-def harvest(request) -> Harvest:
+def harvest(request, transport) -> Harvest:
     """
     Возвращает авторизованный Harvest-клиент.
 
@@ -122,17 +138,13 @@ def harvest(request) -> Harvest:
     Vest=cdeVFR90!
     """
     # 1=TRANSPORT------------------------------------------
-    if socket.gethostname().startswith("harvest"):
-        print("\n[HARVEST_TRANSPORT] using ClientDirect (local pty)")
+    if transport == "direct":
         device = _make_dev_1__direct()
-    else:
+    elif transport == "ssh":
         ssh_address = request.config.getoption("--ssh", default=None)
-        if ssh_address:
-            print(f"\n[HARVEST_TRANSPORT] using ClientSsh({ssh_address})")
-            device = _make_dev_3__ssh(ssh_address)
-        else:
-            print("\n[HARVEST_TRANSPORT] using ClientSerial")
-            device = _make_dev_2__serial()
+        device = _make_dev_3__ssh(ssh_address)
+    else:
+        device = _make_dev_2__serial()
 
     # 2=DEVICE------------------------------------------
     dev_id = device.hostname
