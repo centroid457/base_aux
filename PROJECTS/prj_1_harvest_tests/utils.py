@@ -2262,7 +2262,43 @@ root@harvest05:~#
         }
 
     # ==================================================================================================================
-    def wf__scan(self, full: bool | None = None) -> list[str]:
+    def wf__link_connected(self) -> bool:
+        """
+        GOAL
+        check
+
+        1=DISCONNECTED ------------------------------
+        ---- Sent utf8 encoded message: "iw dev wlan0 link\r\n" ----
+        iw dev wlan0 link
+        Not connected.
+        root@harvest05:~#
+
+        2=CONNECTED ---------------------------------
+        ---- Sent utf8 encoded message: "iw dev wlan0 link\r\n" ----
+        iw dev wlan0 link
+        Connected to e2:d0:45:fb:a2:34 (on wlan0)
+                SSID: Vest
+                freq: 2462
+                RX: 342 bytes (2 packets)
+                TX: 1506 bytes (10 packets)
+                signal: -57 dBm
+                rx bitrate: 1.0 MBit/s
+                tx bitrate: 65.0 MBit/s
+
+                bss flags:      short-preamble short-slot-time
+                dtim period:    3
+                beacon int:     100
+        root@harvest05:~#
+        """
+        output = self.cmd_timeout__write_read__payload("iw dev wlan0 link")
+        result = (
+                "Not connected." not in output
+                and
+                "Connected to " in output
+        )
+        return result
+
+    def wf__scan(self, full: bool | None = None) -> list[str] | NoReturn:
         """
         PART
         ===============
@@ -2999,6 +3035,15 @@ root@harvest05:~#
             timeout=10,
             timeout_continue=2
         )
+        """
+        если сеть WiFi подключена/соннект установлен - скана не будет!!!
+        [COM3.WRITEREAD]
+            write=[timeout 10 iw dev wlan0 scan | grep SSID:]
+            read=[command failed: Resource temporarily unavailable (-11)]
+        """
+        if "Resource temporarily unavailable" in output:
+            raise Exception("WiFi=NOT AWAILABLE SCAN! cause WiFi is connected!!!")
+
         ssids = re.findall(r'\s*SSID:\s(.+)\s*\n*', output)
         print(f"Wi-Fi scan {ssids=}")
         return ssids

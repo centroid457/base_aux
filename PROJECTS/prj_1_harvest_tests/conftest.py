@@ -670,6 +670,12 @@ def internet_access(harvest) -> bool:
 
 # ======================================================================================================================
 @pytest.fixture(scope="session")
+def wf__link_connected(harvest) -> bool:
+    return harvest.wf__link_connected()
+
+
+# ======================================================================================================================
+@pytest.fixture(scope="session")
 def ultrasonic_mac__any(harvest) -> str | None:
     """Находит MAC-адрес UltraSonic датчика."""
     script = "scr__bt_find.py"
