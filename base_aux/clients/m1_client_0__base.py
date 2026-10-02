@@ -245,7 +245,8 @@ class ClientBase(ABC):
         GOAL
 
         """
-        result = re.sub(r'\s*[\r\n]+\s*', "\n", text)
+        # result = re.sub(r'\s*[\r\n]+\s*', "\n", text)
+        result = re.sub(r'[\r\n ]*[\r\n]+', "\n", text)     # all before EOL
         return result
 
     @staticmethod
@@ -319,7 +320,7 @@ class ClientBase(ABC):
         result = self._replace_chars__ansi(result)
         result = self._replace_chars__service(result)
         result = self._replace_chars__blank_lines(result)
-        result = result.strip()
+        result = result.rstrip()
         return result
 
     def _to_str(self, data: AnyStr) -> str | NoReturn:
@@ -367,7 +368,7 @@ class ClientBase(ABC):
         """
         result: bytes = data
         while True:
-            data_new = data.strip()
+            data_new = data.rstrip()
             data_new = data_new.strip(self.EOL__UNI)
             if not result or result == data_new:
                 break
@@ -499,7 +500,7 @@ class ClientBase(ABC):
             if self.history_enable:
                 self.history.append(msg)
 
-            return result.strip()
+            return result.strip(self.EOL__UNI)
 
     def read_text(self, **r_kwargs) -> str:
         """

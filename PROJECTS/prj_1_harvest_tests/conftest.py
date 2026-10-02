@@ -119,7 +119,7 @@ def harvest(request) -> Harvest:
         - ClientSerial через ClientManager_Serial — иначе.
 
     WIFI
-    vest=cdeVFR90!
+    Vest=cdeVFR90!
     """
     # 1=TRANSPORT------------------------------------------
     if socket.gethostname().startswith("harvest"):
