@@ -2289,14 +2289,14 @@ root@harvest05:~#
                 dtim period:    3
                 beacon int:     100
         root@harvest05:~#
+
+        3=WRONG name ---------------------------------
+        ---- Sent utf8 encoded message: "iw dev wlan2 link\r\n" ----
+        iw dev wlan2 link
+        command failed: No such device (-19)
         """
         output = self.cmd_timeout__write_read__payload("iw dev wlan0 link")
-        result = (
-                "Not connected." not in output
-                and
-                "Connected to " in output
-        )
-        return result
+        return "Connected to " in output
 
     def wf__scan(self, full: bool | None = None) -> list[str] | NoReturn:
         """

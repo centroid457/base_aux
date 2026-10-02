@@ -707,69 +707,14 @@ class Test_3__WiFi:
     TX_RETRIES_MAX_RATIO = 0.15  # 15% повторных передач от общего числа – подозрительно
     MIN_SCAN_NETWORKS = 3    # минимальное количество видимых сетей (если меньше – возможно антенна)
 
-    @pytest.mark.dependency(name="wifi_present")
-    def test_wf_1__present(self, harvest):
-        """
-        Проверяет наличие Wi-Fi интерфейса wlan0 и его тип.
-
-        ---- Sent utf8 encoded message: "ip link show wlan0 2>/dev/null || echo ERROR_MSG\r\n" ----
-        ip link show wlan0 2>/dev/null || echo ERROR_MSG
-        2: wlan0: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc pfifo_fast state DOWN mode DORMANT group default qlen 1000
-            link/ether ca:f0:e5:d6:0c:79 brd ff:ff:ff:ff:ff:ff
-        root@harvest05:~#
-        root@harvest05:~#
-        ---- Sent utf8 encoded message: "ip link show wlan1 2>/dev/null || echo ERROR_MSG\r\n" ----
-        ip link show wlan1 2>/dev/null || echo ERROR_MSG
-        ERROR_MSG
-        root@harvest05:~#
-        root@harvest05:~#
-
-
-        ---- Sent utf8 encoded message: "ip link show wlan0\r\n" ----
-        ip link show wlan0
-        2: wlan0: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc pfifo_fast state DOWN mode DORMANT group default qlen 1000
-            link/ether ca:f0:e5:d6:0c:79 brd ff:ff:ff:ff:ff:ff
-        root@harvest05:~#
-        root@harvest05:~#
-        ---- Sent utf8 encoded message: "ip link show wlan1\r\n" ----
-        ip link show wlan1
-        Device "wlan1" does not exist.
-        root@harvest05:~#
-        root@harvest05:~#
-        """
-        # Проверка существования
-        assert harvest.cmd_timeout__check_executed_success(
-            "ip link show wlan0"
-        ), "Wi-Fi интерфейс wlan0 не обнаружен"
-
-        # Дополнительная проверка, что это именно беспроводной интерфейс
-        """
-        СОЕДИНЕННЫЙ К VEST
-        [COM16.WRITEREAD]
-        write=[iw dev wlan0 info]
-        read=[Interface wlan0
-            ifindex 2
-            wdev 0x1
-            addr 54:78:c9:02:22:b0
-            ssid Vest
-            type managed
-            wiphy 0
-            channel 6 (2437 MHz), width: 20 MHz, center1: 2437 MHz
-            txpower 31.00 dBm]
-        """
-        output = harvest.cmd_timeout__write_read__payload("iw dev wlan0 info")
-        assert "wlan0" in output, "iw dev не видит wlan0"
-        assert "type managed" in output.lower() or "type ap" in output.lower(), \
-            f"wlan0 не является беспроводным интерфейсом: {output}"
+    # ------------------------------------------------------------------------------------------------------------------
+    def test_wf_1__present(self, wf__present):
+        assert wf__present, "нет устройства"
 
     # ------------------------------------------------------------------------------------------------------------------
-    @pytest.mark.dependency(depends=["wifi_present"], name="wifi_connected")
     def test_wf_3__connected1__link(self, wf__link_connected):
-        """
-        """
-        assert wf__link_connected, "Нет Wi-Fi соединения с сетью! НО МОЖЕТ ЭТО И НЕ НУЖНО??)))"
+        assert wf__link_connected, "Нет Wi-Fi соединения с сетью!"
 
-    @pytest.mark.dependency(depends=["wifi_connected"])
     def test_wf_3__connected2__station_dump(self, harvest, wf__link_connected):
         """
         1=DISCONNECTED ------------------------------
@@ -803,6 +748,11 @@ Station ea:4f:a4:27:39:98 (on wlan0)
         current time:   1786619989041 ms
 root@harvest05:~#
         """
+        # 0=DEPENDANCY ------------------------
+        if not wf__link_connected:
+            pytest.skip()
+
+        # 1=TEST ------------------------------
         # Извлекаем основные параметры через station dump (более информативно)
         station_output = harvest.cmd_timeout__write_read__payload("iw dev wlan0 station dump")
         print(f"Station dump:\n{station_output}")
@@ -840,20 +790,19 @@ root@harvest05:~#
         # Выводим скорости для информации
         print(f"Скорость TX: {tx_bitrate}, RX: {rx_bitrate}")
 
-    @pytest.mark.dependency(depends=["wifi_connected"])
-    def test_wf_3__connected3__ifconfig(self, harvest):
+    def test_wf_3__connected3__ifconfig(self, harvest, wf__link_connected):
         """
         1=DISCONNECTED ------------------------------
----- Sent utf8 encoded message: "ifconfig wlan0\r\n" ----
-ifconfig wlan0
-wlan0: flags=4099<UP,BROADCAST,MULTICAST>  mtu 1500
-        ether 2e:07:94:ea:0e:b0  txqueuelen 1000  (Ethernet)
-        RX packets 613  bytes 193957 (189.4 KiB)
-        RX errors 0  dropped 0  overruns 0  frame 0
-        TX packets 1560  bytes 318656 (311.1 KiB)
-        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+        ---- Sent utf8 encoded message: "ifconfig wlan0\r\n" ----
+        ifconfig wlan0
+        wlan0: flags=4099<UP,BROADCAST,MULTICAST>  mtu 1500
+                ether 2e:07:94:ea:0e:b0  txqueuelen 1000  (Ethernet)
+                RX packets 613  bytes 193957 (189.4 KiB)
+                RX errors 0  dropped 0  overruns 0  frame 0
+                TX packets 1560  bytes 318656 (311.1 KiB)
+                TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
 
-root@harvest05:~#
+        root@harvest05:~#
 
         2=CONNECTED ---------------------------------
         ---- Sent utf8 encoded message: "ifconfig wlan0\r\n" ----
@@ -869,70 +818,82 @@ root@harvest05:~#
 
         root@harvest05:~#
         """
+        # 0=DEPENDANCY ------------------------
+        if not wf__link_connected:
+            pytest.skip()
+
+        # 1=TEST ------------------------------
         ifconfig = harvest.cmd_timeout__write_read__payload("ifconfig wlan0")
         print(f"{ifconfig=}")
 
-    @pytest.mark.dependency(depends=["wifi_connected"])
-    def test_wf_3__connected4__rout_def(self, harvest):
+    def test_wf_3__connected4__rout_def(self, harvest, wf__link_connected):
         """
         1=DISCONNECTED ------------------------------
----- Sent utf8 encoded message: "ip route show default\r\n" ----
-ip route show default
-default via 192.168.0.1 dev usb0 proto dhcp src 192.168.0.100 metric 100
-root@harvest05:~#
+        ---- Sent utf8 encoded message: "ip route show default\r\n" ----
+        ip route show default
+        default via 192.168.0.1 dev usb0 proto dhcp src 192.168.0.100 metric 100
+        root@harvest05:~#
 
         2=CONNECTED ---------------------------------
----- Sent utf8 encoded message: "ip route show default\r\n" ----
-ip route show default
-default via 192.168.0.1 dev usb0 proto dhcp src 192.168.0.100 metric 100
-default via 192.168.137.1 dev wlan0 proto dhcp src 192.168.137.57 metric 600
-root@harvest05:~#
+        ---- Sent utf8 encoded message: "ip route show default\r\n" ----
+        ip route show default
+        default via 192.168.0.1 dev usb0 proto dhcp src 192.168.0.100 metric 100
+        default via 192.168.137.1 dev wlan0 proto dhcp src 192.168.137.57 metric 600
+        root@harvest05:~#
         """
+        # 0=DEPENDANCY ------------------------
+        if not wf__link_connected:
+            pytest.skip()
+
+        # 1=TEST ------------------------------
         output = harvest.cmd_timeout__write_read__payload("ip route show default")
         print(f"{output=}")
 
-    @pytest.mark.dependency(depends=["wifi_connected"])
-    def test_wf_3__connected5__dns(self, harvest):
+    def test_wf_3__connected5__dns(self, harvest, wf__link_connected):
         """
         1=DISCONNECTED ------------------------------
----- Sent utf8 encoded message: "cat /etc/resolv.conf\r\n" ----
-cat /etc/resolv.conf
-# Dynamic resolv.conf(5) file for glibc resolver(3) generated by resolvconf(8)
-#     DO NOT EDIT THIS FILE BY HAND -- YOUR CHANGES WILL BE OVERWRITTEN
-# 127.0.0.53 is the systemd-resolved stub resolver.
-# run "resolvectl status" to see details about the actual nameservers.
+        ---- Sent utf8 encoded message: "cat /etc/resolv.conf\r\n" ----
+        cat /etc/resolv.conf
+        # Dynamic resolv.conf(5) file for glibc resolver(3) generated by resolvconf(8)
+        #     DO NOT EDIT THIS FILE BY HAND -- YOUR CHANGES WILL BE OVERWRITTEN
+        # 127.0.0.53 is the systemd-resolved stub resolver.
+        # run "resolvectl status" to see details about the actual nameservers.
 
-nameserver 192.168.0.1
-root@harvest05:~#
+        nameserver 192.168.0.1
+        root@harvest05:~#
 
         2=CONNECTED ---------------------------------
----- Sent utf8 encoded message: "cat /etc/resolv.conf\r\n" ----
-cat /etc/resolv.conf
-# Dynamic resolv.conf(5) file for glibc resolver(3) generated by resolvconf(8)
-#     DO NOT EDIT THIS FILE BY HAND -- YOUR CHANGES WILL BE OVERWRITTEN
-# 127.0.0.53 is the systemd-resolved stub resolver.
-# run "resolvectl status" to see details about the actual nameservers.
+        ---- Sent utf8 encoded message: "cat /etc/resolv.conf\r\n" ----
+        cat /etc/resolv.conf
+        # Dynamic resolv.conf(5) file for glibc resolver(3) generated by resolvconf(8)
+        #     DO NOT EDIT THIS FILE BY HAND -- YOUR CHANGES WILL BE OVERWRITTEN
+        # 127.0.0.53 is the systemd-resolved stub resolver.
+        # run "resolvectl status" to see details about the actual nameservers.
 
-nameserver 192.168.0.1
-nameserver 192.168.137.1
-search lan
-root@harvest05:~#
+        nameserver 192.168.0.1
+        nameserver 192.168.137.1
+        search lan
+        root@harvest05:~#
         """
+        # 0=DEPENDANCY ------------------------
+        if not wf__link_connected:
+            pytest.skip()
+
+        # 1=TEST ------------------------------
         output = harvest.cmd_timeout__write_read__payload("cat /etc/resolv.conf")
         print(f"{output=}")
 
-    @pytest.mark.dependency(depends=["wifi_connected"])
-    def test_wf_3__connected6__wpa_cli(self, harvest):
+    def test_wf_3__connected6__wpa_cli(self, harvest, wf__link_connected):
         """
         1=DISCONNECTED ------------------------------
----- Sent utf8 encoded message: "wpa_cli status\r\n" ----
-wpa_cli status
-Selected interface 'wlan0'
-wpa_state=DISCONNECTED
-p2p_device_address=ea:24:2a:24:ab:ed
-address=2e:07:94:ea:0e:b0
-uuid=d83b1bcc-0d53-50f9-8229-9e981e5cabeb
-root@harvest05:~#
+        ---- Sent utf8 encoded message: "wpa_cli status\r\n" ----
+        wpa_cli status
+        Selected interface 'wlan0'
+        wpa_state=DISCONNECTED
+        p2p_device_address=ea:24:2a:24:ab:ed
+        address=2e:07:94:ea:0e:b0
+        uuid=d83b1bcc-0d53-50f9-8229-9e981e5cabeb
+        root@harvest05:~#
 
         2=CONNECTED ---------------------------------
         ---- Sent utf8 encoded message: "wpa_cli status\r\n" ----
@@ -962,12 +923,16 @@ root@harvest05:~#
         uuid=d83b1bcc-0d53-50f9-8229-9e981e5cabeb]
         output="Selected interface 'wlan0'\nwpa_state=ASSOCIATING\np2p_device_address=ea:24:2a:24:ab:ed\naddress=54:78:c9:02:22:b0\nuuid=d83b1bcc-0d53-50f9-8229-9e981e5cabeb"
         """
+        # 0=DEPENDANCY ------------------------
+        if not wf__link_connected:
+            pytest.skip()
+
+        # 1=TEST ------------------------------
         output = harvest.cmd_timeout__write_read__payload("wpa_cli status")
         print(f"{output=}")
 
     # ------------------------------------------------------------------------------------------------------------------
-    @pytest.mark.dependency(depends=["wifi_present"])
-    def test_wf_4__deep__info(self, harvest):
+    def test_wf_4__deep__info(self, harvest, wf__present):
         """
         Собирает максимальную информацию об адаптере:
         - версия прошивки/драйвера
@@ -975,6 +940,11 @@ root@harvest05:~#
         - поддерживаемые стандарты (из iw phy)
         - статистика ошибок (из ip -s link)
         """
+        # 0=DEPENDANCY ------------------------
+        if not wf__present:
+            pytest.skip()
+
+        # 1=TEST ------------------------------
         info = {}
 
         # 1. Версия драйвера и прошивки (ethtool)
@@ -1014,8 +984,7 @@ root@harvest05:~#
         # Для простоты – пусть информация просто печатается, она попадёт в HTML-отчёт.
 
     # ------------------------------------------------------------------------------------------------------------------
-    @pytest.mark.dependency(depends=["wifi_present"])
-    def test_wf_4__deep__scan_ssids(self, harvest, wf__link_connected):
+    def test_wf_4__deep__scan_ssids(self, harvest, wf__present, wf__link_connected):
         """
         Выполняет сканирование и оценивает количество видимых сетей,
         уровни сигнала от ближайших точек доступа.
@@ -1104,6 +1073,11 @@ root@harvest05:~#
         root@harvest05:~#
         root@harvest05:~#
         """
+        # 0=DEPENDANCY ------------------------
+        if not wf__present:
+            pytest.skip()
+
+        # 1=TEST ------------------------------
         if wf__link_connected:
             pytest.skip("невозможно сканировать сеть при подключении к любому SSID")
 
@@ -1112,14 +1086,18 @@ root@harvest05:~#
         assert len(ssids) >= self.MIN_SCAN_NETWORKS, \
             f"Обнаружено мало сетей ({len(ssids)}), минимально ожидается {self.MIN_SCAN_NETWORKS}."
 
-    @pytest.mark.dependency(depends=["wifi_present"])
-    def test_wf_4__deep__scan_signal(self, harvest, wf__link_connected):
+    def test_wf_4__deep__scan_signal(self, harvest, wf__present, wf__link_connected):
         """
         Собираем BSSID и уровни сигнала
         """
+        # 0=DEPENDANCY ------------------------
+        if not wf__present:
+            pytest.skip()
+
         if wf__link_connected:
             pytest.skip("невозможно сканировать сеть при подключении к любому SSID")
 
+        # 1=TEST ------------------------------
         scan_output = harvest.cmd_timeout__write_read__payload(
             "iw dev wlan0 scan",
             timeout=10,

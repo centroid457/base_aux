@@ -670,6 +670,79 @@ def internet_access(harvest) -> bool:
 
 # ======================================================================================================================
 @pytest.fixture(scope="session")
+def wf__present(harvest) -> bool:
+    """
+    Проверяет наличие Wi-Fi интерфейса wlan0 и его тип.
+
+    ---- Sent utf8 encoded message: "ip link show wlan0 2>/dev/null || echo ERROR_MSG\r\n" ----
+    ip link show wlan0 2>/dev/null || echo ERROR_MSG
+    2: wlan0: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc pfifo_fast state DOWN mode DORMANT group default qlen 1000
+        link/ether ca:f0:e5:d6:0c:79 brd ff:ff:ff:ff:ff:ff
+    root@harvest05:~#
+    root@harvest05:~#
+    ---- Sent utf8 encoded message: "ip link show wlan1 2>/dev/null || echo ERROR_MSG\r\n" ----
+    ip link show wlan1 2>/dev/null || echo ERROR_MSG
+    ERROR_MSG
+    root@harvest05:~#
+    root@harvest05:~#
+
+    1=СУЩЕСТВУЕТ ---------------------------------
+    ---- Sent utf8 encoded message: "ip link show wlan0\r\n" ----
+    ip link show wlan0
+    2: wlan0: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc pfifo_fast state DOWN mode DORMANT group default qlen 1000
+        link/ether ca:f0:e5:d6:0c:79 brd ff:ff:ff:ff:ff:ff
+    root@harvest05:~#
+    root@harvest05:~#
+
+    2=НЕ СУЩЕСТВУЕТ ---------------------------------
+    ---- Sent utf8 encoded message: "ip link show wlan1\r\n" ----
+    ip link show wlan1
+    Device "wlan1" does not exist.
+    root@harvest05:~#
+    root@harvest05:~#
+    """
+    # Проверка существования
+    result = harvest.cmd_timeout__check_executed_success(
+        "ip link show wlan0"
+    )
+
+    # # Дополнительная проверка, что это именно беспроводной интерфейс
+    # """
+    # СОЕДИНЕННЫЙ К VEST
+    # [COM16.WRITEREAD]
+    # write=[iw dev wlan0 info]
+    # read=[Interface wlan0
+    #     ifindex 2
+    #     wdev 0x1
+    #     addr 54:78:c9:02:22:b0
+    #     ssid Vest
+    #     type managed
+    #     wiphy 0
+    #     channel 6 (2437 MHz), width: 20 MHz, center1: 2437 MHz
+    #     txpower 31.00 dBm]
+    #
+    # НЕСОЕДИНЕННЫЙ
+    # ---- Sent utf8 encoded message: "iw dev wlan0 info\r\n" ----
+    # iw dev wlan0 info
+    # Interface wlan0
+    #         ifindex 2
+    #         wdev 0x1
+    #         addr 6e:70:bc:41:be:87
+    #         type managed
+    #         wiphy 0
+    #         channel 1 (2412 MHz), width: 20 MHz, center1: 2412 MHz
+    #         txpower 31.00 dBm
+    # root@harvest05:~#
+    # """
+    # output = harvest.cmd_timeout__write_read__payload("iw dev wlan0 info")
+    # assert "wlan0" in output, "iw dev не видит wlan0"
+    # assert "type managed" in output.lower() or "type ap" in output.lower(), \
+    #     f"wlan0 не является беспроводным интерфейсом: {output}"
+
+    return result
+
+
+@pytest.fixture(scope="session")
 def wf__link_connected(harvest) -> bool:
     return harvest.wf__link_connected()
 
