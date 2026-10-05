@@ -11,7 +11,15 @@ from base_aux.aux_eq.m4_eq_valid2_derivatives import *
 # ======================================================================================================================
 SSH_HOST = "harvest05"
 
+
+# 1=DEFINE -------------------------------------------------
 def pytest_addoption(parser):
+    parser.addoption(
+        '--pre-skip',
+        action="store_true",
+        help="не делать подготовку блока (проверка и установка утилит+загрузка скриптов, это долго идет)",
+    )
+
     parser.addoption(
         '--ssh',
         action="store",
@@ -20,6 +28,19 @@ def pytest_addoption(parser):
         default=None,
         help="SSH-хост: без значения → harvest05",
     )
+
+
+# 2=READ -------------------------------------------------
+@pytest.fixture(scope="session")
+def option__pre_skip(pytestconfig) -> bool:
+    result = pytestconfig.getoption("--pre-skip")
+    return result
+
+
+@pytest.fixture(scope="session")
+def option__ssh_address(pytestconfig) -> str | None:
+    result = pytestconfig.getoption("--ssh", default=None)
+    return result
 
 
 # ======================================================================================================================
@@ -109,12 +130,11 @@ def _make_dev_3__ssh(address: str) -> Harvest | None:
 
 # ----------------------------------------------------------------------------------------------------------------------
 @pytest.fixture(scope="session")
-def transport(request) -> str:
+def transport(request, option__ssh_address) -> str:
     if socket.gethostname().startswith("harvest"):
         result = "direct"
     else:
-        ssh_address = request.config.getoption("--ssh", default=None)
-        if ssh_address:
+        if option__ssh_address:
             result = "ssh"
         else:
             result = "serial"
@@ -125,7 +145,7 @@ def transport(request) -> str:
 
 # ======================================================================================================================
 @pytest.fixture(scope="session")
-def harvest(request, transport) -> Harvest:
+def harvest(request, transport, option__ssh_address, option__pre_skip) -> Harvest:
     """
     Возвращает авторизованный Harvest-клиент.
 
@@ -141,16 +161,19 @@ def harvest(request, transport) -> Harvest:
     if transport == "direct":
         device = _make_dev_1__direct()
     elif transport == "ssh":
-        ssh_address = request.config.getoption("--ssh", default=None)
-        device = _make_dev_3__ssh(ssh_address)
+        device = _make_dev_3__ssh(option__ssh_address)
     else:
         device = _make_dev_2__serial()
 
     # 2=DEVICE------------------------------------------
     dev_id = device.hostname
     with device.conn:
+        option__pre_skip = request.config.getoption("--pre-skip")
+
+        if not option__pre_skip:
+            device.prepare__services(start=False)
+
         device.prepare__stop__kernel_terminal_logs()
-        device.prepare__services(start=False)
         request.config.stash["device_id"] = dev_id
         yield device
         device.prepare__services(start=True)

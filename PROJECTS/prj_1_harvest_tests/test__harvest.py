@@ -90,6 +90,7 @@ class Test_01__Detection:
 # ======================================================================================================================
 @pytest.mark.PRE
 class Test_02__PreInstall:
+
     # ------------------------------------------------------------------------------------------------------------------
     def pkg__check_installed_or_install(self, harvest, internet_access, name_check: str, name_install: str | None = None) -> None | NoReturn:
         name_install = name_install or name_check
