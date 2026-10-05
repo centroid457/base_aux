@@ -24,7 +24,7 @@ import os
 def pytest_addoption(parser):
     # *arg=УКАЗАНИЕ ИМЕНИ!!! без имени параметра в функции!!!
     parser.addoption(
-        "--ssh-host",
+        "--ssh_host",
         action="store",
         default=None,
         help="SSH-хост: имя или IP"
@@ -65,7 +65,7 @@ def pytest_addoption(parser):
         help="UART-порт, например: com3 или ttyUSB0"
     )
     parser.addoption(
-        "--ssh-host",
+        "--ssh_host",
         action="store",
         default=None,
         help="SSH-хост: имя или IP"
@@ -111,13 +111,25 @@ def pytest_addoption(parser):
 # 2=PASS/WRITE =========================================================================================================
 # Запуск из консоли:
 # pytest --uart=ttyUSB0 --channel=uart
-# pytest --ssh-host=harvest05 --channel=ssh
-# pytest --ssh-host=192.168.1.64 --channel=ssh
+# pytest --ssh_host=harvest05 --channel=ssh
+# pytest --ssh_host=192.168.1.64 --channel=ssh
 
 # 3=READING ============================================================================================================
 # 1=из тестов - config.getoption(...). - лучше всегда использовать его!
-def test__1(config):
+
+# [test.py]
+def test_1__wrong_fixname(config):
     assert config.getoption("--opt1")
+
+def test_2__good_pytestconfig(pytestconfig):
+    assert pytestconfig.getoption("--opt1")
+
+def test_3__good_request(request):
+    assert request.config.getoption("--opt1")
+
+
+
+
 
 
 # 2=из фикстур - request.config.getoption(...) + config.getoption(...)
@@ -127,7 +139,7 @@ def uart_port(request):
 
 @pytest.fixture(scope="session")
 def ssh_host(request):
-    return request.config.getoption("--ssh-host")
+    return request.config.getoption("--ssh_host")
 
 @pytest.fixture(scope="session")
 def channel(request):
@@ -138,7 +150,7 @@ def test__2(uart_port, ssh_host, channel):
         assert uart_port is not None, "Не задан --uart"
         print(f"\nРаботаем с UART: {uart_port}")
     elif channel == "ssh":
-        assert ssh_host is not None, "Не задан --ssh-host"
+        assert ssh_host is not None, "Не задан --ssh_host"
         print(f"\nРаботаем по SSH: {ssh_host}")
 
 
