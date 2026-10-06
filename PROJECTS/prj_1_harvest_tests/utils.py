@@ -2267,6 +2267,8 @@ root@harvest05:~#
         GOAL
         check
 
+        ======================================================================
+        2=вариант-2=ПРОВЕРКА через iw dev
         1=DISCONNECTED ------------------------------
         ---- Sent utf8 encoded message: "iw dev wlan0 link\r\n" ----
         iw dev wlan0 link
@@ -2294,6 +2296,67 @@ root@harvest05:~#
         ---- Sent utf8 encoded message: "iw dev wlan2 link\r\n" ----
         iw dev wlan2 link
         command failed: No such device (-19)
+
+        ======================================================================
+        2=вариант-2=ПРОВЕРКА через ifconfig - ОШИБОЧНО!!! НЕ ПРОВЕРЯТЬ ТАК!!!
+        если нет DHCP - то будет некорректно!!!
+        НЕТОЧНО!!! показывает inet6 даже при фактическом НЕПОДКЛЮЧЕНИИ!!!
+
+        ---- Sent utf8 encoded message: "iw dev wlan0 link\r\n" ----
+        iw dev wlan0 link
+        Not connected.
+        root@harvest05:~#
+        root@harvest05:~#
+        ---- Sent utf8 encoded message: "ifconfig wlan0\r\n" ----
+        ifconfig wlan0
+        wlan0: flags=4099<UP,BROADCAST,MULTICAST>  mtu 1500
+                ether 72:d0:0f:2c:1e:2a  txqueuelen 1000  (Ethernet)
+                RX packets 37  bytes 11877 (11.5 KiB)
+                RX errors 0  dropped 0  overruns 0  frame 0
+                TX packets 120  bytes 24512 (23.9 KiB)
+                TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+        root@harvest05:~#
+
+        1=DISCONNECTED ------------------------------
+        ---- Sent utf8 encoded message: "ifconfig wlan0\r\n" ----
+        ifconfig wlan0
+        wlan0: flags=4099<UP,BROADCAST,MULTICAST>  mtu 1500
+                ether 9a:cc:10:f7:34:46  txqueuelen 1000  (Ethernet)
+                RX packets 0  bytes 0 (0.0 B)
+                RX errors 0  dropped 0  overruns 0  frame 0
+                TX packets 0  bytes 0 (0.0 B)
+                TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+        root@harvest05:~#
+
+        2=CONNECTED ---------------------------------
+        2.1=БЕЗ DHCP=
+        ---- Sent utf8 encoded message: "ifconfig wlan0\r\n" ----
+        ifconfig wlan0
+        wlan0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+                inet6 fe80::eeca:37c1:3b57:2a47  prefixlen 64  scopeid 0x20<link>
+                ether 54:78:c9:02:22:b0  txqueuelen 1000  (Ethernet)
+                RX packets 1  bytes 321 (321.0 B)
+                RX errors 0  dropped 0  overruns 0  frame 0
+                TX packets 10  bytes 1815 (1.7 KiB)
+                TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+        root@harvest05:~#
+
+        2.2=С DHCP
+        ---- Sent utf8 encoded message: "ifconfig wlan0\r\n" ----
+        ifconfig wlan0
+        wlan0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+                inet 192.168.137.58  netmask 255.255.255.0  broadcast 192.168.137.255
+                inet6 fe80::eeca:37c1:3b57:2a47  prefixlen 64  scopeid 0x20<link>
+                ether 54:78:c9:02:22:b0  txqueuelen 1000  (Ethernet)
+                RX packets 64  bytes 19652 (19.1 KiB)
+                RX errors 0  dropped 0  overruns 0  frame 0
+                TX packets 615  bytes 124217 (121.3 KiB)
+                TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+        root@harvest05:~#
         """
         output = self.cmd_timeout__write_read__payload("iw dev wlan0 link")
         return "Connected to " in output
