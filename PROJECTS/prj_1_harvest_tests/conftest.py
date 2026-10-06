@@ -25,7 +25,7 @@ def pytest_addoption(parser):
         action="store",
         nargs="?",
         const=SSH_HOST,
-        default=None,
+        default=SSH_HOST,
         help="SSH-хост: без значения → harvest05",
     )
 

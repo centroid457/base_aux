@@ -47,10 +47,17 @@ class Test_000__Explore:
 # ======================================================================================================================
 @pytest.mark.DET
 class Test_01__Detection:
-    def test_det_1__transport_1__serial(self, transport):
+    def test_det_1__transport_0__selected(self, transport):
+        assert transport is not None
+
+    def test_det_1__transport_1__direct(self, transport):
+        if transport.lower() != "direct":
+            pytest.skip(f"{transport=} != direct!")
+
+    def test_det_1__transport_2__serial(self, transport):
         # 0=serial
         if transport.lower() != "serial":
-            pytest.skip()
+            pytest.skip(f"{transport=} != serial!")
 
         # 1=exist_ports ------------------------------------
         result = manager.ADDRESSES_CASHED
@@ -71,6 +78,11 @@ class Test_01__Detection:
         print(f"{exist_opening__fail=}")
         assert exist_opening__ok != [], "Ни один порт не удалось открыть."
 
+    def test_det_1__transport_3__ssh(self, transport):
+        if transport.lower() != "ssh":
+            pytest.skip(f"{transport=} != ssh!")
+
+    # ------------------------------------------------------------------------------------------------------------------
     def test_det_2__dev_0__detection(self, harvest):
         """
         Тест проверяет, что устройство успешно обнаружено,

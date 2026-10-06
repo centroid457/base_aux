@@ -1,5 +1,6 @@
 import time
 from typing import *
+import paramiko
 
 from base_aux.aux_eq.m4_eq_valid1_base import Base_EqValid
 from base_aux.clients.m1_client_0__base import ClientBase
@@ -109,12 +110,6 @@ class ClientSsh(ClientBase):
         self.disconnect()
 
         try:
-            import paramiko
-        except ImportError:
-            print(f"paramiko module is required for SSH connections")
-            return False
-
-        try:
             self._ssh_client = paramiko.SSHClient()
             self._ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
             self._ssh_client.connect(
@@ -216,3 +211,13 @@ class ClientSsh(ClientBase):
 
 
 # ======================================================================================================================
+import pytest
+
+
+def test__conn_ssh():
+    conn = ClientSsh(
+        address="harvest05",
+        username="root",
+        password="1",
+    )
+    assert conn.connect()
