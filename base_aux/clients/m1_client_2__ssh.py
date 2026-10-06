@@ -122,7 +122,7 @@ class ClientSsh(ClientBase):
                 look_for_keys=False,
             )
 
-            self._channel = self._ssh_client.invoke_shell()
+            self._channel = self._ssh_client.invoke_shell(width=4096)
             self._channel.settimeout(self.timeout_read_initial)
             # combine stderr в тот же поток — как в Serial
             self._channel.set_combine_stderr(True)
