@@ -15,8 +15,8 @@ SSH_HOST = "harvest05"
 # 1=DEFINE -------------------------------------------------
 def pytest_addoption(parser):
     parser.addoption(
-        '--pre-skip',
-        action="store_true",
+        '--pre_skip',
+        action="store_false",
         help="не делать подготовку блока (проверка и установка утилит+загрузка скриптов, это долго идет)",
     )
 
@@ -30,10 +30,22 @@ def pytest_addoption(parser):
     )
 
 
+def pytest_collection_modifyitems(session, config, items):
+    """Модификация списка собранных тестов (сортировка, добавление маркеров).
+
+    "Позволяет изменить список собранных тестов: переупорядочить, отфильтровать,
+    динамически добавить маркеры на основе имён/путей.
+    """
+    skip_marker = pytest.mark.skip(reason="--pre_skip ACCEPTED")
+    for item in items:
+        if item.get_closest_marker("PRE_SKIP__CHECK") :
+            if config.getoption("--pre_skip"):
+                item.add_marker(skip_marker)
+
 # 2=READ -------------------------------------------------
 @pytest.fixture(scope="session")
 def option__pre_skip(pytestconfig) -> bool:
-    result = pytestconfig.getoption("--pre-skip")
+    result = pytestconfig.getoption("--pre_skip")
     return result
 
 
@@ -168,7 +180,7 @@ def harvest(request, transport, option__ssh_address, option__pre_skip) -> Harves
     # 2=DEVICE------------------------------------------
     dev_id = device.hostname
     with device.conn:
-        option__pre_skip = request.config.getoption("--pre-skip")
+        option__pre_skip = request.config.getoption("--pre_skip")
 
         if not option__pre_skip:
             device.prepare__services(start=False)

@@ -109,18 +109,41 @@ def pytest_collection_modifyitems(session, config, items):
 
     "Позволяет изменить список собранных тестов: переупорядочить, отфильтровать,
     динамически добавить маркеры на основе имён/путей.
+
+    item.own_markers - маркеры непосредственные на конечном тесте!!!
     """
+    skip_marker = pytest.mark.skip(reason="reason")
+
     for item in items:
+        # ITEMS - показывает только конечные тесты! обобщенные Классы - не в счет!!!
+
+        # 1=MARKERS practice -----------------------------------------------------
+        if (
+            # 1=маркеры непосредственно на конечном тесте! сработает только если маркер собственный - прямо на методе!
+            (pytest.mark.PRE_SKIP__CHECK in item.own_markers)
+            or
+            # 2=маркеры по всей иерархии = директория+файл+класс+непосредственныйТест!
+            item.get_closest_marker("PRE_SKIP__CHECK")      # ЛУЧШЕЕ!!!
+            or
+            any(m.name == "PRE_SKIP__CHECK" for m in item.iter_markers())      # сложноватое!!!
+        ):
+            if config.getoption("--pre_skip", default=None):
+                item.add_marker(skip_marker)
+
+
+            if config.getoption("--pre_skip", default=None):
+                item.add_marker(skip_marker)
+
+        # 2=NAMES checks
         if "slow" in item.name:
             item.add_marker(pytest.mark.slow)
 
-        skip_marker = pytest.mark.skip(reason="--skip-slow указан")
         if "TestCls_skipping" in item.nodeid:
             item.add_marker(skip_marker)
 
     """
     ITEM
-    ==========================================================================================
+==========================================================================================
 ----------OBJECTINFO.PRINT--------------------------------------------------------------------------
 str(SOURCE)=<Function test__2>
 repr(SOURCE)=<Function test__2>
@@ -188,24 +211,24 @@ _report_sections    	list        :[]
 extra_keyword_matches	set         :set()
 funcargs            	dict        :{}
 location            	tuple       :('REFERENCE\\d1__pytest\\0_EXPLORE\\test__explore.py', 11, 'TestCls_skipping.test__2')
-own_markers         	list        :[]
+own_markers         	list        :[Mark(name='USER', args=(), kwargs={}), Mark(name='skip', args=(), kwargs={})]
 user_properties     	list        :[]
 ----------PROPERTIES__OBJECTS-----------------------------------------------------------------------
-_abc_impl           	_abc_data   :<_abc._abc_data object at 0x000001D92571A9C0>
+_abc_impl           	_abc_data   :<_abc._abc_data object at 0x000001BD7D03A6C0>
 _fixtureinfo        	FuncFixtureInfo:FuncFixtureInfo(argnames=(), initialnames=('event_loop_policy', 'skip_whole_class'), names_closure=['event_loop_policy', 'skip_whole_class', 'pytestconfig', ...
-_instance           	TestCls_skipping:<test__explore.TestCls_skipping object at 0x000001D92A29EA80>
+_instance           	TestCls_skipping:<test__explore.TestCls_skipping object at 0x000001BD01BBEE10>
 _pyfuncitem         	Function    :<Function test__2>
 _request            	TopRequest  :<FixtureRequest for <Function test__2>>
-_store              	Stash       :<_pytest.stash.Stash object at 0x000001D92A29EB00>
-config              	Config      :<_pytest.config.Config object at 0x000001D92587FD70>
+_store              	Stash       :<_pytest.stash.Stash object at 0x000001BD01BBEE90>
+config              	Config      :<_pytest.config.Config object at 0x000001BD7D27B200>
 fspath              	LocalPath   :C:\__STARICHENKO_Element\PROJECTS\abc=base_aux\REFERENCE\d1__pytest\0_EXPLORE\test__explore.py
-instance            	TestCls_skipping:<test__explore.TestCls_skipping object at 0x000001D92A29EA80>
+instance            	TestCls_skipping:<test__explore.TestCls_skipping object at 0x000001BD01BBEE10>
 keywords            	NodeKeywords:<NodeKeywords for node <Function test__2>>
 module              	module      :<module 'test__explore' from 'C:\\__STARICHENKO_Element\\PROJECTS\\abc=base_aux\\REFERENCE\\d1__pytest\\0_EXPLORE\\test__explore.py'>
 parent              	Class       :<Class TestCls_skipping>
 path                	WindowsPath :C:\__STARICHENKO_Element\PROJECTS\abc=base_aux\REFERENCE\d1__pytest\0_EXPLORE\test__explore.py
 session             	Session     :<Session  exitstatus=<ExitCode.OK: 0> testsfailed=0 testscollected=0>
-stash               	Stash       :<_pytest.stash.Stash object at 0x000001D92A29EB00>
+stash               	Stash       :<_pytest.stash.Stash object at 0x000001BD01BBEE90>
 ----------PROPERTIES__EXC---------------------------------------------------------------------------
 ----------METHODS__ELEMENTARY_SINGLE----------------------------------------------------------------
 _check_item_and_collector_diamond_inheritance	NoneType    :None
@@ -225,12 +248,12 @@ listextrakeywords   	set         :set()
 listnames           	list        :['', 'abc=base_aux', 'REFERENCE', 'd1__pytest', '0_EXPLORE', 'test__explore.py', 'TestCls_skipping', 'test__2']
 reportinfo          	tuple       :(WindowsPath('C:/__STARICHENKO_Element/PROJECTS/abc=base_aux/REFERENCE/d1__pytest/0_EXPLORE/test__explore.py'), 11, 'TestCls_skipping.test__2')
 ----------METHODS__OBJECTS--------------------------------------------------------------------------
-_getinstance        	TestCls_skipping:<test__explore.TestCls_skipping object at 0x000001D92A29EC30>
-_getobj             	method      :<bound method TestCls_skipping.test__2 of <test__explore.TestCls_skipping object at 0x000001D92A29EA80>>
-cls                 	TestCls_skipping:<test__explore.TestCls_skipping object at 0x000001D92A29D5E0>
-iter_markers        	generator   :<generator object Node.iter_markers.<locals>.<genexpr> at 0x000001D929FB3AC0>
-iter_markers_with_node	generator   :<generator object Node.iter_markers_with_node at 0x000001D92A273D40>
-iter_parents        	generator   :<generator object Node.iter_parents at 0x000001D929F0D9C0>
+_getinstance        	TestCls_skipping:<test__explore.TestCls_skipping object at 0x000001BD01BBEE70>
+_getobj             	method      :<bound method TestCls_skipping.test__2 of <test__explore.TestCls_skipping object at 0x000001BD01BBEE10>>
+cls                 	TestCls_skipping:<test__explore.TestCls_skipping object at 0x000001BD01BBF020>
+iter_markers        	generator   :<generator object Node.iter_markers.<locals>.<genexpr> at 0x000001BD018DFB90>
+iter_markers_with_node	generator   :<generator object Node.iter_markers_with_node at 0x000001BD01BE4040>
+iter_parents        	generator   :<generator object Node.iter_parents at 0x000001BD0183D9C0>
 ----------METHODS__EXC------------------------------------------------------------------------------
 _repr_failure_py    	TypeError   :TypeError("Node._repr_failure_py() missing 1 required positional argument: 'excinfo'")
 _traceback_filter   	TypeError   :TypeError("Function._traceback_filter() missing 1 required positional argument: 'excinfo'")

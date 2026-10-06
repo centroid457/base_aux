@@ -9,6 +9,8 @@ class TestCls_skipping():
     def test__1(self):
         pass
 
+    @pytest.mark.skip
+    @pytest.mark.USER
     def test__2(self):
         pass
 
