@@ -83,7 +83,16 @@ class Test_01__Detection:
             pytest.skip(f"{transport=} != ssh!")
 
     # ------------------------------------------------------------------------------------------------------------------
-    def test_det_2__dev_0__detection(self, harvest):
+    def test_det_2__conn_cmds(self, harvest):
+        """
+        GOAL
+        test success working cmds
+        """
+        assert harvest.cmd_timeout__write_read__payload('hostname').startswith("harvest")
+        assert "command not found" in harvest.cmd_timeout__write_read__payload('hello123')
+
+    # ------------------------------------------------------------------------------------------------------------------
+    def test_det_3__dev_0__detection(self, harvest):
         """
         Тест проверяет, что устройство успешно обнаружено,
         и выводит его уникальный идентификатор.
@@ -91,11 +100,11 @@ class Test_01__Detection:
         assert harvest, "Устройство Harvest не обнаружено."
 
     @pytest.mark.skipif(True, reason="bad work!!!")
-    def test_det_2__dev_1__info(self, harvest_info):
+    def test_det_3__dev_1__info(self, harvest_info):
         print(json.dumps(harvest_info, indent=2, ensure_ascii=False))
         assert harvest_info, "Устройство Harvest не обнаружено."
 
-    def test_det_2__dev_2__sql_settings(self, sql_settings):
+    def test_det_3__dev_2__sql_settings(self, sql_settings):
         assert sql_settings, "настройки устройства из SQL не получены"
 
 
