@@ -395,7 +395,7 @@ $GNVTG,,,,,,,,,N*2E]
 
         output_collected = list()
         for step in range(3):
-            output = harvest.cmd_timeout__write_read__payload("cat /dev/ttyUSB0", timeout=3, timeout_continue=3)
+            output = harvest.cmd_timeout__write_read__payload("cat /dev/ttyUSB0", timeout=2, timeout_continue=3)
             output = output.splitlines()
             output_collected.extend(output)
             if len(output_collected) > 10:
