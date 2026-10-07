@@ -83,6 +83,13 @@ class Test_01__Detection:
             pytest.skip(f"{transport=} != ssh!")
 
     # ------------------------------------------------------------------------------------------------------------------
+    def test_det_2__dev_0__detection(self, harvest):
+        """
+        Тест проверяет, что устройство успешно обнаружено,
+        и выводит его уникальный идентификатор.
+        """
+        assert harvest, "Устройство Harvest не обнаружено."
+
     def test_det_2__conn_cmds(self, harvest):
         """
         GOAL
@@ -92,13 +99,6 @@ class Test_01__Detection:
         assert "command not found" in harvest.cmd_timeout__write_read__payload('hello123')
 
     # ------------------------------------------------------------------------------------------------------------------
-    def test_det_3__dev_0__detection(self, harvest):
-        """
-        Тест проверяет, что устройство успешно обнаружено,
-        и выводит его уникальный идентификатор.
-        """
-        assert harvest, "Устройство Harvest не обнаружено."
-
     @pytest.mark.skipif(True, reason="bad work!!!")
     def test_det_3__dev_1__info(self, harvest_info):
         print(json.dumps(harvest_info, indent=2, ensure_ascii=False))

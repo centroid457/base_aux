@@ -16,7 +16,8 @@ SSH_HOST = "harvest05"
 def pytest_addoption(parser):
     parser.addoption(
         '--pre_skip',
-        action="store_false",
+        # action="store_false",     # def=TRUE
+        action="store_true",        # def=FALSE
         help="не делать подготовку блока (проверка и установка утилит+загрузка скриптов, это долго идет)",
     )
 
@@ -25,8 +26,8 @@ def pytest_addoption(parser):
         action="store",
         nargs="?",
         const=SSH_HOST,
-        default=None,           # default=SERIAL
-        # default=SSH_HOST,     # default=SSH
+        # default=None,       # default=SERIAL
+        default=SSH_HOST,     # default=SSH
         help="SSH-хост: без значения → harvest05",
     )
 
@@ -40,7 +41,7 @@ def pytest_collection_modifyitems(session, config, items):
     skip_marker = pytest.mark.skip(reason="--pre_skip ACCEPTED")
     for item in items:
         if item.get_closest_marker("PRE_SKIP__CHECK") :
-            if config.getoption("--pre_skip"):
+            if config.getoption("--pre_skip") is True:
                 item.add_marker(skip_marker)
 
 # 2=READ -------------------------------------------------

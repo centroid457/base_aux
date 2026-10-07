@@ -23,12 +23,10 @@ class Harvest:
         # =========================================================================
         # попытка определить номер телефона
         "AT+CNUM",
-        "AT+CPBS",
-        "AT+CPBR",
-        "AT+CRSM?",
+        "AT+CRSM",
         # "AT+CPBS=\"ON\"; +CPBR=1",  # Чтение своего номера из книги
         # "AT+CPBS=\'ON\'; +CPBR=1",  # Чтение своего номера из книги
-        # "AT+CIMI",                # IMSI (для идентификации)
+        "AT+CIMI",                # IMSI (для идентификации)
         # "AT+CRSM=176,28589,0,0,12",  # Чтение EF_MSISDN с SIM (прямой доступ)
 
         # =========================================================================
@@ -53,8 +51,8 @@ class Harvest:
 
         # =========================================================================
         # СОСТОЯНИЕ SIM-КАРТЫ И PIN
-        "AT+CPIN",  # Статус SIM: READY, SIM PIN, SIM PUK, SIM PIN2...
-        "AT+CPINR",  #
+        "AT+CPIN?",  # Статус SIM: READY, SIM PIN, SIM PUK, SIM PIN2...
+        "AT+CPINR?",  #
         # "AT+CPINR=\"SIM PIN\"",  # Остаток попыток ввода PIN
         # "AT+CPINR=\"SIM PUK\"",  # Остаток попыток ввода PUK
         "AT+CCID",  # ICCID (серийный номер SIM-карты)
@@ -62,8 +60,6 @@ class Harvest:
 
         # =========================================================================
         # СЕТЬ И РЕГИСТРАЦИЯ
-        "AT+COPS",  # Текущий оператор (режим, формат, MCC/MNC)
-        # "AT+COPS=3,2; +COPS?",  # Принудительно числовой формат + получить оператора
         "AT+CREG",  # Статус регистрации в сети (0=нет, 1=домашняя, 5=роуминг)
         "AT+CGREG",  # Статус GPRS/PS регистрации
         "AT+CEREG",  # Статус EPS (LTE) регистрации
@@ -78,7 +74,7 @@ class Harvest:
         "AT*CNTI",  # Информация о текущей соте (MCC, MNC, LAC, CellID, band, ARFCN)
 
         # попытка 2
-        "AT*CPSI",     # (часто работает на SIMCom для LTE, возвращает "LTE, TAC, CellID")
+        "AT*CPSI?",     # (часто работает на SIMCom для LTE, возвращает "LTE, TAC, CellID")
         "AT*CNETSCAN", # (может сработать).
         "AT+CRUSET",   # (просмотр текущих настроек сети).
         # "AT+CNETSCAN",   # Это заставит модем поискать другие вышки вокруг
@@ -384,6 +380,9 @@ root@harvest05:~#
         output = self.conn.write_read_text(cmd, **wr_kwargs)
         if not output or output.splitlines()[-1] != self.stopline_prompt__eq:
             self.conn.send__ctrl_c()
+            # SLEEP
+            # 0.2=serial-OK, ssh-NOT GOOD but so-so
+            # 0.3=serial-OK, SSH-good!!!
             time.sleep(0.3)
 
         if payload_only:
@@ -3527,7 +3526,7 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
             ('ATI?', 'ERROR'),
             ],
         # ATI1 - 9 TODO: add???
-        'AT+CGMI': ['manufacturer identification',
+        'AT+CGMI': ['manufacturer ID',
             ('AT+CGMI=?', 'OK'),
             ('AT+CGMI', 'INCORPORATED\nOK'),
             ('AT+CGMI?', 'INCORPORATED\nOK'),
@@ -3701,6 +3700,11 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
                      ('AT+CIMIM', 'ERROR'),
                      ('AT+CIMIM?', 'ERROR'),
                      ],
+        'AT+CNUM': ['основной запрос номера (недоступен на M2M sim)',
+                    ('AT+CNUM=?', 'ERROR'),
+                    ('AT+CNUM', 'ERROR'),
+                    ('AT+CNUM?', 'ERROR'),
+                    ],
     },
 
     # =========================================================================
@@ -4893,11 +4897,6 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
     #                 ('AT+CPBR=?', '+CME ERROR: unknown error'),
     #                 ('AT+CPBR', 'ERROR'),
     #                 ('AT+CPBR?', '+CME ERROR: unknown error'),
-    #                 ],
-    #     'AT+CNUM': ['основной запрос номера (недоступен на M2M sim)',
-    #                 ('AT+CNUM=?', 'ERROR'),
-    #                 ('AT+CNUM', 'ERROR'),
-    #                 ('AT+CNUM?', 'ERROR'),
     #                 ],
     # },
 
