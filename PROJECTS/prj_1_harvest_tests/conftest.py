@@ -16,8 +16,8 @@ SSH_HOST = "harvest05"
 def pytest_addoption(parser):
     parser.addoption(
         '--pre_skip',
-        # action="store_false",     # def=TRUE
-        action="store_true",        # def=FALSE
+        action="store_false",     # def=TRUE
+        # action="store_true",        # def=FALSE
         help="не делать подготовку блока (проверка и установка утилит+загрузка скриптов, это долго идет)",
     )
 
@@ -26,8 +26,10 @@ def pytest_addoption(parser):
         action="store",
         nargs="?",
         const=SSH_HOST,
-        # default=None,       # default=SERIAL
-        default=SSH_HOST,     # default=SSH
+
+        default=None,       # default=SERIAL
+        # default=SSH_HOST,     # default=SSH
+
         help="SSH-хост: без значения → harvest05",
     )
 
@@ -707,6 +709,7 @@ root@harvest05:~#
 @pytest.fixture(scope="session")
 def gsm_at__dump_dict(harvest, gsm_at__port) -> dict[str, str]:
     result = harvest.at_cmd__dump_dict(port=gsm_at__port, method_simple=True)
+    print(f"[gsm_at__dump_dict]")
     print(json.dumps(result, indent=2, ensure_ascii=False))
     return result
 

@@ -1,4 +1,5 @@
 import json
+import re
 
 from base_aux.clients.m2_manager_1__serial import ClientManager_Serial
 from base_aux.aux_eq.m4_eq_valid2_derivatives import *
@@ -1341,30 +1342,25 @@ class Test_42__GSMAT:
 
     # ------------------------------------------------------------------------------------------------------------------
     @pytest.mark.dependency(depends=["gsmat_present"])
-    def test_gsmat_3__deep__dump(self, gsm_at__dump_dict):
-        assert gsm_at__dump_dict, "dump не получен"
+    def test_gsmat_4__signal_quality(self, gsm_at__dump_dict):# FIXME: use without gsm_at__dump_dict
+        """AT+CSQ, RSSI >= 5 (из 31)."""
+        output = gsm_at__dump_dict.get("AT+CSQ")
+        if output:
+            match = re.search(r"\+CSQ: (\d+,\d+)\nOK", output)         # +CSQ: 27,0\nOK
+            if match:
+                rssi = float(match[1].replace(",", "."))
+                assert rssi >= 5, f"Низкий уровень сигнала GSM: {rssi}/31"
+                return
 
-    # ------------------------------------------------------------------------------------------------------------------
-    @pytest.mark.dependency(depends=["gsmat_present"])
+        pytest.fail(f"CSQ не найден: {output}")
+
+    @pytest.mark.dependency(depends=["gsmat_present"])# FIXME: use without gsm_at__dump_dict
     def test_gsmat_4__sim_ready(self, gsm_at__dump_dict):
         """AT+CPIN? -> READY."""
         assert "+CPIN: READY" in gsm_at__dump_dict.get("AT+CPIN?"), f"SIM не готова"
 
     @pytest.mark.dependency(depends=["gsmat_present"])
-    def test_gsmat_4__signal_quality(self, gsm_at__dump_dict):
-        """AT+CSQ, RSSI >= 5 (из 31)."""
-        at_cmd = "AT+CSQ"
-        out = gsm_at__dump_dict.get(at_cmd)
-        for line in out.splitlines():
-            if "+CSQ:" in line:
-                parts = line.split(":")[1].strip().split(",")
-                rssi = int(parts[0])
-                assert rssi >= 5, f"Низкий уровень сигнала GSM: {rssi}/31"
-                return
-        pytest.fail(f"CSQ не найден: {out}")
-
-    @pytest.mark.dependency(depends=["gsmat_present"])
-    def test_gsmat_4__network_registration(self, gsm_at__dump_dict):
+    def test_gsmat_4__network_registration(self, gsm_at__dump_dict):# FIXME: use without gsm_at__dump_dict
         """AT+CREG? – статус 1 (зарегистрирован) или 5 (роуминг).
 
         AT+CREG? – статус 1 или 5.
@@ -1379,7 +1375,7 @@ class Test_42__GSMAT:
         assert registered, f"Не зарегистрирован в сети: {out}"
 
     @pytest.mark.dependency(depends=["gsmat_present"])
-    def test_gsmat_4__operator(self, gsm_at__dump_dict):
+    def test_gsmat_4__operator(self, gsm_at__dump_dict):    # FIXME: use without gsm_at__dump_dict
         """AT+COPS? – имя оператора.
         [at_output='+COPS: 0,2,"25020",7\nOK']
         """
@@ -1387,6 +1383,11 @@ class Test_42__GSMAT:
         out = gsm_at__dump_dict.get(at_cmd)
         assert "COPS" in out, f"Оператор не получен: {out}"
         print(f"GSM operator: {out}")
+
+    # ------------------------------------------------------------------------------------------------------------------
+    @pytest.mark.dependency(depends=["gsmat_present"])
+    def test_gsmat_5__deep__dump(self, gsm_at__dump_dict):
+        assert gsm_at__dump_dict, "dump не получен"
 
 
 # ======================================================================================================================
