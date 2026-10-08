@@ -1381,10 +1381,15 @@ class Test_42__GSMAT:
     def test_gsmat_4__operator(self, harvest):
         """AT+COPS? – имя оператора.
         [at_output='+COPS: 0,2,"25020",7\nOK']
+
+        FAIL
+        +COPS: 0\nOK
         """
         cmd = "AT+COPS?"
         output = harvest.at_cmd__simple(cmd)
-        assert "COPS" in output, f"Оператор не получен: {output}"
+        assert "COPS" in output, f"ответ не получен: {output}"
+        assert "+COPS: 0\nOK " not in output, f"Оператор не получен: {output}"
+
         print(f"GSM operator: {output}")
 
     # ------------------------------------------------------------------------------------------------------------------
