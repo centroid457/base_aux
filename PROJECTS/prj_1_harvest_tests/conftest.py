@@ -15,7 +15,9 @@ from base_aux.clients.m1_client_2__ssh import \
 SSH_HOST = "harvest05"
 
 
-# 1=DEFINE -------------------------------------------------
+# ======================================================================================================================
+# 1=HOOKS
+# ----------------------------------------------------------------------------------------------------------------------
 def pytest_addoption(parser):
     parser.addoption(
         '--pre_skip',
@@ -48,11 +50,6 @@ def pytest_configure(config):
 
 
 def pytest_collection_modifyitems(session, config, items):
-    """Модификация списка собранных тестов (сортировка, добавление маркеров).
-
-    "Позволяет изменить список собранных тестов: переупорядочить, отфильтровать,
-    динамически добавить маркеры на основе имён/путей.
-    """
     skip_marker = pytest.mark.skip(reason="--pre_skip ACCEPTED")
     for item in items:
         if item.get_closest_marker("PRE_SKIP__CHECK") :
@@ -60,6 +57,58 @@ def pytest_collection_modifyitems(session, config, items):
                 item.add_marker(skip_marker)
 
 
+@pytest.hookimpl(trylast=True)
+def pytest_unconfigure(config):
+    """
+    GOAL
+    finalise all processes
+    """
+    # 1=HTML ----------------------------------------------------------------------------
+    # Переименовывает HTML-отчёт, добавляя dev_id и текущую дату-время
+    html_path = config.getoption('--html', default=None)
+    if not html_path:
+        print("HTML-отчёт не задан – переименование не требуется.")
+        return
+
+    # Даём время на завершение записи файла
+    for _ in range(10):
+        if os.path.isfile(html_path):
+            break
+        time.sleep(0.5)
+    else:
+        print(f"HTML-отчёт не появился: {html_path}")
+        return
+
+    # Получаем данные из stash
+    TRANSPORT = config.stash.get("transport", None)
+    DEVICE_ID = config.stash.get("device_id", None)
+    if DEVICE_ID is None:
+        print("DEVICE_ID не определён")
+
+    mark_expr = config.getoption('markexpr', default='')
+    safe_mark = mark_expr.replace(' ', '_').replace('(', '').replace(')', '')
+
+    dir_name, file_name = os.path.split(html_path)
+    print(dir_name, file_name)
+    date_str = datetime.now().strftime('%Y.%m.%d_%H-%M-%S')
+
+    new_name = f"{date_str}_{TRANSPORT}_{DEVICE_ID}_m[{safe_mark}].html"
+    new_path = os.path.join(dir_name, new_name)
+
+    try:
+        os.rename(html_path, new_path)
+        print(f"Отчёт переименован в: {new_path}")
+
+        # Меняем заголовок
+        title = f"{DEVICE_ID} – {date_str}"
+        if safe_mark:
+            title += f" (markers: {safe_mark})"
+        patch_html__title(filepath=new_path, new_title=new_name)
+    except OSError as exc:
+        print(f"Ошибка переименования отчёта: {exc!r}")
+
+
+# ======================================================================================================================
 # 2=READ -------------------------------------------------
 @pytest.fixture(scope="session")
 def option__pre_skip(pytestconfig) -> bool:
@@ -171,6 +220,7 @@ def transport(request, option__ssh_address) -> str:
             result = "serial"
 
     print(f"\n[HARVEST_TRANSPORT] selected [{result}]")
+    request.config.stash["transport"] = result
     return result
 
 
@@ -856,55 +906,6 @@ def patch_html__title(filepath, new_title, **kwargs):
     with open(filepath, 'w', encoding='utf-8') as f:
         f.write(new_html)
     print(f"Заголовок отчёта изменён на '{new_title}'")
-
-
-@pytest.hookimpl(trylast=True)
-def pytest_unconfigure(config):
-    """
-    GOAL
-    finalise all processes
-    """
-    # 1=HTML ----------------------------------------------------------------------------
-    # Переименовывает HTML-отчёт, добавляя dev_id и текущую дату-время
-    html_path = config.getoption('--html', default=None)
-    if not html_path:
-        print("HTML-отчёт не задан – переименование не требуется.")
-        return
-
-    # Даём время на завершение записи файла
-    for _ in range(10):
-        if os.path.isfile(html_path):
-            break
-        time.sleep(0.5)
-    else:
-        print(f"HTML-отчёт не появился: {html_path}")
-        return
-
-    # Получаем DEVICE_ID из stash – больше никакой глобальной переменной
-    DEVICE_ID = config.stash.get("device_id", None)
-    if DEVICE_ID is None:
-        print("DEVICE_ID не определён")
-
-    mark_expr = config.getoption('markexpr', default='')
-    safe_mark = mark_expr.replace(' ', '_').replace('(', '').replace(')', '')
-
-    dir_name, file_name = os.path.split(html_path)
-    print(dir_name, file_name)
-    date_str = datetime.now().strftime('%Y.%m.%d_%H-%M-%S')
-
-    new_name = f"{DEVICE_ID}_{date_str}_m[{safe_mark}].html"
-    new_path = os.path.join(dir_name, new_name)
-
-    try:
-        os.rename(html_path, new_path)
-        print(f"Отчёт переименован в: {new_path}")
-        # Меняем заголовок
-        title = f"{DEVICE_ID} – {date_str}"
-        if safe_mark:
-            title += f" (markers: {safe_mark})"
-        patch_html__title(filepath=new_path, new_title=new_name)
-    except OSError as exc:
-        print(f"Ошибка переименования отчёта: {exc!r}")
 
 
 # ======================================================================================================================
