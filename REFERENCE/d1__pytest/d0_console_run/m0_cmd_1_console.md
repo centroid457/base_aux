@@ -369,6 +369,10 @@ pytest --html=reports/report.html
 # в папку!!! текущей директории! если нет создается без проблем!!!!
 pytest -v --capture=fd --html=reports/report_results.html -m DET
 
+# чтобы сохранялся автоматически и дополнялся сразу
+pyproject.toml
+    [pytest]
+    generate_report_on_test = true
 
 # =============================================================================
 # 2.4 ТРЕЙСБЭК

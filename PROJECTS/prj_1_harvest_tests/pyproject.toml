@@ -1,3 +1,6 @@
+[pytest]
+generate_report_on_test = true
+
 [tool.pytest.ini_options]
 addopts = "-v -s"
 markers = [
