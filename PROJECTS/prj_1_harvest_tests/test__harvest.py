@@ -1200,7 +1200,8 @@ class Test_41__GSM:
 
         ping_ok = harvest.cmd_timeout__check_executed_success(
             f"ping -I {self.INTERFACE_NAME} -c 1 -W 2 8.8.8.8",
-            timeout=3
+            timeout=4,
+            timeout_continue=4,
         )
         assert ping_ok, f"Пинг 8.8.8.8 через {self.INTERFACE_NAME} не прошёл (проверьте SIM/покрытие)"
 
@@ -1211,23 +1212,24 @@ class Test_41__GSM:
         Информация: является ли usb0 маршрутом по умолчанию.
         Не падает, если нет – просто сообщает в лог.
 
+        1=РАБОТА ЧЕРЕЗ GSM
         ---- Sent utf8 encoded message: "ip route show\r\n" ----
         ip route show
         default via 192.168.0.1 dev usb0 proto dhcp src 192.168.0.100 metric 100
         169.254.0.0/16 dev usb0 scope link metric 1000
         192.168.0.0/24 dev usb0 proto kernel scope link src 192.168.0.100 metric 100
         root@harvest05:~#
+
+        2=РАБОТА ЧЕРЕЗ WF
+        ---- Sent utf8 encoded message: "ip route show default\r\n" ----
+        default via 192.168.137.1 dev wlan0 proto dhcp src 192.168.137.58 metric 600
+        root@harvest05:~#
         """
-        default_route = harvest.cmd_timeout__write_read__payload(
+        output = harvest.cmd_timeout__write_read__payload(
             "ip route show default", timeout=2
         )
-        result = "usb0" in default_route
-        if result:
-            print("GSM (usb0) является основным шлюзом (default route)")
-        else:
-            print("GSM (usb0) НЕ является основным шлюзом (WiFi или другой интерфейс активен)")
-
-        assert result, "GSM (usb0) НЕ является основным шлюзом (WiFi или другой интерфейс активен)"
+        assert "wlan0" not in output, "соединение через WIFI, а не GSM"
+        assert "usb0" in output, "GSM (usb0) НЕ является основным шлюзом (WiFi или другой интерфейс активен)"
 
     @pytest.mark.dependency(depends=["gsm_present"])
     def test_gsm_3__deep__ping1_gw(self, harvest):
@@ -1242,7 +1244,7 @@ class Test_41__GSM:
             "ip route show default | grep usb0",
             timeout=2
         ).strip()
-        assert gw_out, "нет данных"
+        assert gw_out, "usb0 не является дефолтным каналом соединения"
 
         gw = gw_out.split()[2]
         assert gw, "Не удалось извлечь IP шлюза для usb0"
@@ -1250,7 +1252,8 @@ class Test_41__GSM:
 
         ping_ok = harvest.cmd_timeout__check_executed_success(
             f"ping -I {self.INTERFACE_NAME} -c 1 -W 1 {gw}",
-            timeout=2
+            timeout=4,
+            timeout_continue=4,
         )
         assert ping_ok, f"Шлюз {gw} не отвечает через {self.INTERFACE_NAME}"
 
@@ -1259,19 +1262,21 @@ class Test_41__GSM:
         """Разрешение DNS и доступность внешнего ресурса (ya.ru)."""
         ping_ok = harvest.cmd_timeout__check_executed_success(
             f"ping -I {self.INTERFACE_NAME} -c 1 -W 2 8.8.8.8",
-            timeout=2
+            timeout=4,
+            timeout_continue=4,
         )
         assert ping_ok, f"[8.8.8.8] недоступен через {self.INTERFACE_NAME}"
 
-    @pytest.mark.flaky(reruns=3, reruns_delay=1)
+    # @pytest.mark.flaky(reruns=3, reruns_delay=1)
     @pytest.mark.dependency(depends=["gsm_present"])
     def test_gsm_3__deep__ping3_dns(self, harvest):
         """Разрешение DNS и доступность внешнего ресурса (ya.ru)."""
         ping_ok = harvest.cmd_timeout__check_executed_success(
             f"ping -I {self.INTERFACE_NAME} -c 1 -W 2 ya.ru",
-            timeout=2
+            timeout=4,
+            timeout_continue=4,
         )
-        assert ping_ok, f"ya.ru недоступен через {self.INTERFACE_NAME} (проверьте DNS/интернет)"
+        assert ping_ok, f"ya.ru НЕОПРЕДЕЛИЛСЯ/недоступен через {self.INTERFACE_NAME} (проверьте DNS/интернет)"
 
 
 # ----------------------------------------------------------------------------------------------------------------------
