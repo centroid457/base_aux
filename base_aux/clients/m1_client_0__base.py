@@ -247,6 +247,7 @@ class ClientBase(ABC):
         """
         # result = re.sub(r'\s*[\r\n]+\s*', "\n", text)
         result = re.sub(r'[\r\n ]*[\r\n]+', "\n", text)     # all before EOL
+        result = result.strip("\n")
         return result
 
     @staticmethod

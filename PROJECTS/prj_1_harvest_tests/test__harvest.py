@@ -10,7 +10,7 @@ manager = ClientManager_Serial()
 
 
 # ======================================================================================================================
-@pytest.mark.skipif(True, reason="used for exploring executions/methods")
+@pytest.mark.skip
 class Test_000__Explore:
     # WARN!!! DONT FORGET TURN OFF IT!!! else more of tests would failed!
 

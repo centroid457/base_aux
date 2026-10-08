@@ -70,10 +70,6 @@ def pytest_collection_modifyitems(session, config, items):
 
 @pytest.hookimpl(trylast=True)
 def pytest_unconfigure(config):
-    """
-    GOAL
-    finalise all processes
-    """
     # 1=HTML ----------------------------------------------------------------------------
     # Переименовывает HTML-отчёт, добавляя dev_id и текущую дату-время
     html_path = config.getoption('--html', default=None)
@@ -263,6 +259,7 @@ def harvest(request, transport, option__ssh_address, option__pre_skip) -> Harves
         if not option__pre_skip:
             device.prepare__services(start=False)
 
+        device.prepare__echo_off()
         device.prepare__stop__kernel_terminal_logs()
         request.config.stash["device_id"] = dev_id
         yield device

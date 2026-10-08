@@ -1101,6 +1101,16 @@ PASSED
         return result
 
     # CMDS =============================================================================================================
+    def prepare__echo_off(self) -> bool:
+        """
+        GOAL
+        disable echo for cmdline sent
+        """
+        result = self.cmd_timeout__check_executed_success(f'stty -echo')
+        if not result:
+            print("не удалось изменить режим логгирования сообщений ядра Linux в консоль")
+        return result
+
     def prepare__stop__kernel_terminal_logs(self) -> bool:
         """
         GOAL
@@ -1118,8 +1128,10 @@ PASSED
         [ 5708.553030] IPv6: ADDRCONF(NETDEV_UP): wlan0: link is not ready
         [ 6121.554739] IPv6: ADDRCONF(NETDEV_UP): wlan0: link is not ready
         """
-        print("не удалось изменить режим логгирования сообщений ядра Linux в консоль")
-        return self.cmd_timeout__check_executed_success(f'dmesg -n 3')
+        result = self.cmd_timeout__check_executed_success(f'dmesg -n 3')
+        if not result:
+            print("не удалось изменить режим логгирования сообщений ядра Linux в консоль")
+        return result
 
     def prepare__services(self, start: bool | None = True) -> bool:
         """
