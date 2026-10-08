@@ -1,7 +1,5 @@
-[pytest]
-generate_report_on_test = true
-
 [tool.pytest.ini_options]
+generate_report_on_test = true
 addopts = "-v -s"
 markers = [
     "PRE_SKIP__CHECK: used --pre_skip",

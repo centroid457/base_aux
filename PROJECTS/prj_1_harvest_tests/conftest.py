@@ -39,6 +39,14 @@ def pytest_addoption(parser):
     )
 
 
+def pytest_configure(config):
+    # Если пользователь не указал --html, ставим свой путь
+    if not config.option.htmlpath:
+        reports_dir = "-reports"
+        os.makedirs(reports_dir, exist_ok=True)
+        config.option.htmlpath = os.path.join(reports_dir, "_report_results.html")
+
+
 def pytest_collection_modifyitems(session, config, items):
     """Модификация списка собранных тестов (сортировка, добавление маркеров).
 
@@ -50,6 +58,7 @@ def pytest_collection_modifyitems(session, config, items):
         if item.get_closest_marker("PRE_SKIP__CHECK") :
             if config.getoption("--pre_skip") is True:
                 item.add_marker(skip_marker)
+
 
 # 2=READ -------------------------------------------------
 @pytest.fixture(scope="session")

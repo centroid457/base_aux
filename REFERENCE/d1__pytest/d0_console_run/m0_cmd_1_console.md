@@ -371,7 +371,12 @@ pytest -v --capture=fd --html=reports/report_results.html -m DET
 
 # чтобы сохранялся автоматически и дополнялся сразу
 pyproject.toml
+    # WRONG 
     [pytest]
+    generate_report_on_test = true
+
+    # CORRECT 
+    [tool.pytest.ini_options]
     generate_report_on_test = true
 
 # =============================================================================

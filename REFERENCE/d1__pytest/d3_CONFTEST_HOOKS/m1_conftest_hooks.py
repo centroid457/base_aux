@@ -14,6 +14,7 @@
 
 import pytest
 import datetime
+import os
 
 
 # ======================================================================================================================
@@ -59,9 +60,7 @@ def pytest_cmdline_preparse(config, args):
     pass
 
 def pytest_addoption(parser, pluginmanager):
-    """Добавление своих параметров командной строки.
-
-    Добавление своих опций командной строки.
+    """Добавление своих параметров командной строки. для парсинга
     """
     parser.addoption("--my-env", action="store", default="dev", help="Окружение")
 
@@ -70,8 +69,20 @@ def pytest_configure(config):
     Здесь можно регистрировать маркеры, добавлять свои on-действия.
 
     Вызывается после создания объекта конфигурации, до сбора тестов.
-    Можно зарегистрировать кастомные маркеры, добавить опции, изменить настройки."""
+    Можно
+    1. зарегистрировать кастомные маркеры,
+    2. опции  - изменить значения, добавить новые,
+    3. изменить настройки.
+    """
     config.addinivalue_line("markers", "smoke: быстрые проверки")
+
+    # CHANGE OPTIONS
+    # Если пользователь не указал --html, ставим свой путь
+    if not config.option.htmlpath:
+        reports_dir = "reports"
+        os.makedirs(reports_dir, exist_ok=True)
+        config.option.htmlpath = os.path.join(reports_dir, "_report_results.html")
+
 
 def pytest_sessionstart(session):
     """Начало сессии, до сбора тестов. Полезно для баннера.
