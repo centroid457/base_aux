@@ -43,10 +43,21 @@ def pytest_addoption(parser):
 
 def pytest_configure(config):
     # Если пользователь не указал --html, ставим свой путь
-    if not config.option.htmlpath:
+    htmlpath = config.option.htmlpath
+    if not htmlpath:
         reports_dir = "-reports"
         os.makedirs(reports_dir, exist_ok=True)
-        config.option.htmlpath = os.path.join(reports_dir, "_report_results.html")
+        htmlpath = os.path.join(reports_dir, "_report_results.html")
+
+    dir_name, file_name = os.path.split(htmlpath)
+    print(dir_name, file_name)
+    date_str = datetime.now().strftime('%Y.%m.%d_%H-%M-%S')
+
+    mark_expr = config.getoption('markexpr', default='')
+    safe_mark = mark_expr.replace(' ', '_').replace('(', '').replace(')', '')
+
+    new_name = f"{date_str}_._._._waiting_._._._m[{safe_mark}].html"
+    config.option.htmlpath = os.path.join(dir_name, new_name)
 
 
 def pytest_collection_modifyitems(session, config, items):
