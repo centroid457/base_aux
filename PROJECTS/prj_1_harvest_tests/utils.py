@@ -437,7 +437,7 @@ PASSED
         # =======FILTERS - OLD
         # 3=SERVICE LOGS ----------------
         # AT": "[1]   Terminated              timeout 2.0 cat /dev/ttyUSB2\nOK"
-        # [AT] AT+CSQ ---> at_output='[4] 1836\n[3]   Exit 124                timeout 2.0 cat /dev/ttyUSB2\n+CSQ: 20,99\nOK'
+        # [AT] AT+CSQ ---> output='[4] 1836\n[3]   Exit 124                timeout 2.0 cat /dev/ttyUSB2\n+CSQ: 20,99\nOK'
         # Удаляем служебные строки bash о статусе фоновых процессов
         lines_filtered = [
             line for line in lines
@@ -454,7 +454,7 @@ PASSED
         # for line in lines:
         #     # 3=SERVICE LOGS ----------------
         #     # AT": "[1]   Terminated              timeout 2.0 cat /dev/ttyUSB2\nOK"
-        #     # [AT] AT+CSQ ---> at_output='[4] 1836\n[3]   Exit 124                timeout 2.0 cat /dev/ttyUSB2\n+CSQ: 20,99\nOK'
+        #     # [AT] AT+CSQ ---> output='[4] 1836\n[3]   Exit 124                timeout 2.0 cat /dev/ttyUSB2\n+CSQ: 20,99\nOK'
         #     # Удаляем служебные строки bash о статусе фоновых процессов
         #     if (
         #             re.match(r'\s*\[\d+\]\s+(?:Exit|Terminated|Done)?\s*\d*\s*', line)
@@ -649,11 +649,11 @@ PASSED
     #         f"timeout {timeout} bash -c 'echo -e \"{cmd}\\r\\n\" > {port}; "
     #         f"timeout {timeout} cat {port}'"
     #     )
-    #     at_output = self.cmd_timeout__write_read__payload_str(full_cmd, timeout=timeout * 2)
+    #     output = self.cmd_timeout__write_read__payload_str(full_cmd, timeout=timeout * 2)
     #     # Убираем возможное эхо команды
-    #     at_output = at_output.replace(cmd + "\n", "")
-    #     print(f"[{at_output=}]")
-    #     return at_output
+    #     output = output.replace(cmd + "\n", "")
+    #     print(f"[{output=}]")
+    #     return output
     #
     # def send__at_command__simple(self, cmd: str, port="/dev/ttyUSB2", timeout=1.0) -> str:
     #     """
@@ -667,18 +667,18 @@ PASSED
     #         f"printf \"{cmd}\\r\\n\" > {port}; "
     #         f"timeout {timeout} cat {port}'"
     #     )
-    #     at_output = self.cmd_timeout__write_read__payload_str(
+    #     output = self.cmd_timeout__write_read__payload_str(
     #         full_cmd,
     #         timeout=None,
     #         timeout_continue=timeout * 1.5
     #     )
     #     # Убираем пустые строки и возможное эхо (если echo не выключено)
-    #     lines = [line.strip() for line in at_output.split('\n') if line.strip()]
+    #     lines = [line.strip() for line in output.split('\n') if line.strip()]
     #     # Отфильтровываем саму команду, если echo ещё активно
     #     lines = [line for line in lines if line != cmd]
-    #     at_output = '\n'.join(lines)
-    #     print(f"[SIMPLE_AT] {at_output=}")
-    #     return at_output
+    #     output = '\n'.join(lines)
+    #     print(f"[SIMPLE_AT] {output=}")
+    #     return output
 
     def at_cmd__simple(
             self,
@@ -699,7 +699,7 @@ PASSED
 
         root@harvest05:~#
         root@harvest05:~# )
-        [AT] AT+COPS? -> at_output='+COPS: 0,2,"25020",7\nOK'
+        [AT] AT+COPS? -> output='+COPS: 0,2,"25020",7\nOK'
         GSM operator: +COPS: 0,2,"25020",7
         OK
 
@@ -715,7 +715,7 @@ PASSED
             write=[timeout 2.0 cat /dev/ttyUSB2 & sleep 0.1; printf 'AT\r\n' > /dev/ttyUSB2; sleep 0.4]
             read=[[1] 3964
         OK]
-        [AT] AT ---> at_output=''
+        [AT] AT ---> output=''
         FAILED
         """
         # Увеличиваем задержку для медленных команд
@@ -729,16 +729,16 @@ PASSED
         )
 
         # Добавляем повторную попытку при пустом ответе
-        at_output = None
+        output = None
         for attempt in range(2):
-            at_output = self.cmd_timeout__write_read__payload(
+            output = self.cmd_timeout__write_read__payload(
                 cmd=cmd_full,
                 timeout=timeout,
                 timeout_continue=timeout_continue or timeout * 0.8,
             )
 
             # Если получили ответ - выходим
-            if at_output.strip():
+            if output.strip():
                 break
 
             # Если ответ пустой - ждем и пробуем снова
@@ -746,8 +746,8 @@ PASSED
                 print(f"[AT] Пустой ответ на {cmd}, повторная попытка...")
                 time.sleep(0.5)
 
-        print(f"[AT]{cmd}--->{at_output}")
-        return at_output
+        print(f"[AT]{cmd}--->[{output!r}]")
+        return output
 
     def at_cmd__raw(    # NOTE: DONT USE!
             self,
@@ -771,29 +771,29 @@ PASSED
             printable=timeout 2 python3 /tmp/at_client.py 'AT+CSQ' /dev/ttyUSB2 115200
         root@harvest05:~#
         root@harvest05:~# )
-        [at_output='+CSQ: 23,99\nOK']
+        [output='+CSQ: 23,99\nOK']
         """
-        command_line = f"python3 {bridge} '{cmd}' {port} {baudrate}"
-        at_output = ""
+        cmd = f"python3 {bridge} '{cmd}' {port} {baudrate}"
+        output = ""
         for _ in range(2):
 
-            at_output = self.cmd_timeout__write_read__payload(
-                command_line,
+            output = self.cmd_timeout__write_read__payload(
+                cmd,
                 stop_line=stop_line,
                 timeout=timeout,
                 timeout_continue=timeout_continue,
                 **read_kwargs
             )
             # Убираем возможное эхо команды
-            if at_output.startswith(cmd + "\n"):
-                at_output = at_output.replace(cmd + "\n", "", 1)
+            if output.startswith(cmd + "\n"):
+                output = output.replace(cmd + "\n", "", 1)
 
-            if "No such file or directory" in at_output:
+            if "No such file or directory" in output:
                 if not self.file_name__push(bridge):
                     break
 
-        print(f"[AT]{cmd}--->{at_output}")
-        return at_output
+        print(f"[AT]{cmd}--->[{output!r}]")
+        return output
 
     # AT DUMP ==========================================================================================================
     def at_cmd__dump(
@@ -2708,10 +2708,10 @@ root@harvest05:~#
         self.conn.write_read_bytes(f"fuser -k /dev/ttyS2 2>/dev/null", timeout_continue=0.5)
         time.sleep(0.2)
 
-        command_line = f"python3 scr__rfid_scan.py"
+        cmd = f"python3 scr__rfid_scan.py"
 
         output = self.cmd_timeout__write_read__payload(
-            command_line,
+            cmd,
             timeout=2,
             timeout_continue=2,
         )
@@ -2808,7 +2808,7 @@ A02901810001203000E2806894000050035FD77070430A430A3000E2806894000050035FD7707010
         found=4epc]
         """
         result = set()
-        command_line = f"python3 scr__rfid_scan.py"
+        cmd = f"python3 scr__rfid_scan.py"
 
         steps = steps or 1
         for step in range(steps):
@@ -2817,7 +2817,7 @@ A02901810001203000E2806894000050035FD77070430A430A3000E2806894000050035FD7707010
             time.sleep(0.3)
 
             output = self.cmd_timeout__write_read__payload(
-                command_line,
+                cmd,
                 timeout_continue=10,
             )
             s_result = output.splitlines()

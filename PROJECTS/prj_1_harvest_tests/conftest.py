@@ -7,6 +7,9 @@ from .utils import *
 from base_aux.clients.m2_manager_1__serial import ClientManager_Serial, ClientSerial
 from base_aux.aux_eq.m4_eq_valid2_derivatives import *
 
+from base_aux.clients.m1_client_2__ssh import \
+    ClientSsh  # NOTE: local import, so tests without --ssh don't require paramiko
+
 
 # ======================================================================================================================
 SSH_HOST = "harvest05"
@@ -16,8 +19,10 @@ SSH_HOST = "harvest05"
 def pytest_addoption(parser):
     parser.addoption(
         '--pre_skip',
+
         action="store_false",     # def=TRUE
         # action="store_true",        # def=FALSE
+
         help="не делать подготовку блока (проверка и установка утилит+загрузка скриптов, это долго идет)",
     )
 
@@ -27,8 +32,8 @@ def pytest_addoption(parser):
         nargs="?",
         const=SSH_HOST,
 
-        default=None,       # default=SERIAL
-        # default=SSH_HOST,     # default=SSH
+        # default=None,       # default=SERIAL
+        default=SSH_HOST,     # default=SSH
 
         help="SSH-хост: без значения → harvest05",
     )
@@ -122,7 +127,7 @@ def _make_dev_3__ssh(address: str) -> Harvest | None:
 
     Отличие от Direct: Direct работает с localhost, где мы уже залогинены.
     """
-    from base_aux.clients.m1_client_2__ssh import ClientSsh   # NOTE: local import, so tests without --ssh don't require paramiko
+    # TODO: ADD pre PING!!!! as step name found
 
     try:
         conn = ClientSsh(
@@ -132,7 +137,8 @@ def _make_dev_3__ssh(address: str) -> Harvest | None:
             _raise_if_occupied=False,
         )
     except:
-        return
+
+        raise
 
     assert conn.connect(), f"не удалось подключиться по SSH к {address}"
 
@@ -184,15 +190,14 @@ def harvest(request, transport, option__ssh_address, option__pre_skip) -> Harves
     # 2=DEVICE------------------------------------------
     dev_id = device.hostname
     with device.conn:
-        option__pre_skip = request.config.getoption("--pre_skip")
-
         if not option__pre_skip:
             device.prepare__services(start=False)
 
         device.prepare__stop__kernel_terminal_logs()
         request.config.stash["device_id"] = dev_id
         yield device
-        device.prepare__services(start=True)
+        if not option__pre_skip:
+            device.prepare__services(start=True)
 
 
 @pytest.fixture(scope="session")

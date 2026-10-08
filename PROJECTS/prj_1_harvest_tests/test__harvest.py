@@ -23,9 +23,9 @@ class Test_000__Explore:
         scriptname = "scr__rfid_scan.py"
         assert harvest.file_name__push(scriptname)
 
-        command_line = f"python3 {scriptname}"
+        cmd = f"python3 {scriptname}"
         output = harvest.cmd_timeout__write_read__payload(
-            command_line,
+            cmd,
             # stop_line=EqValid_Regexp(rb'found=\d+epc'),
             timeout_continue=10,
         )
@@ -38,7 +38,6 @@ class Test_000__Explore:
 
         info = harvest.bt__get_dev_info("D4:81:ED:BB:AA:6B")
         print(json.dumps(info, indent=2))
-
 
         # for mac in [list(bt_get_known_devices)[0], "E5:C6:EB:4E:F3:05", "F6:D4:61:D3:B7:55"]:
         #     result = harvest.bt__get_dev_info(mac)
