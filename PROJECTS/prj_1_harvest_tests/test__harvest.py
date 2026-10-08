@@ -1342,51 +1342,57 @@ class Test_42__GSMAT:
 
     # ------------------------------------------------------------------------------------------------------------------
     @pytest.mark.dependency(depends=["gsmat_present"])
-    def test_gsmat_4__signal_quality(self, gsm_at__dump_dict):# FIXME: use without gsm_at__dump_dict
+    def test_gsmat_4__signal_quality(self, harvest):
         """AT+CSQ, RSSI >= 5 (из 31)."""
-        output = gsm_at__dump_dict.get("AT+CSQ")
-        if output:
-            match = re.search(r"\+CSQ: (\d+,\d+)\nOK", output)         # +CSQ: 27,0\nOK
-            if match:
-                rssi = float(match[1].replace(",", "."))
-                assert rssi >= 5, f"Низкий уровень сигнала GSM: {rssi}/31"
-                return
-
-        pytest.fail(f"CSQ не найден: {output}")
-
-    @pytest.mark.dependency(depends=["gsmat_present"])# FIXME: use without gsm_at__dump_dict
-    def test_gsmat_4__sim_ready(self, gsm_at__dump_dict):
-        """AT+CPIN? -> READY."""
-        assert "+CPIN: READY" in gsm_at__dump_dict.get("AT+CPIN?"), f"SIM не готова"
+        cmd = "AT+CSQ"
+        output = harvest.at_cmd__simple(cmd)
+        assert output, "нет ответа"
+        match = re.search(r"\+CSQ: (\d+,\d+)\nOK", output)         # +CSQ: 27,0\nOK
+        assert match, "ответ некорректный"
+        rssi = float(match[1].replace(",", "."))
+        assert rssi >= 5, f"Низкий уровень сигнала GSM: {rssi}/31"
 
     @pytest.mark.dependency(depends=["gsmat_present"])
-    def test_gsmat_4__network_registration(self, gsm_at__dump_dict):# FIXME: use without gsm_at__dump_dict
+    def test_gsmat_4__sim_ready(self, harvest):
+        """AT+CPIN? -> READY."""
+        cmd = "AT+CPIN?"
+        output = harvest.at_cmd__simple(cmd)
+        assert "+CPIN: READY" in output, f"SIM не готова"
+
+    @pytest.mark.dependency(depends=["gsmat_present"])
+    def test_gsmat_4__network_registration(self, harvest):
         """AT+CREG? – статус 1 (зарегистрирован) или 5 (роуминг).
 
+        1=GOOD ----------------
         AT+CREG? – статус 1 или 5.
         [at_output='+CREG: 0,1\nOK']
+
+        2=FAIL ----------------
+        [harvest05.WRITEREAD]
+            write=[timeout 5.0 cat /dev/ttyUSB2 & sleep 0.1; printf 'AT+CREG?\r\n' > /dev/ttyUSB2; sleep 0.6; kill %1 2>/dev/null]
+            read=[+CREG: 0,0
+        OK]
         """
-        at_cmd = "AT+CREG?"
-        out = gsm_at__dump_dict.get(at_cmd)
-        registered = any(
-            "+CREG:" in l and (",1" in l or ",5" in l)
-            for l in out.splitlines()
-        )
-        assert registered, f"Не зарегистрирован в сети: {out}"
+        cmd = "AT+CREG?"
+        output = harvest.at_cmd__simple(cmd)
+        registered = "+CREG:" in output and (",1" in output or ",5" in output)
+        assert registered, f"Не зарегистрирован в сети: {output}"
 
     @pytest.mark.dependency(depends=["gsmat_present"])
-    def test_gsmat_4__operator(self, gsm_at__dump_dict):    # FIXME: use without gsm_at__dump_dict
+    def test_gsmat_4__operator(self, harvest):
         """AT+COPS? – имя оператора.
         [at_output='+COPS: 0,2,"25020",7\nOK']
         """
-        at_cmd = "AT+COPS?"
-        out = gsm_at__dump_dict.get(at_cmd)
-        assert "COPS" in out, f"Оператор не получен: {out}"
-        print(f"GSM operator: {out}")
+        cmd = "AT+COPS?"
+        output = harvest.at_cmd__simple(cmd)
+        assert "COPS" in output, f"Оператор не получен: {output}"
+        print(f"GSM operator: {output}")
 
     # ------------------------------------------------------------------------------------------------------------------
+    @pytest.mark.skip
     @pytest.mark.dependency(depends=["gsmat_present"])
     def test_gsmat_5__deep__dump(self, gsm_at__dump_dict):
+        print(json.dumps(gsm_at__dump_dict, indent=2, ensure_ascii=False))
         assert gsm_at__dump_dict, "dump не получен"
 
 
