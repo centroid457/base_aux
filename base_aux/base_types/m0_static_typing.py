@@ -8,7 +8,7 @@ from base_aux.base_types.m0_static_types import TYPES
 # from base_aux.base_lambdas.m1_lambda import Lambda    # DONT IMPORT! circular inport!
 
 
-# =====================================================================================================================
+# ======================================================================================================================
 @final
 class TYPING:
     """
@@ -18,18 +18,18 @@ class TYPING:
     """
     ELEMENTARY = Union[*TYPES.ELEMENTARY]
 
-    # DIGIT -----------------------------------------------------------------------------------------------------------
+    # DIGIT ------------------------------------------------------------------------------------------------------------
     DIGIT_FLOAT_INT = Union[float, int]
     DIGIT_FLOAT_INT_NONE = Union[float, int, None]
 
-    # ARGS/KWARGS -----------------------------------------------------------------------------------------------------
+    # ARGS/KWARGS ------------------------------------------------------------------------------------------------------
     ARGS_FINAL = tuple[Any, ...]
     ARGS_DRAFT = Union[Any, ARGS_FINAL, 'ArgsKwargs']           # you can use direct single value
 
     KWARGS_FINAL = dict[str, Any]
     KWARGS_DRAFT = Union[None, KWARGS_FINAL, 'ArgsKwargs']  # if passed NONE - no data!
 
-    # PATH ------------------------------------------------------------------------------------------------------------
+    # PATH -------------------------------------------------------------------------------------------------------------
     PATH_FINAL = pathlib.Path
     PATH_DRAFT = Union[str, PATH_FINAL]
 
@@ -39,7 +39,7 @@ class TYPING:
     ATTR_FINAL = str
     ATTR_DRAFT = str | int | Any
 
-    # DICT ------------------------------------------------------------------------------------------------------------
+    # DICT -------------------------------------------------------------------------------------------------------------
     DICT_ANY_NONE = dict[Any, None]             # just to show - dict with None values after clearing!
     DICT_ANY_ANY = dict[Any, Any]               # just to show - dict could be any! on keys/values
     DICT_STR_ANY = dict[str, Any]               # just to show - dict could be any! on values! not just an elementary1
@@ -50,12 +50,12 @@ class TYPING:
     DICT_ANY_TUPLE_ANY = dict[Any, tuple[Any, ...]]     # as DICT_DIFF_DICTS
     DICT_STR_TUPLE_ANY = dict[str, tuple[Any, ...]]     # as DICT_DIFF_ATTRS
 
-    # -----------------------------------------------------------------------------------------------------------------
+    # ------------------------------------------------------------------------------------------------------------------
     ITERABLE_ORDERED = Union[dict, list, tuple, Iterable]     # "SET" - DONT USE!
     ITERPATH_KEY = Union[Any, int]   # Any is for dict
     ITERPATH = tuple[ITERPATH_KEY, ...]
 
-    # -----------------------------------------------------------------------------------------------------------------
+    # ------------------------------------------------------------------------------------------------------------------
     BOOL_DRAFT = Union[
         None,
         Any,                                # fixme: hide? does it need? for results like []/{}/()/0/"" think KEEP! it mean you must know that its expecting boolComparing in further logic!
@@ -65,7 +65,7 @@ class TYPING:
         VALUE_SPECIAL.NOVALUE
     ]
 
-    # RESULT ----------------------------------------------------------------------------------------------------------
+    # RESULT -----------------------------------------------------------------------------------------------------------
     RESULT__NONE = None
     RESULT__BOOL = bool
     RESULT__EXC = Exception     # | type[Exception] - DONT USE typeExc! from any process Exception comes as instance!
@@ -80,10 +80,10 @@ class TYPING:
 
     RESULT__BOOL_RAISE_NONE = bool | NoReturn | None
 
-    # -----------------------------------------------------------------------------------------------------------------
+    # ------------------------------------------------------------------------------------------------------------------
     EXPECTED = bool | type[Any | Exception] | Any
 
-    # CALLABLE --------------------------------------------------------------------------------------------------------
+    # CALLABLE ---------------------------------------------------------------------------------------------------------
     CALLABLE_DRAFT = Union[Any, type[Any], Callable[..., Any | NoReturn]]
     # CALLABLE_FINAL    # dont need final! Final - are all others!
 
@@ -98,7 +98,13 @@ class TYPING:
 
     CALLABLE__BOOL_RAISE_NONE = Callable[..., bool | NoReturn | None]
 
-    # -----------------------------------------------------------------------------------------------------------------
+    # ------------------------------------------------------------------------------------------------------------------
+    MODIFIER_TRY = Callable[[Any], Any | NoReturn] | None
+
+    MODIFIERS_TRY__DRAFT = list[MODIFIER_TRY] | MODIFIER_TRY | None
+    MODIFIERS_TRY__FINAL = list[MODIFIER_TRY]
+
+    # ------------------------------------------------------------------------------------------------------------------
     VALID_VALIDATOR = Union[
         Any,    # generic final instance as expecting value - direct comparison OR comparison instance like Valid!
         # Type,   # Class as validator like Exception????? fixme
@@ -106,7 +112,7 @@ class TYPING:
         Callable[[Any, ...], bool | NoReturn]     # func with first param for validating source
     ]
 
-    # -----------------------------------------------------------------------------------------------------------------
+    # ------------------------------------------------------------------------------------------------------------------
     AIO_FUNC = Callable[..., Awaitable[Any]]                    # func defined with ASYNC key which result as AWAITABLE
     AIO_FUNC__ANY = Callable[..., Awaitable[Any]]                    # func defined with ASYNC key which result as AWAITABLE
     AIO_FUNC__BOOL = Callable[..., Awaitable[bool]]                    # func defined with ASYNC key which result as AWAITABLE
@@ -134,4 +140,4 @@ class TYPING:
     """
 
 
-# =====================================================================================================================
+# ======================================================================================================================

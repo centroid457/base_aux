@@ -50,23 +50,33 @@ class Base_EqValid(NestCall_Resolve):
         dump_attrs(Cls(), skip_names=["exit", call1, call2, call3])
         dump_attrs(Cls(), skip_names=["exit", EqValid_Startswith(call)])
     """
-    # TODO: add patch???
-    VALIDATOR: TYPING.VALID_VALIDATOR    # DEFINE!!!
+    VALIDATOR: TYPING.VALID_VALIDATOR               # DEFINE!!!
+    MODIFIERS_TRY: TYPING.MODIFIERS_TRY__FINAL      # FIXME: NAMES available: PATCH/MODIFIER/PREPARSE!!!
+
+    CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ALL_TRUE
 
     V_ARGS: TYPING.ARGS_FINAL       # as variant for validation! can be blank!
     V_KWARGS: TYPING.KWARGS_FINAL   # as settings!
-
-    CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ALL_TRUE
 
     # -----------------------------------------------------------------------------------------------------------------
     def __init__(
             self,
             *v_args,
             _cumulate_mode: EnumAdj_BoolCumulate = None,
+            _modifiers_try: TYPING.MODIFIERS_TRY__DRAFT = None,
             **v_kwargs,
     ) -> None:
         if _cumulate_mode is not None:
             self.CUMULATE_MODE = _cumulate_mode
+        if _modifiers_try is not None:
+            if callable(_modifiers_try):
+                self.MODIFIERS_TRY = [_modifiers_try, ]
+            elif isinstance(_modifiers_try, (list, tuple, set)):
+                self.MODIFIERS_TRY = list(_modifiers_try)
+            else:
+                raise Exception(f"incorrect type {_modifiers_try=}/{type(_modifiers_try)=}")
+        else:
+            self.MODIFIERS_TRY = []
 
         # super(ArgsKwargs, self).__init__(*v_args, **v_kwargs)
         self.V_ARGS = v_args
