@@ -12,7 +12,7 @@ from base_aux.clients.m1_client_2__ssh import \
 
 
 # ======================================================================================================================
-SSH_HOST = "harvest05"
+SSH_HOST = "harvest12"
 
 
 # ======================================================================================================================
@@ -22,8 +22,8 @@ def pytest_addoption(parser):
     parser.addoption(
         '--pre_skip',
 
-        action="store_false",     # def=TRUE
-        # action="store_true",        # def=FALSE
+        # action="store_false",     # def=TRUE
+        action="store_true",        # def=FALSE
 
         help="не делать подготовку блока (проверка и установка утилит+загрузка скриптов, это долго идет)",
     )
@@ -879,7 +879,7 @@ def ultrasonic_mac__any(harvest) -> str | None:
     assert harvest.file_name__push(script), "скрипт не отправился"
     output = harvest.cmd_timeout__write_read__payload(
         f"python3 {script}",
-        timeout=20,
+        timeout=30,
     )
     mac_match = re.search(r'[0-9A-F:]{17}', output)
     if mac_match:
