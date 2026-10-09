@@ -269,10 +269,10 @@ def test__EQ(args, other, _EXPECTED):
 )
 def test__GL_1_variants__single(args, other, _EXP_obj, _EXP_num):
     # ------
-    func_ExpectAux__all_operators__eq_in(EqValid_LT, other, _EXP_obj[0], *args)
-    func_ExpectAux__all_operators__eq_in(EqValid_LE, other, _EXP_obj[1], *args)
-    func_ExpectAux__all_operators__eq_in(EqValid_GE, other, _EXP_obj[2], *args)
-    func_ExpectAux__all_operators__eq_in(EqValid_GT, other, _EXP_obj[3], *args)
+    func_ExpectAux__all_operators__eq_in(EqValid_L_T, other, _EXP_obj[0], *args)
+    func_ExpectAux__all_operators__eq_in(EqValid_L_E, other, _EXP_obj[1], *args)
+    func_ExpectAux__all_operators__eq_in(EqValid_G_E, other, _EXP_obj[2], *args)
+    func_ExpectAux__all_operators__eq_in(EqValid_G_T, other, _EXP_obj[3], *args)
 
     # ------
     func_ExpectAux__all_operators__eq_in(EqValid_LT_NumParsedSingle, other, _EXP_num[0], *args)

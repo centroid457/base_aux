@@ -12,8 +12,8 @@ from base_aux.base_values.m4_primitives import *
         (LAMBDA_RAISE, NoValue, None),
         (1, NoValue, None),
 
-        (1, EqValid_GE(1), None),
-        (1, EqValid_GE(2), Exception),
+        (1, EqValid_G_E(1), None),
+        (1, EqValid_G_E(2), Exception),
 
         (1, EqValid_EQ(1), None),
         (1, EqValid_EQ(2), Exception),
@@ -35,8 +35,8 @@ def test__1_init(source, eq, _EXPECTED):
         (LAMBDA_RAISE, NoValue, 10, True),
         (1, NoValue, 10, True),
 
-        (1, EqValid_GE(1), 10, True),
-        (1, EqValid_GE(1), 0, Exception),
+        (1, EqValid_G_E(1), 10, True),
+        (1, EqValid_G_E(1), 0, Exception),
 
         (1, EqValid_EQ(1), 10, Exception),
         (1, EqValid_EQ_AnyTrue(1, 10), 10, True),
@@ -54,9 +54,9 @@ def test__2_reset(source, eq, new, _EXPECTED):
         (1, NoValue, 1, True),
         (1, NoValue, 10, False),
 
-        (1, EqValid_GE(1), 1, True),
-        (1, EqValid_GE(1), 10, False),
-        (1, EqValid_GE(1), 0, False),
+        (1, EqValid_G_E(1), 1, True),
+        (1, EqValid_G_E(1), 10, False),
+        (1, EqValid_G_E(1), 0, False),
 
         (1, EqValid_EQ(1), 10, False),
         (1, EqValid_EQ_AnyTrue(1, 10), 10, False),

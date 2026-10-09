@@ -169,7 +169,7 @@ class Validators:
 
     # ==================================================================================================================
     @staticmethod
-    def CMP_LT(self, other_resolved: OtherResolved, variant: Any, parse__number_single: bool = None) -> bool | NoReturn:
+    def CMP_L_T(self, other_resolved: OtherResolved, variant: Any, parse__number_single: bool = None) -> bool | NoReturn:
         if parse__number_single:
             other_final = TextAux(other_resolved.RESULT).parse__number_single()
         else:
@@ -177,7 +177,7 @@ class Validators:
         return variant > other_final    # NOTE: KEEP variant ALWAYS AT FIRST PLACE!!! to use its DANDER-methods!
 
     @staticmethod
-    def CMP_LE(self, other_resolved: OtherResolved, variant: Any, parse__number_single: bool = None) -> bool | NoReturn:
+    def CMP_L_E(self, other_resolved: OtherResolved, variant: Any, parse__number_single: bool = None) -> bool | NoReturn:
         if parse__number_single:
             other_final = TextAux(other_resolved.RESULT).parse__number_single()
         else:
@@ -185,7 +185,7 @@ class Validators:
         return variant >= other_final
 
     @staticmethod
-    def CMP_GT(self, other_resolved: OtherResolved, variant: Any, parse__number_single: bool = None) -> bool | NoReturn:
+    def CMP_G_T(self, other_resolved: OtherResolved, variant: Any, parse__number_single: bool = None) -> bool | NoReturn:
         if parse__number_single:
             other_final = TextAux(other_resolved.RESULT).parse__number_single()
         else:
@@ -193,7 +193,7 @@ class Validators:
         return variant < other_final
 
     @staticmethod
-    def CMP_GE(self, other_resolved: OtherResolved, variant: Any, parse__number_single: bool = None) -> bool | NoReturn:
+    def CMP_G_E(self, other_resolved: OtherResolved, variant: Any, parse__number_single: bool = None) -> bool | NoReturn:
         if parse__number_single:
             other_final = TextAux(other_resolved.RESULT).parse__number_single()
         else:
@@ -217,14 +217,14 @@ class Validators:
         """
         # schema
         if edges_mode[0].lower() == "t":
-            edge_mode__greater = Validators.CMP_GT
+            edge_mode__greater = Validators.CMP_G_T
         else:
-            edge_mode__greater = Validators.CMP_GE
+            edge_mode__greater = Validators.CMP_G_E
 
         if edges_mode[1].lower() == "t":
-            edge_mode__lower = Validators.CMP_LT
+            edge_mode__lower = Validators.CMP_L_T
         else:
-            edge_mode__lower = Validators.CMP_LE
+            edge_mode__lower = Validators.CMP_L_E
 
         for validator, variant in [
             (edge_mode__greater, variant[0]),
@@ -298,19 +298,19 @@ class Validators:
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
     def CMP_LT_NumParsedSingle(self, other_resolved: OtherResolved, variant: Any) -> bool | NoReturn:
-        return Validators.CMP_LT(self, other_resolved, variant, parse__number_single=True)
+        return Validators.CMP_L_T(self, other_resolved, variant, parse__number_single=True)
 
     @staticmethod
     def CMP_LE_NumParsedSingle(self, other_resolved: OtherResolved, variant: Any) -> bool | NoReturn:
-        return Validators.CMP_LE(self, other_resolved, variant, parse__number_single=True)
+        return Validators.CMP_L_E(self, other_resolved, variant, parse__number_single=True)
 
     @staticmethod
     def CMP_GT_NumParsedSingle(self, other_resolved: OtherResolved, variant: Any) -> bool | NoReturn:
-        return Validators.CMP_GT(self, other_resolved, variant, parse__number_single=True)
+        return Validators.CMP_G_T(self, other_resolved, variant, parse__number_single=True)
 
     @staticmethod
     def CMP_GE_NumParsedSingle(self, other_resolved: OtherResolved, variant: Any) -> bool | NoReturn:
-        return Validators.CMP_GE(self, other_resolved, variant, parse__number_single=True)
+        return Validators.CMP_G_E(self, other_resolved, variant, parse__number_single=True)
 
     @staticmethod
     def CMP_GL_NumParsedSingle(

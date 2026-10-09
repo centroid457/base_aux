@@ -196,24 +196,24 @@ class EqValid_EndswithIc(Base_EqValid):
 
 # ======================================================================================================================
 @final
-class EqValid_LT(Base_EqValid):
+class EqValid_L_T(Base_EqValid):
     CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ALL_TRUE
-    VALIDATOR = Validators.CMP_LT
+    VALIDATOR = Validators.CMP_L_T
 
 @final
-class EqValid_LE(Base_EqValid):
+class EqValid_L_E(Base_EqValid):
     CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ALL_TRUE
-    VALIDATOR = Validators.CMP_LE
+    VALIDATOR = Validators.CMP_L_E
 
 @final
-class EqValid_GT(Base_EqValid):
+class EqValid_G_T(Base_EqValid):
     CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ALL_TRUE
-    VALIDATOR = Validators.CMP_GT
+    VALIDATOR = Validators.CMP_G_T
 
 @final
-class EqValid_GE(Base_EqValid):
+class EqValid_G_E(Base_EqValid):
     CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ALL_TRUE
-    VALIDATOR = Validators.CMP_GE
+    VALIDATOR = Validators.CMP_G_E
 
 # --------------------------------
 @final
@@ -242,6 +242,13 @@ class EqValid_GL_EE(Base_EqValid):
     VALIDATOR = Validators.CMP_GL_EE
 
 # ----------------------------------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------------------------
+# TODO: APPLY PREPARSE!!!
+# TODO: APPLY PREPARSE!!!
+# TODO: APPLY PREPARSE!!!
+# TODO: APPLY PREPARSE!!!
+# TODO: APPLY PREPARSE!!!
 @final
 class EqValid_LT_NumParsedSingle(Base_EqValid):
     CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ALL_TRUE
@@ -281,6 +288,7 @@ class EqValid_NumParsedSingle_TypeInt(Base_EqValid):
 @final
 class EqValid_NumParsedSingle_TypeFloat(Base_EqValid):
     VALIDATOR = Validators.NumParsedSingle_TypeFloat
+
 
 @final
 class EqValid_NumParsedSingle_EQ(EqValid_EQ_NumParsedSingle):
