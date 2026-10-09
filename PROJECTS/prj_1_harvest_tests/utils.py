@@ -3248,12 +3248,12 @@ A02901810001203000E2806894000050035FD77070430A430A3000E2806894000050035FD7707010
         data_text = data_bytes.decode(errors="replace")
 
         eq_default = {
-            "UTC": EqValid_GT_NumParsedSingle(0),
-            "Distance up": EqValid_GL_NumParsedSingle(ge=0, lt=100),
-            "Distance side": EqValid_GL_NumParsedSingle(ge=0, lt=10),
-            "Temperature": EqValid_GL_NumParsedSingle(gt=0, lt=40),
-            "Battery": EqValid_GL_NumParsedSingle(gt=0, lt=100),
-            "Percentage": EqValid_GL_NumParsedSingle(gt=0, lt=100),
+            "UTC": EqValid_GE(0),
+            "Distance up": EqValid_GL_ET((0, 100)),
+            "Distance side": EqValid_GL_ET((0, 10)),
+            "Temperature": EqValid_GL_TT((0, 40)),
+            "Battery": EqValid_GL_TT((0, 100)),
+            "Percentage": EqValid_GL_TT((0, 100)),
         }
 
         parced = {

@@ -7,8 +7,7 @@ from .utils import *
 from base_aux.clients.m2_manager_1__serial import ClientManager_Serial, ClientSerial
 from base_aux.aux_eq.m4_eq_valid2_derivatives import *
 
-from base_aux.clients.m1_client_2__ssh import \
-    ClientSsh  # NOTE: local import, so tests without --ssh don't require paramiko
+from base_aux.clients.m1_client_2__ssh import ClientSsh
 
 
 # ======================================================================================================================
