@@ -37,8 +37,7 @@ class PROJECT(PROJECT_BASE):
     FIXME: list[str] = [
     ]
     # ------------------------------------------------------------------------------------------------------------------
-    VERSION = Version((0, 3, 28))
-    # VERSION = Version((0, 4, 0))
+    VERSION = Version((0, 4, 0))
     NEWS: list[str] = [
         "[termOs] finish",
         "[js] work",

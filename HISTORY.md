@@ -9,6 +9,15 @@
 ********************************************************************************
 ## NEWS
 
+0.4.0(2026.10.10 18.16.34)
+------------------------------
+- [termOs] finish  
+- [js] work  
+- [pytest] reference  
+- [harvest] create prj serial+ssh  
+- [eq_valid] make good struct  
+- [PROJECTS] create directory  
+
 0.3.28(2026.06.25 15.53.23)
 ------------------------------
 - [Dict] create make_json_serializable  
