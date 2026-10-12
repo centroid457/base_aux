@@ -145,7 +145,7 @@ class Base_EqValid(NestCall_Resolve):
         validate smth with special logic
         """
         # OTHER_FINAL --------------------
-        other_resolved = OtherResolved(other_draft)
+        other_resolved: OtherResolved = OtherResolved(other_draft, self.modifiers_try)
 
         # VALIDATE -----------------------
         for v_arg in (self.v_args or (_NO_VARIANT,)):
