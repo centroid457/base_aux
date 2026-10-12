@@ -8,12 +8,13 @@ from base_aux.base_types.m0_static_types import TYPES
 class OtherResolved:
     DRAFT: Any | Self
 
-    __finished: bool | None = None
+    _finished: bool | None = None
     RAISED: bool | None = None
     EXC: Exception | None = None
     RESULT: Any | None = None
 
     modifiers_try: TYPING.MODIFIERS_TRY__FINAL
+    _modifier_results: list[Any | Exception]    # for debugging!
 
     def __init__(self, draft: Any | Self, modifiers_try: TYPING.MODIFIERS_TRY__FINAL | None = None) -> None:
         """
@@ -24,24 +25,34 @@ class OtherResolved:
         Base_EqValid
         to move all artefacts from Base_EqValid into separated special object
         """
+        # 0=ALREADY OtherResolved ----------------------------
         if isinstance(draft, OtherResolved):
-            self.__finished = draft.__finished
+            # copy all attrs into new object --------
+            self.DRAFT = draft.DRAFT
+
+            self._finished = draft._finished
             self.RESULT = draft.RESULT
             self.RAISED = draft.RAISED
             self.EXC = draft.EXC
 
-            self.DRAFT = draft.DRAFT
+            self.modifiers_try = draft.modifiers_try
+            self._modifier_results = draft._modifier_results
         else:
             self.DRAFT = draft
 
+        # 1=modifiers -------------------------------
         if modifiers_try:
             self.modifiers_try = modifiers_try
         else:
             self.modifiers_try = []
+
+        self._modifier_results = []
+
+        # 2=WORK ------------------------------------
         self._resolve()
 
     def _resolve(self) -> None:
-        if self.__finished:
+        if self._finished:
             return
 
         try:
@@ -54,10 +65,11 @@ class OtherResolved:
         for modifier in self.modifiers_try:
             try:
                 self.RESULT = modifier(self.RESULT)
-            except:
-                pass
+                self._modifier_results.append(self.RESULT)
+            except Exception as exc:
+                self._modifier_results.append(exc)
 
-        self.__finished = True
+        self._finished = True
 
 
 # =====================================================================================================================
