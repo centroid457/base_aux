@@ -48,8 +48,22 @@ class OtherResolved:
 
         self._modifier_results = []
 
+        self._validate_modifiers_or_raise(self.modifiers_try)
+
         # 2=WORK ------------------------------------
         self._resolve()
+
+    @staticmethod
+    def _validate_modifiers_or_raise(modifiers: list[Any]) -> None | NoReturn:
+        """
+        GOAL
+        raise if validators not callable!!!
+        # TODO: decide using any modifier with no raising???
+        """
+        for item in modifiers:
+            if not callable(item):
+                msg = f"Incorrect type usage {item=}/{modifiers=}"
+                raise Exception(msg)
 
     def _resolve(self) -> None:
         if self._finished:
