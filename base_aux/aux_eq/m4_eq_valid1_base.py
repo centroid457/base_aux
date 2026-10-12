@@ -6,7 +6,7 @@ from base_aux.aux_eq.m3_eq_other1 import *
 _NO_VARIANT = object()
 
 
-# =====================================================================================================================
+# ======================================================================================================================
 class Base_EqValid(NestCall_Resolve):
     """
     RULES
@@ -50,44 +50,65 @@ class Base_EqValid(NestCall_Resolve):
         dump_attrs(Cls(), skip_names=["exit", call1, call2, call3])
         dump_attrs(Cls(), skip_names=["exit", EqValid_Startswith(call)])
     """
-    VALIDATOR: TYPING.VALID_VALIDATOR               # DEFINE!!!
-    MODIFIERS_TRY: TYPING.MODIFIERS_TRY__FINAL      # FIXME: NAMES available: PATCH/MODIFIER/PREPARSE!!!
+    VALIDATOR: TYPING.VALID_VALIDATOR                   # reDEFINE!!!
+
+    # FIXME: NAMES available: PATCH/MODIFIER/PREPARSE!!!
+    MODIFIERS_TRY__DEF: TYPING.MODIFIERS_TRY__DRAFT = None   # FINAL MAIN MODIFIER!!!
+    modifiers_try: TYPING.MODIFIERS_TRY__FINAL
 
     CUMULATE_MODE: EnumAdj_BoolCumulate = EnumAdj_BoolCumulate.ALL_TRUE
 
-    V_ARGS: TYPING.ARGS_FINAL       # as variant for validation! can be blank!
-    V_KWARGS: TYPING.KWARGS_FINAL   # as settings!
+    v_args: TYPING.ARGS_FINAL       # as variant for validation! can be blank!
+    v_kwargs: TYPING.KWARGS_FINAL   # as settings!
 
-    # -----------------------------------------------------------------------------------------------------------------
+    # ------------------------------------------------------------------------------------------------------------------
     def __init__(
             self,
             *v_args,
             _cumulate_mode: EnumAdj_BoolCumulate = None,
-            _modifiers_try: TYPING.MODIFIERS_TRY__DRAFT = None,
+            _modifiers_pre: TYPING.MODIFIERS_TRY__DRAFT = None,
             **v_kwargs,
     ) -> None:
+        # CUMULATE  ---------------------------
         if _cumulate_mode is not None:
             self.CUMULATE_MODE = _cumulate_mode
-        if _modifiers_try is not None:
-            if callable(_modifiers_try):
-                self.MODIFIERS_TRY = [_modifiers_try, ]
-            elif isinstance(_modifiers_try, (list, tuple, set)):
-                self.MODIFIERS_TRY = list(_modifiers_try)
-            else:
-                raise Exception(f"incorrect type {_modifiers_try=}/{type(_modifiers_try)=}")
-        else:
-            self.MODIFIERS_TRY = []
 
+        # MODIFIERS ---------------------------
+        self.modifiers_try = []
+
+        if _modifiers_pre:
+            if callable(_modifiers_pre):
+                self.modifiers_try.append(_modifiers_pre)
+            elif isinstance(_modifiers_pre, (list, tuple, set)):
+                for item in _modifiers_pre:
+                    if not callable(item):
+                        msg = f"Incorrect type usage {item=}/{_modifiers_pre=}"
+                        raise Exception(msg)
+                    self.modifiers_try.append(item)
+            else:
+                raise Exception(f"incorrect type {_modifiers_pre=}/{type(_modifiers_pre)=}")
+
+        if self.MODIFIERS_TRY__DEF:
+            if callable(self.MODIFIERS_TRY__DEF):
+                self.modifiers_try.append(self.MODIFIERS_TRY__DEF)
+            elif isinstance(self.MODIFIERS_TRY__DEF, (list, tuple, set)):
+                for item in self.MODIFIERS_TRY__DEF:
+                    if not callable(item):
+                        msg = f"Incorrect type usage {item=}/{self.MODIFIERS_TRY__DEF=}"
+                        raise Exception(msg)
+                    self.modifiers_try.append(item)
+
+        # ARGS/KWARGS -------------------------
         # super(ArgsKwargs, self).__init__(*v_args, **v_kwargs)
-        self.V_ARGS = v_args
-        self.V_KWARGS = v_kwargs
+        self.v_args = v_args
+        self.v_kwargs = v_kwargs
 
     def __hash__(self):
         return hash(str(self))
 
     def __str__(self):
-        v_args = self.V_ARGS
-        v_kwargs = self.V_KWARGS
+        v_args = self.v_args
+        v_kwargs = self.v_kwargs
         _cumulate_mode = self.CUMULATE_MODE
         return f"{self.__class__.__name__}({v_args=}/{v_kwargs=}/{_cumulate_mode=})"
 
@@ -97,7 +118,7 @@ class Base_EqValid(NestCall_Resolve):
     def VALIDATOR(self, other_final, *v_args, **v_kwargs) -> bool | NoReturn:
         return NotImplemented
 
-    # DOUBT -----------------------------------------------------------------------------------------------------------
+    # DOUBT ------------------------------------------------------------------------------------------------------------
     def __iter__(self) -> Iterable[Any]:
         """
         NOTE
@@ -107,16 +128,16 @@ class Base_EqValid(NestCall_Resolve):
 
         # TODO: DEPRECATE??? - think no!!
         """
-        yield from self.V_ARGS
+        yield from self.v_args
 
-    # VALIDATE-1=VALUE SINGLE -----------------------------------------------------------------------------------------
+    # VALIDATE-1=VALUE SINGLE ------------------------------------------------------------------------------------------
     def __eq__(self, other_draft) -> bool:
         return self.resolve(other_draft)
 
     def __contains__(self, item) -> bool:
         return self.resolve(item)
 
-    # VALIDATE-2=VALUE with argsKwrgs----------------------------------------------------------------------------------
+    # VALIDATE-2=VALUE with argsKwrgs-----------------------------------------------------------------------------------
     def resolve(self, other_draft: Any | OtherResolved) -> bool:
         """
         GOAL
@@ -127,17 +148,17 @@ class Base_EqValid(NestCall_Resolve):
         other_resolved = OtherResolved(other_draft)
 
         # VALIDATE -----------------------
-        for v_arg in (self.V_ARGS or (_NO_VARIANT,)):
+        for v_arg in (self.v_args or (_NO_VARIANT,)):
             try:
                 if isinstance(v_arg, Base_EqValid):
                     # Передаем уже разрешенное значение вложенному валидатору
                     result = v_arg.resolve(other_resolved)
                 elif v_arg is _NO_VARIANT:
                     # 1=ARGS BLANK --------------
-                    result = bool(self.VALIDATOR(other_resolved, **self.V_KWARGS))
+                    result = bool(self.VALIDATOR(other_resolved, **self.v_kwargs))
                 else:
                     # 2=ARGS one or MORE --------------
-                    result = bool(self.VALIDATOR(other_resolved, v_arg, **self.V_KWARGS))
+                    result = bool(self.VALIDATOR(other_resolved, v_arg, **self.v_kwargs))
             except Exception:
                 result = False
 
@@ -159,4 +180,4 @@ class Base_EqValid(NestCall_Resolve):
         return self.CUMULATE_MODE in [EnumAdj_BoolCumulate.ALL_TRUE, EnumAdj_BoolCumulate.ALL_FALSE]
 
 
-# =====================================================================================================================
+# ======================================================================================================================
