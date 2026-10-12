@@ -1,6 +1,6 @@
 from base_aux.base_types.m0_static_typing import *
 from base_aux.base_lambdas.m1_lambda import *
-from base_aux.aux_eq.m3_eq_other1 import *
+from base_aux.aux_eq.m3_eq_other1_resolved import *
 
 
 _NO_VARIANT = object()
