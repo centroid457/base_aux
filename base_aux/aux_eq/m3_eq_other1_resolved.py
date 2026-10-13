@@ -14,7 +14,7 @@ class OtherResolved:
     RESULT: Any | None = None
 
     modifiers_try: TYPING.MODIFIERS_TRY__FINAL
-    _modifier_results: list[Any | Exception]    # for debugging!
+    _modifier_direct_results: list[Any | Exception]    # for debugging!
 
     def __init__(self, draft: Any | Self, modifiers_try: TYPING.MODIFIERS_TRY__FINAL | None = None) -> None:
         """
@@ -36,7 +36,7 @@ class OtherResolved:
             self.EXC = draft.EXC
 
             self.modifiers_try = draft.modifiers_try
-            self._modifier_results = draft._modifier_results
+            self._modifier_direct_results = draft._modifier_direct_results
         else:
             self.DRAFT = draft
 
@@ -46,7 +46,7 @@ class OtherResolved:
         else:
             self.modifiers_try = []
 
-        self._modifier_results = []
+        self._modifier_direct_results = []
 
         self._validate_modifiers_or_raise(self.modifiers_try)
 
@@ -79,9 +79,9 @@ class OtherResolved:
         for modifier in self.modifiers_try:
             try:
                 self.RESULT = modifier(self.RESULT)
-                self._modifier_results.append(self.RESULT)
+                self._modifier_direct_results.append(self.RESULT)
             except Exception as exc:
-                self._modifier_results.append(exc)
+                self._modifier_direct_results.append(exc)
 
         self._finished = True
 
