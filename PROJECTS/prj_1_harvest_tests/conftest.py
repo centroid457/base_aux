@@ -11,7 +11,7 @@ from base_aux.clients.m1_client_2__ssh import ClientSsh
 
 
 # ======================================================================================================================
-SSH_HOST = "harvest12"
+SSH_HOST = "harvest05"
 
 
 # ======================================================================================================================
@@ -67,22 +67,25 @@ def pytest_collection_modifyitems(session, config, items):
                 item.add_marker(skip_marker)
 
 
-@pytest.hookimpl(trylast=True)
-def pytest_unconfigure(config):
+def report_html__rename(config):    # ЗДЕСЬ CONFIG - просто как параметр функции!!!
+    """
+    GOAL
+    just separate report renaming into function
+    """
     # 1=HTML ----------------------------------------------------------------------------
     # Переименовывает HTML-отчёт, добавляя dev_id и текущую дату-время
-    html_path = config.getoption('--html', default=None)
-    if not html_path:
+    report_html__path = config.getoption('--html', default=None)
+    if not report_html__path:
         print("HTML-отчёт не задан – переименование не требуется.")
         return
 
     # Даём время на завершение записи файла
     for _ in range(10):
-        if os.path.isfile(html_path):
+        if os.path.isfile(report_html__path):
             break
         time.sleep(0.5)
     else:
-        print(f"HTML-отчёт не появился: {html_path}")
+        print(f"HTML-отчёт не появился: {report_html__path}")
         return
 
     # Получаем данные из stash
@@ -94,7 +97,7 @@ def pytest_unconfigure(config):
     mark_expr = config.getoption('markexpr', default='')
     safe_mark = mark_expr.replace(' ', '_').replace('(', '').replace(')', '')
 
-    dir_name, file_name = os.path.split(html_path)
+    dir_name, file_name = os.path.split(report_html__path)
     print(dir_name, file_name)
     date_str = datetime.now().strftime('%Y.%m.%d_%H-%M-%S')
 
@@ -102,7 +105,7 @@ def pytest_unconfigure(config):
     new_path = os.path.join(dir_name, new_name)
 
     try:
-        os.rename(html_path, new_path)
+        os.rename(report_html__path, new_path)
         print(f"Отчёт переименован в: {new_path}")
 
         # Меняем заголовок
@@ -112,6 +115,13 @@ def pytest_unconfigure(config):
         patch_html__title(filepath=new_path, new_title=new_name)
     except OSError as exc:
         print(f"Ошибка переименования отчёта: {exc!r}")
+
+
+@pytest.hookimpl(trylast=True)
+def pytest_unconfigure(config):
+    print(f"[pytest.STAGE.pytest_unconfigure]START")
+    report_html__rename(config)
+    print(f"[pytest.STAGE.pytest_unconfigure]FINISH")
 
 
 # ======================================================================================================================
@@ -145,7 +155,10 @@ def _make_dev_1__direct() -> Harvest | None:
     from base_aux.clients.m1_client_3__direct import ClientDirect   # NOTE: placed here cause not working on Windows!
 
     conn = ClientDirect(address=socket.gethostname(), _raise_if_occupied=False)
-    assert conn.connect(), "не удалось запустить ClientDirect (pty+shell)"
+    if not conn.connect():
+        print("не удалось запустить ClientDirect (pty+shell)")
+        return
+
     device = Harvest(conn)
     device.get_hostname_and_occupy()
     return device
@@ -167,9 +180,11 @@ def _make_dev_2__serial() -> Harvest | None:
                 found.append(Harvest(conn))
 
     if len(found) == 0:
-        pytest.exit("Устройств Harvest не обнаружено.")
+        print("Устройств Harvest не обнаружено.")
+        return
     if len(found) > 1:
-        pytest.exit("Устройств Harvest более чем 1!")
+        print("Устройств Harvest более чем 1!")
+        return
 
     device = found[0]
     return device
@@ -200,15 +215,18 @@ def _make_dev_3__ssh(address: str) -> Harvest | None:
             password="1",
             _raise_if_occupied=False,
         )
-    except:
+    except Exception as exc:
+        print(f"[SSH] {exc!r}")
+        return
 
-        raise
-
-    assert conn.connect(), f"не удалось подключиться по SSH к {address}"
+    if not conn.connect():
+        print(f"[SSH] не удалось подключиться {address=}")
+        return
 
     device = Harvest(conn)
     if not device.validate_conn():
-        pytest.exit(f"SSH: не удалось залогиниться на {address}")
+        print(f"[SSH] соединение не валидировано {address=}")
+        return
 
     device.get_hostname_and_occupy()
     return device
@@ -245,12 +263,15 @@ def harvest(request, transport, option__ssh_address, option__pre_skip) -> Harves
     Vest=cdeVFR90!
     """
     # 1=TRANSPORT------------------------------------------
-    if transport == "direct":
+    if transport == "direct":   # если local hostname - совпал!
         device = _make_dev_1__direct()
-    elif transport == "ssh":
+    elif transport == "ssh":    # если строго указан
         device = _make_dev_3__ssh(option__ssh_address)
-    else:
+    else:   # в остальных случаях!
         device = _make_dev_2__serial()
+
+    if device is None:
+        pytest.exit("Устройство Harvest не обнаружено.")
 
     # 2=DEVICE------------------------------------------
     dev_id = device.hostname

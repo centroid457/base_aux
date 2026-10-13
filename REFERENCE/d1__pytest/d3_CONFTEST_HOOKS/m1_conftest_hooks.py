@@ -31,8 +31,10 @@ def pytest_unconfigure(config):      # реально после pytest-html з�
     """ПОСЛЕ ВСЕХ pytest_sessionfinish"""
     """Вызывается ПОСЛЕ pytest_sessionfinish, когда все плагины завершили работу.
     Здесь уже безопасно переименовывать/перемещать сгенерированные отчёты."""
+
+    print(f"[pytest.STAGE.pytest_unconfigure]START")
     html_path = config.getoption('--html', default=None)
-    pass
+    print(f"[pytest.STAGE.pytest_unconfigure]FINISH")
 
 
 # ======================================================================================================================

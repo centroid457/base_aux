@@ -95,7 +95,8 @@ class Test_01__Detection:
         GOAL
         test success working cmds
         """
-        assert harvest.cmd_timeout__write_read__payload('hostname').startswith("harvest")
+        hostname_value = harvest.cmd_timeout__write_read__payload('hostname')
+        assert hostname_value.startswith("harvest"), "hostname не соответствует требуемому"
         assert "command not found" in harvest.cmd_timeout__write_read__payload('hello123')
 
     # ------------------------------------------------------------------------------------------------------------------
