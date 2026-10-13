@@ -19,7 +19,7 @@ from base_aux.qeues.m1_event_broadcaster import *
 from base_aux.tasks.m1_tasks_bg import *
 from base_aux.aux_paradigm.m2_aio import *
 from base_aux.webs_back.d4_channels.m1_ws_server import WsServer
-from base_aux.aux_eq.m4_eq_valid2_derivatives import EqValid_AttrsByKwargs
+from base_aux.aux_eq.m4_eq_valid3_derivatives import EqValid_AttrsByKwargs
 
 
 # =====================================================================================================================

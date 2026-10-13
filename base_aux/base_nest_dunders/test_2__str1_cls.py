@@ -1,7 +1,7 @@
 from typing import *
 
 from base_aux.base_lambdas.m1_lambda import *
-from base_aux.aux_eq.m4_eq_valid2_derivatives import *
+from base_aux.aux_eq.m4_eq_valid3_derivatives import *
 from base_aux.base_nest_dunders.m2_str1_cls import *
 
 

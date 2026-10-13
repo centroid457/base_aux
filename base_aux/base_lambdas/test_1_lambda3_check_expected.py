@@ -3,7 +3,7 @@ from base_aux.base_lambdas.m1_lambda import *
 
 from base_aux.base_values.m4_primitives import *
 from base_aux.aux_argskwargs.m1_argskwargs import *
-from base_aux.aux_eq.m4_eq_valid2_derivatives import *
+from base_aux.aux_eq.m4_eq_valid3_derivatives import *
 from base_aux.base_nest_dunders.m7_cmp import *
 
 

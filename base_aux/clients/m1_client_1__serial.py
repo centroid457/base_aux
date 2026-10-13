@@ -2,7 +2,7 @@
 
 from serial import Serial, SerialException
 
-from base_aux.aux_eq.m4_eq_valid2_derivatives import *
+from base_aux.aux_eq.m4_eq_valid3_derivatives import *
 from base_aux.clients.m1_client_0__base import ClientBase
 
 

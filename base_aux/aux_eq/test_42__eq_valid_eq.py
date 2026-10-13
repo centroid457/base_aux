@@ -3,7 +3,7 @@ import pytest
 from base_aux.base_lambdas.m1_lambda import *
 from base_aux.base_values.m4_primitives import *
 
-from base_aux.aux_eq.m4_eq_valid2_derivatives import *
+from base_aux.aux_eq.m4_eq_valid3_derivatives import *
 from base_aux.base_values.m3_exceptions import Exc__ExpectedAnother
 
 

@@ -5,7 +5,7 @@ import sys
 from serial import Serial, SerialException
 from serial.tools import list_ports
 
-from base_aux.aux_eq.m4_eq_valid2_derivatives import EqValid_EQ_StrIc
+from base_aux.aux_eq.m4_eq_valid3_derivatives import EqValid_EQ_StrIc
 from base_aux.base_values.m3_exceptions import Exc__SerialPL2303IncorrectDriver
 from base_aux.clients.m1_client_1__serial import ClientSerial
 from base_aux.clients.m1_client_0__base import *

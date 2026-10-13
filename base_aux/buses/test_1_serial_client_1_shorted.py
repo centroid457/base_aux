@@ -3,7 +3,7 @@ import pytest
 from base_aux.base_lambdas.m1_lambda import *
 
 from base_aux.valid.m1_valid_base import *
-from base_aux.aux_eq.m4_eq_valid2_derivatives import *
+from base_aux.aux_eq.m4_eq_valid3_derivatives import *
 from base_aux.base_values.m5_value_valid2_variants import *
 from base_aux.base_values.m5_value_valid3_unit import *
 from base_aux.buses.m1_serial1_client import *
