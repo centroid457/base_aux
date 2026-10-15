@@ -2,26 +2,26 @@
 import pytest
 from base_aux.base_types.m2_info import ObjectInfo
 
-@pytest.hookimpl(hookwrapper=True)
-def pytest_runtest_makereport(item, call):
-    from _pytest.outcomes import Exit
-
-    print(f"[pytest.STAGE.pytest_runtest_makereport]START")
-
-    for obj in (item, call):
-        print()
-        print(f"{obj=}")
-        ObjectInfo(item).print()
-
-    # ПОМЕТКА выхода из тестирования pytest.exit как FAILED! если так не сделать то будет похоже на SKIPPED
-    outcome = yield
-    report = outcome.get_result()
-    if call.excinfo and isinstance(call.excinfo.value, Exit):
-        # pytest.exit() внутри теста — принудительно делаем failed
-        report.outcome = "failed"
-        report.longrepr = f"Фатальная остановка: {call.excinfo.value}"
-
-    print(f"[pytest.STAGE.pytest_runtest_makereport]FINISH")
+# @pytest.hookimpl(hookwrapper=True)
+# def pytest_runtest_makereport(item, call):
+#     from _pytest.outcomes import Exit
+#
+#     print(f"[pytest.STAGE.pytest_runtest_makereport]START")
+#
+#     for obj in (item, call):
+#         print()
+#         print(f"{obj=}")
+#         ObjectInfo(item).print()
+#
+#     # ПОМЕТКА выхода из тестирования pytest.exit как FAILED! если так не сделать то будет похоже на SKIPPED
+#     outcome = yield
+#     report = outcome.get_result()
+#     if call.excinfo and isinstance(call.excinfo.value, Exit):
+#         # pytest.exit() внутри теста — принудительно делаем failed
+#         report.outcome = "failed"
+#         report.longrepr = f"Фатальная остановка: {call.excinfo.value}"
+#
+#     print(f"[pytest.STAGE.pytest_runtest_makereport]FINISH")
 
 
 # [test.py]

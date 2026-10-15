@@ -1,16 +1,13 @@
 import pytest
 
 
-class TestCls_skipping():
-    @pytest.fixture(scope="session", autouse=True)
-    def skip_whole_class(self, request, pytestconfig):
-        pytest.skip("класс пропущен целиком")
+@pytest.fixture(autouse=True)
+def fixture__return():
+    """каждый scope тестов оборачивается"""
+    # При запуске с -s будет видно сообщения до и после теста.
+    print("\n\t[autouse] вкл verbose лог")
+    return 123
 
-    def test__1(self):
-        pass
-
-    @pytest.mark.skip
-    @pytest.mark.USER
-    def test__2(self):
-        pass
+def test__1():
+    assert True
 
