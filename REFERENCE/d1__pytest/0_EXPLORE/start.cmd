@@ -1,1 +1,1 @@
-pytest conftest.py -v -s --ssh
+pytest conftest.py -v -s
