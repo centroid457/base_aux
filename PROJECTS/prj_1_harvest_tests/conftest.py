@@ -249,7 +249,7 @@ def transport(request, option__ssh_address) -> str:
 
 
 # ======================================================================================================================
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="session", autouse=True)
 def harvest(request, transport, option__ssh_address, option__pre_skip) -> Harvest:
     """
     Возвращает авторизованный Harvest-клиент.

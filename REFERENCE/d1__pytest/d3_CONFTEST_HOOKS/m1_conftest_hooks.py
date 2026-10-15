@@ -130,37 +130,7 @@ def pytest_collection_modifyitems(session, config, items):
     динамически добавить маркеры на основе имён/путей.
 
     item.own_markers - маркеры непосредственные на конечном тесте!!!
-    """
-    skip_marker = pytest.mark.skip(reason="reason")
 
-    for item in items:
-        # ITEMS - показывает только конечные тесты! обобщенные Классы - не в счет!!!
-
-        # 1=MARKERS practice -----------------------------------------------------
-        if (
-            # 1=маркеры непосредственно на конечном тесте! сработает только если маркер собственный - прямо на методе!
-            (pytest.mark.PRE_SKIP__CHECK in item.own_markers)
-            or
-            # 2=маркеры по всей иерархии = директория+файл+класс+непосредственныйТест!
-            item.get_closest_marker("PRE_SKIP__CHECK")      # ЛУЧШЕЕ!!!
-            or
-            any(m.name == "PRE_SKIP__CHECK" for m in item.iter_markers())      # сложноватое!!!
-        ):
-            if config.getoption("--pre_skip", default=None):
-                item.add_marker(skip_marker)
-
-
-            if config.getoption("--pre_skip", default=None):
-                item.add_marker(skip_marker)
-
-        # 2=NAMES checks
-        if "slow" in item.name:
-            item.add_marker(pytest.mark.slow)
-
-        if "TestCls_skipping" in item.nodeid:
-            item.add_marker(skip_marker)
-
-    """
     ITEM
 ==========================================================================================
 ----------OBJECTINFO.PRINT--------------------------------------------------------------------------
@@ -283,6 +253,43 @@ repr_failure        	TypeError   :TypeError("Function.repr_failure() missing 1 r
 warn                	TypeError   :TypeError("Node.warn() missing 1 required positional argument: 'warning'")
 ==========================================================================================
     """
+    # ПРИМЕР-1=как переставить конкретный класс тестов в начало -----------
+    # NOTE: Но это работает в пределах одного файла!!!
+    detect = [i for i in items if "TestDetect" in i.nodeid]
+    rest = [i for i in items if "TestDetect" not in i.nodeid]
+    items[:] = detect + rest
+
+    # ПРИМЕР-2=обработка обьектов тестов -----------------------------------
+    SKIP_MARKER = pytest.mark.skip(reason="reason")
+
+    for item in items:
+        # ITEMS - показывает только конечные тесты! обобщенные Классы - не в счет!!!
+        # класс сморится парсингом и проверками!
+
+        # 1=MARKERS practice - добавление маркеров -----------------------------------------------------
+        if (
+            # 1=маркеры непосредственно на конечном тесте! сработает только если маркер собственный - прямо на методе!
+            (pytest.mark.PRE_SKIP__CHECK in item.own_markers)
+            or
+            # 2=маркеры по всей иерархии = директория+файл+класс+непосредственныйТест!
+            item.get_closest_marker("PRE_SKIP__CHECK")      # ЛУЧШЕЕ!!!
+            or
+            any(m.name == "PRE_SKIP__CHECK" for m in item.iter_markers())      # сложноватое!!!
+        ):
+            if config.getoption("--pre_skip", default=None):
+                item.add_marker(SKIP_MARKER)
+
+
+            if config.getoption("--pre_skip", default=None):
+                item.add_marker(SKIP_MARKER)
+
+        # 2=NAMES checks
+        if "slow" in item.name:
+            item.add_marker(pytest.mark.slow)
+
+        if "TestCls_skipping" in item.nodeid:
+            item.add_marker(SKIP_MARKER)
+
 
 # ---------------------------------------------------------------------------
 # 3. ФИКСТУРЫ — настройка и завершение

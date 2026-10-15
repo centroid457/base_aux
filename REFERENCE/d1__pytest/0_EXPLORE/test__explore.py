@@ -1,12 +1,16 @@
 import pytest
 
 
-@pytest.fixture(autouse=True)
-def fixture__return():
-    """каждый scope тестов оборачивается"""
-    # При запуске с -s будет видно сообщения до и после теста.
-    print("\n\t[autouse] вкл verbose лог")
-    return 123
+class TestDetect:
+    @pytest.fixture(scope="session", autouse=True)
+    def test_detect(self):
+        print(123)
+        print(123)
+        print(123)
+        print(123)
+        print(123)
+        print(123)
+
 
 def test__1():
     assert True
