@@ -190,16 +190,16 @@ self.MAX_ITER_ITEMS=5
   10:setup
 ----------PROPERTIES__ELEMENTARY_SINGLE-------------------------------------------------------------
 _ALLOW_MARKERS      	bool        :False
-_nodeid             	str         :REFERENCE/d1__pytest/0_EXPLORE/test__explore.py::TestCls_skipping::test__2
+_nodeid             	str         :REFERENCE/d1_pytest/0_EXPLORE/test__explore.py::TestCls_skipping::test__2
 _pytest_diamond_inheritance_warning_shown	bool        :True
 name                	str         :test__2
-nodeid              	str         :REFERENCE/d1__pytest/0_EXPLORE/test__explore.py::TestCls_skipping::test__2
+nodeid              	str         :REFERENCE/d1_pytest/0_EXPLORE/test__explore.py::TestCls_skipping::test__2
 originalname        	str         :test__2
 ----------PROPERTIES__ELEMENTARY_COLLECTION---------------------------------------------------------
 _report_sections    	list        :[]
 extra_keyword_matches	set         :set()
 funcargs            	dict        :{}
-location            	tuple       :('REFERENCE\\d1__pytest\\0_EXPLORE\\test__explore.py', 11, 'TestCls_skipping.test__2')
+location            	tuple       :('REFERENCE\\d1_pytest\\0_EXPLORE\\test__explore.py', 11, 'TestCls_skipping.test__2')
 own_markers         	list        :[Mark(name='USER', args=(), kwargs={}), Mark(name='skip', args=(), kwargs={})]
 user_properties     	list        :[]
 ----------PROPERTIES__OBJECTS-----------------------------------------------------------------------
@@ -210,12 +210,12 @@ _pyfuncitem         	Function    :<Function test__2>
 _request            	TopRequest  :<FixtureRequest for <Function test__2>>
 _store              	Stash       :<_pytest.stash.Stash object at 0x000001BD01BBEE90>
 config              	Config      :<_pytest.config.Config object at 0x000001BD7D27B200>
-fspath              	LocalPath   :C:\__STARICHENKO_Element\PROJECTS\abc=base_aux\REFERENCE\d1__pytest\0_EXPLORE\test__explore.py
+fspath              	LocalPath   :C:\__STARICHENKO_Element\PROJECTS\abc=base_aux\REFERENCE\d1_pytest\0_EXPLORE\test__explore.py
 instance            	TestCls_skipping:<test__explore.TestCls_skipping object at 0x000001BD01BBEE10>
 keywords            	NodeKeywords:<NodeKeywords for node <Function test__2>>
-module              	module      :<module 'test__explore' from 'C:\\__STARICHENKO_Element\\PROJECTS\\abc=base_aux\\REFERENCE\\d1__pytest\\0_EXPLORE\\test__explore.py'>
+module              	module      :<module 'test__explore' from 'C:\\__STARICHENKO_Element\\PROJECTS\\abc=base_aux\\REFERENCE\\d1_pytest\\0_EXPLORE\\test__explore.py'>
 parent              	Class       :<Class TestCls_skipping>
-path                	WindowsPath :C:\__STARICHENKO_Element\PROJECTS\abc=base_aux\REFERENCE\d1__pytest\0_EXPLORE\test__explore.py
+path                	WindowsPath :C:\__STARICHENKO_Element\PROJECTS\abc=base_aux\REFERENCE\d1_pytest\0_EXPLORE\test__explore.py
 session             	Session     :<Session  exitstatus=<ExitCode.OK: 0> testsfailed=0 testscollected=0>
 stash               	Stash       :<_pytest.stash.Stash object at 0x000001BD01BBEE90>
 ----------PROPERTIES__EXC---------------------------------------------------------------------------
@@ -226,16 +226,16 @@ getmodpath          	str         :TestCls_skipping.test__2
 obj                 	NoneType    :None
 teardown            	NoneType    :None
 ----------METHODS__ELEMENTARY_COLLECTION------------------------------------------------------------
-listchain           	list        :[<Session  exitstatus=<ExitCode.OK: 0> testsfailed=0 testscollected=0>, <Dir abc=base_aux>, <Dir REFERENCE>, <Dir d1__pytest>, <Dir 0_EXPLORE>, <Module test__ex...
+listchain           	list        :[<Session  exitstatus=<ExitCode.OK: 0> testsfailed=0 testscollected=0>, <Dir abc=base_aux>, <Dir REFERENCE>, <Dir d1_pytest>, <Dir 0_EXPLORE>, <Module test__ex...
                     	Session     :	<Session  exitstatus=<ExitCode.OK: 0> testsfailed=0 testscollected=0>
                     	Dir         :	<Dir abc=base_aux>
                     	Dir         :	<Dir REFERENCE>
-                    	Dir         :	<Dir d1__pytest>
+                    	Dir         :	<Dir d1_pytest>
                     	Dir         :	<Dir 0_EXPLORE>
                     	            :	...
 listextrakeywords   	set         :set()
-listnames           	list        :['', 'abc=base_aux', 'REFERENCE', 'd1__pytest', '0_EXPLORE', 'test__explore.py', 'TestCls_skipping', 'test__2']
-reportinfo          	tuple       :(WindowsPath('C:/__STARICHENKO_Element/PROJECTS/abc=base_aux/REFERENCE/d1__pytest/0_EXPLORE/test__explore.py'), 11, 'TestCls_skipping.test__2')
+listnames           	list        :['', 'abc=base_aux', 'REFERENCE', 'd1_pytest', '0_EXPLORE', 'test__explore.py', 'TestCls_skipping', 'test__2']
+reportinfo          	tuple       :(WindowsPath('C:/__STARICHENKO_Element/PROJECTS/abc=base_aux/REFERENCE/d1_pytest/0_EXPLORE/test__explore.py'), 11, 'TestCls_skipping.test__2')
 ----------METHODS__OBJECTS--------------------------------------------------------------------------
 _getinstance        	TestCls_skipping:<test__explore.TestCls_skipping object at 0x000001BD01BBEE70>
 _getobj             	method      :<bound method TestCls_skipping.test__2 of <test__explore.TestCls_skipping object at 0x000001BD01BBEE10>>
@@ -496,12 +496,12 @@ self.MAX_ITER_ITEMS=5
 ----------PROPERTIES__ELEMENTARY_SINGLE-------------------------------------------------------------
 _ALLOW_MARKERS      	bool        :False
 _instance           	NoneType    :None
-_nodeid             	str         :REFERENCE/d1__pytest/0_EXPLORE/conftest.py::test__in_conftest
+_nodeid             	str         :REFERENCE/d1_pytest/0_EXPLORE/conftest.py::test__in_conftest
 _pytest_diamond_inheritance_warning_shown	bool        :True
 cls                 	NoneType    :None
 instance            	NoneType    :None
 name                	str         :test__in_conftest
-nodeid              	str         :REFERENCE/d1__pytest/0_EXPLORE/conftest.py::test__in_conftest
+nodeid              	str         :REFERENCE/d1_pytest/0_EXPLORE/conftest.py::test__in_conftest
 originalname        	str         :test__in_conftest
 ----------PROPERTIES__ELEMENTARY_COLLECTION---------------------------------------------------------
 _report_sections    	list        :[]
@@ -510,7 +510,7 @@ funcargs            	dict        :{'event_loop_policy': <asyncio.windows_events.
                     	event_loop_policy:<asyncio.windows_events.WindowsProactorEventLoopPolicy ...
                     	pytestconfig:<_pytest.config.Config object at 0x000001CE4E946DB0>:	ItemKe...
                     	request:<FixtureRequest for <Function test__in_conftest>>:	ItemKeyValue(K...
-location            	tuple       :('REFERENCE\\d1__pytest\\0_EXPLORE\\conftest.py', 24, 'test_...
+location            	tuple       :('REFERENCE\\d1_pytest\\0_EXPLORE\\conftest.py', 24, 'test_...
 own_markers         	list        :[]
 user_properties     	list        :[]
 ----------PROPERTIES__OBJECTS-----------------------------------------------------------------------
@@ -538,11 +538,11 @@ listchain           	list        :[<Session  exitstatus=<ExitCode.OK: 0> testsfa
                     	Session     :	<Session  exitstatus=<ExitCode.OK: 0> testsfailed=0 testsco...
                     	Dir         :	<Dir abc=base_aux>
                     	Dir         :	<Dir REFERENCE>
-                    	Dir         :	<Dir d1__pytest>
+                    	Dir         :	<Dir d1_pytest>
                     	Dir         :	<Dir 0_EXPLORE>
                     	            :	...
 listextrakeywords   	set         :set()
-listnames           	list        :['', 'abc=base_aux', 'REFERENCE', 'd1__pytest', '0_EXPLORE',...
+listnames           	list        :['', 'abc=base_aux', 'REFERENCE', 'd1_pytest', '0_EXPLORE',...
 reportinfo          	tuple       :(WindowsPath('C:/__STARICHENKO_Element/PROJECTS/abc=base_aux...
                     	WindowsPath :	C:\__STARICHENKO_Element\PROJECTS\abc=base_aux\REFERENCE\d1...
                     	int         :	24
