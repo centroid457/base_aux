@@ -4,7 +4,7 @@
 """
 1. conftest.py = доступно на всех тестах!!! = ГЛОБАЛЬНЫЕ фикстуры
 ФУНКЦИЯ - классика!
-МЕТОД класса (класса без тестов) = КОНТЕЙНЕР ФИКСТУР
+(МЕТОД класса (класса без тестов) = КОНТЕЙНЕР ФИКСТУР - НЕТ ТАКОГО!!! не будет работать!!!)
 
 2. МОДУЛЬ фикстур - теже фикстуры глобальные только выделены в отдельный модуль и загружены в CONFTEST.PY
 3. ПЛАГИН фикстур - отдельный модуль!
@@ -16,34 +16,34 @@
 
 
 # ======================================================================================================================
-# 1=КОНТЕЙНЕР ФИКСТУР
+# 1=КОНТЕЙНЕР ФИКСТУР=НЕТ ТАКОГО!!! не будет работать!!! «Класс-контейнер фикстур» — это миф!!!
 """
 Не делайте контейнер с тестами
 Если в классе есть и test_*, и фикстуры — фикстуры доступны только тестам этого класса. Снаружи — нет. 
 Поэтому «контейнер» должен быть без тестов, иначе он не «контейнер», а «класс с тестами и вспомогательными фикстурами».
 """
-# conftest.py
-import pytest
-
-class TestSharedFixtures:
-    @pytest.fixture(scope="session")
-    def harvest(self):
-        # return discover_harvest()
-        return None
-
-    @pytest.fixture(scope="session")
-    def transport(self, harvest):
-        return harvest.transport
-
-    @pytest.fixture(scope="session")
-    def device(self, harvest):
-        return harvest.device
-
-# test_1.py
-# Теперь в любом тестовом модуле проекта можно запросить harvest, transport, device — они найдутся в корневом conftest.
-# без указания класса!!!
-def test_1(transport):
-    assert transport == "ssh"
+# # conftest.py
+# import pytest
+#
+# class FixturesContainer:
+#     @pytest.fixture(scope="session")
+#     def harvest(self):
+#         # return discover_harvest()
+#         return None
+#
+#     @pytest.fixture(scope="session")
+#     def transport(self, harvest):
+#         return harvest.transport
+#
+#     @pytest.fixture(scope="session")
+#     def device(self, harvest):
+#         return harvest.device
+#
+# # test_1.py
+# # Теперь в любом тестовом модуле проекта можно запросить harvest, transport, device — они найдутся в корневом conftest.
+# # без указания класса!!!
+# # def test_1(transport):   # ОШИБКА!!! не найдет такой фикстуры!!!
+# #     assert transport == "ssh"
 
 
 # ======================================================================================================================
