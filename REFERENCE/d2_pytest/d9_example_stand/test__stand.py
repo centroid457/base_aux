@@ -97,15 +97,28 @@ class Test2_I(_TBase):
     PARALLEL = False
     @pytest.mark.asyncio
     async def test__1_i(self, dc, dut_list):
+        TEST_U: float = 12
         TEST_I: float = 0.5
 
         # 0=prepare
-        assert await dc.set_u(TEST_I)
+        assert await dc.set_u(TEST_U)
+
+        results = []
+        for dut in dut_list:
+            result = dut.set_i(TEST_I)
+            if not result:
+                results.append(result)
+
+            i = await dc.mesure_i()
+            :
+                TEST_I
+
+
 
         # 1=get links
         func_links = []
         for dut in dut_list:
-            func_links.append(dut.mesure_u(TEST_I))
+            func_links.append()
 
         # 2=get values
         values = await self._execute_funcs__async(func_links)
