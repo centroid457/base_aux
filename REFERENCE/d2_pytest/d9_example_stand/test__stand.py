@@ -103,25 +103,15 @@ class Test2_I(_TBase):
         # 0=prepare
         assert await dc.set_u(TEST_U)
 
-        results = []
+        values = []
         for dut in dut_list:
-            result = dut.set_i(TEST_I)
-            if not result:
-                results.append(result)
+            _result = dut.set_i(TEST_I)
+            if not _result:
+                values.append(_result)
+                continue
 
-            i = await dc.mesure_i()
-            :
-                TEST_I
-
-
-
-        # 1=get links
-        func_links = []
-        for dut in dut_list:
-            func_links.append()
-
-        # 2=get values
-        values = await self._execute_funcs__async(func_links)
+            values.append(await dc.mesure_i())
+            dut.set_i(0)
 
         # 3=validate
         results, result_final = self._validate_values(values, TEST_I)

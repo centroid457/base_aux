@@ -8,7 +8,7 @@ STAND_DUT_COUNT: int = 4
 
 @pytest.fixture(scope="session")
 async def dc() -> Dc:
-    result = Dc()
+    dc = Dc()
     if not await dc._detect():
         pytest.fail(f"{dc=} not detected")
     print(f"{dc=} detected")
