@@ -4,6 +4,7 @@ import asyncio
 # ======================================================================================================================
 class Dc:
     detected: bool | None = None
+    value: float = 0
     # -----------------------------------------
     async def _connect(self) -> bool: return True
     async def _disconnect(self) -> bool: return True
@@ -12,32 +13,24 @@ class Dc:
         self.detected = result
         return result
     # -----------------------------------------
-    async def on(self) -> bool:
-        if not self.detected:
-            return False
-        return True
-    async def off(self) -> bool:
-        if not self.detected:
-            return False
-        return True
-
-    # -----------------------------------------
     async def set_u(self, value: float) -> bool:
         if not self.detected:
             return False
+        self.value = value
         return True
     async def mesure_i(self) -> float | None:
         if not self.detected:
             return None
-        return
+        return self.value
 
 
 # ======================================================================================================================
 class Dut:
     detected: bool | None = None
+    value: float = 0
+    # -----------------------------------------
     def __init__(self, index: int):
         self.index = index
-
     # -----------------------------------------
     async def _connect(self) -> bool: return True
     async def _disconnect(self) -> bool: return True
@@ -45,27 +38,17 @@ class Dut:
         result = True
         self.detected = result
         return result
-
-    # -----------------------------------------
-    async def on(self) -> bool:
-        if not self.detected:
-            return False
-        return True
-    async def off(self) -> bool:
-        if not self.detected:
-            return False
-        return True
-
     # -----------------------------------------
     async def set_i(self, value: float) -> bool:
         if not self.detected:
             return False
+        self.value = value
         return True
 
     async def mesure_u(self) -> float | None:
         if not self.detected:
             return None
-        return
+        return self.value
 
 
 # ======================================================================================================================
