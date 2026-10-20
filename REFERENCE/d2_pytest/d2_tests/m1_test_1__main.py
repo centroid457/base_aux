@@ -46,9 +46,7 @@ def test__collection_types():
 # ======================================================================================================================
 # 2. МЕТОДЫ PYTEST=FAIL/exit
 # ----------------------------------------------------------------------------------------------------------------------
-@pytest.mark.dependency(depends=["gsmat_present"])
-def test_methods(harvest):
-    """AT+CSQ, RSSI >= 5."""
+def test_methods():
     for line in []:
         rssi = int(line[0])
         assert rssi >= 5, f"Низкий уровень сигнала GSM: {rssi} (из 31)"
