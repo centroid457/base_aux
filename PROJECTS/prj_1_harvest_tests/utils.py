@@ -1028,8 +1028,8 @@ PASSED
             cmd: str,
 
             port: str = '/dev/ttyUSB2',
-            timeout: float = 5.0,                   # best 2!
-            timeout_continue: float | None = 3,     # best 1!
+            timeout: float = 5.0,                   # best 2! 5=best for ssh
+            timeout_continue: float | None = 3,     # best 1! 3=best for ssh
     ) -> list[tuple[str, str]]:
         """
         result = re.search(r"\(0-(\d+)\)", "+CREG: (0-2)\nOK")
@@ -3441,13 +3441,37 @@ def test__at_param__parse_variants(source, _EXPECTED):
 # ======================================================================================================================
 AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
     # =========================================================================
-    # СТРУКТУРА!!!
+    # ОПРЕДЕЛЕНИЯ
+    # -------------------------------------------------------------------------
+    # COMMAND LINE - whole line
+    # PREFIX AT
+    # SYMBOL +
+    # PARAMETER - имя параметра в строке после AT+
+    # SUBPARAMETERS - внутренние параметры внутри параметра!
+
+    # =========================================================================
+    # ВАЖНОСТЬ В РАБОТЕ!!!
+    # -------------------------------------------------------------------------
+    # ТАЙМАУТЫ
+    # при отправке нескольких команд - выжидать паузы! или до результата OK! - это решит многие проблемы наложения!
+
+
+
+    # =========================================================================
+    # УНИВЕРСАЛЬНЫЕ КОМАНДЫ
+    # -------------------------------------------------------------------------
+    # A/ - отправить предыдущую команду! если ее еще не было то аналог AT = тоесть просто ОК вернет!
+
+    # =========================================================================
+    # СТРУКТУРА группы команд!!!
+    # -------------------------------------------------------------------------
     # 0=DANGER+USELESS -------------------------------
     # 1=ACCURATE -------------------------------------
     # 2=DOUBT ----------------------------------------
     # 3=UNKNOWN --------------------------------------
 
-    # СИНТАКСИС КОМАНДЫ КОНЕЧНОЕ = та версия что выдает результат напрямую!
+    # =========================================================================
+    # КОМАНДА КОНЕЧНАЯ = та версия что выдает нужный результат напрямую!
 
     # как определить конечное имя
     # -------------------------------------------------------------------------
@@ -3501,14 +3525,37 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
     #             ('AT+CPAS?', '+CME ERROR: Operation not supported'),
     #             ],
 
-    # ==========================================================================
+    # =========================================================================
+    # ПОЛУЧЕНИЕ ДОПУСТИМЫХ ЗНАЧЕНИЙ
+    # -------------------------------------------------------------------------
+
+    # =========================================================================
+    # УСТАНОВКА ЗНАЧЕНИЙ
+    # -------------------------------------------------------------------------
+    # 1=ОДНО ЗНАЧЕНИЕ
+
+    # -------------------------------------------------------------------------
+    # 2=НЕСКОЛЬКО ЗНАЧЕНИЙ
+    # ПОЗИЦИОННЫЕ ЗНАЧЕНИЯ
+    # AT+CFUN=<fun>[,<rst>]
+    # OK
+
+    # AT+CGACT=1,1 — активирует GPRS-соединение и разрешает входящие подключения.
+    # AT+CGDCONT=1,"ip","адрес_APN — задаёт тип соединения (например, IP) и адрес точки доступа (APN). Пример: AT+CGDCONT=1,"ip","airtelgprs.com".
+
+    # =========================================================================
+    # =========================================================================
+    # =========================================================================
+    # GROUPS
+    # =========================================================================
     "1=MODEM": {
         # 0=DANGER+USELESS -------------------------------
+        # "AT+CPOF": "[DANGER]power off module",
+
         # "AT+CSCS": "[DANGER]выбор TE character set (IRA/GSM/UCS2/HEX)",
         # "AT+SIMEI": "[DANGER]установка IMEI (только для service)",
         # "AT+CUSBPIDSWITCH": "[DANGER]смена USB PID (перезагружает модуль!)",
         # "AT+CLCK": "[DANGER] facility lock (блокировка SIM/сети)",
-        # "AT+CPOF": "[DANGER]power off module",
         # "AT+CRESET": "[DANGER]reset module",
         # "AT+CSCLK": "[DANGER]UART sleep control",
         # "AT+CMUX": "[DANGER]мультиплексор UART (4 виртуальных порта) # DANGER",
@@ -3538,27 +3585,27 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
             ('ATI?', 'ERROR'),
             ],
         # ATI1 - 9 TODO: add???
-        'AT+CGMI': ['manufacturer ID',
+        'AT+CGMI': ['ID=manufacturer',
             ('AT+CGMI=?', 'OK'),
             ('AT+CGMI', 'INCORPORATED\nOK'),
             ('AT+CGMI?', 'INCORPORATED\nOK'),
             ],
-        'AT+CGMM': ['model identification',
+        'AT+CGMM': ['ID=model',
             ('AT+CGMM=?', 'OK'),
             ('AT+CGMM', 'A7682E-R\nOK'),
             ('AT+CGMM?', 'A7682E-R\nOK'),
             ],
-        'AT+CGMR': ['revision identification',
+        'AT+CGMR': ['ID=revision',
                     ('AT+CGMR=?', 'OK'),
                     ('AT+CGMR', '+CGMR: A011B02A7682M6_DS_FOTA\nOK'),
                     ('AT+CGMR?', '+CGMR: A011B02A7682M6_DS_FOTA\nOK'),
                     ],
-        'AT+CGSN': ['IMEI / serial number',
+        'AT+CGSN': ['ID=IMEI / serial number /ProductSn',
                     ('AT+CGSN=?', 'OK'),
                     ('AT+CGSN', '865286077380516\nOK'),
                     ('AT+CGSN?', 'ERROR'),
                     ],
-        'AT+GSN': ['IMEI (алиас)',
+        'AT+GSN': ['ID=IMEI (алиас)',
                    ('AT+GSN=?', 'OK'),
                    ('AT+GSN', '865286077380516\nOK'),
                    ('AT+GSN?', 'ERROR'),
@@ -3579,7 +3626,18 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
                      ('AT+CCLK', 'ERROR'),
                      ('AT+CCLK?', '+CCLK: "70/01/01,00:23:56+00"\nOK'),
                      ],
-        'AT+CATR?': ['URC destination interface',
+        'AT+CATR?': ['''URC destination interface=used to configure the serial port which will be used to output URCs.
+        7500_SIM7600 Series_AT Command Manual_V1.10 6 4 2018-10-08
+<port>
+0 – all ports
+1 – use UART port to output URCs
+2 – use MODEM port to output URCs
+3 – use ATCOM port to output URCs
+4 – use cmux vritual port1 to output URCs
+5 – use cmux virtual port2 to output URCs
+6 – use cmux vritual port3 to output URCs
+7 – use cmux vritual port4 to output URCs
+        ''',
                      ('AT+CATR=?', '+CATR: (0-7)\nOK'),
                      ('AT+CATR', 'ERROR'),
                      ('AT+CATR?', '+CATR: 0\nOK'),
@@ -3629,7 +3687,20 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
             ('AT+CGGMR', 'ERROR'),
             ('AT+CGGMR?', 'ERROR'),
             ],
-        'AT+GCAP': ['список поддерживаемых возможностей (+CGSM, +FCLASS, +DS)',
+        'AT+GCAP': ['''список поддерживаемых возможностей (+CGSM, +FCLASS, +DS)
+        List of additional capabilities.
++CGSM GSM function is supported
++FCLASS FAX function is supported
++DS Data compression is supported
++ES Synchronous data mode is supported.
++CIS707-A CDMA data service command set
++CIS-856 EVDO data service command set
++MS Mobile Specific command set
+
+AT+GCAP
++GCAP:+CGSM,+FCLASS,+DS
+OK
+''',
             ('AT+GCAP=?', 'OK'),
             ('AT+GCAP', 'ERROR'),
             ('AT+GCAP?', 'ERROR'),
@@ -3663,7 +3734,7 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
                       ('AT+CICCID', '+CME ERROR: SIM not inserted'),
                       ('AT+CICCID?', '+CME ERROR: SIM not inserted'),
                       ],
-        'AT+CIMI': ['IMSI (IMSI SIM-карты)',
+        'AT+CIMI': ['IMSI (IMSI SIM-карты) international mobile subscriber identity (460010222028133)',
                     ('AT+CIMI=?', 'OK'),
                     ('AT+CIMI', '+CME ERROR: SIM failure'),
                     ('AT+CIMI?', '+CME ERROR: Operation not supported'),
@@ -3707,7 +3778,7 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
                       ],
 
         # 3=UNKNOWN --------------------------------------
-        'AT+CIMIM': ['IMSI второго аппа (USIM)',
+        'AT+CIMIM': ['IMSI (второй симки?) (USIM)',
                      ('AT+CIMIM=?', 'ERROR'),
                      ('AT+CIMIM', 'ERROR'),
                      ('AT+CIMIM?', 'ERROR'),
@@ -3722,8 +3793,10 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
     # =========================================================================
     "3=V25TER_BASIC(V.25TER БАЗОВЫЕ (управление модемом))": {
         # 0=DANGER+USELESS -------------------------------
+        # "ATE": "[???DANGER]echo on/off, ATE0->off, ATE1->on", # нетиповая команда!!!
 
         # "A/": "[DANGER]повторить последнюю команду",
+
         # "ATD": "dial (голосовой/данные)",
         # "ATD><mem><n>": "dial из памяти (SM/ME/DC...)",
         # "ATD><n>": "dial из активной памяти",
@@ -3736,10 +3809,9 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
         # "AT+ICF": "[DANGER]character framing (data/parity/stop)",
         # "AT+IFC": "[DANGER]flow control (RTS/CTS)",
         # "AT&C": "[DANGER]DCD function mode",
-        # "ATE": "[DANGER]echo on/off",
         # "AT&D": "[DANGER]DTR function mode",
         # "AT&S": "[DANGER]DSR function mode",
-        # "AT&F": "[DANGER]factory defaults",
+        # "AT&F": "[DANGER]factory defaults=for all settings!",
         # "ATQ": "[DANGER]result code presentation mode",
         # "AT&W": "[DANGER]save user settings",
         # "ATZ": "[DANGER]restore user settings",
@@ -3811,7 +3883,15 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
         # 2=DOUBT ----------------------------------------
 
         # 3=UNKNOWN --------------------------------------
-        'AT&V': ['display current configuration',
+        'AT&V': ['display current configuration=',
+                 # AT&V=ДОЛЖЕН ПОКАЗАТЬ НАСТРОЙКИ!!!
+                 # &C: 0; &D: 2; &F: 0; E: 1; L: 0; M: 0; Q: 0; V: 1; X: 0; Z: 0; S0: 0;
+                 # S3: 13; S4: 10; S5: 8; S6: 2; S7: 50; S8: 2; S9: 6; S10: 14; S11: 95;
+                 # +FCLASS: 0; +ICF: 3,3; +IFC: 2,2; +IPR: 115200; +DR: 0; +DS: 0,0,2048,6;
+                 # +WS46: 12; +CBST: 0,0,1;
+                 # ……
+                 # OK
+
                  ('AT&V=?', 'ERROR'),
                  ('AT&V', 'ERROR'),
                  ('AT&V?', 'ERROR'),
@@ -3826,8 +3906,10 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
     # =========================================================================
     "4=STATUS_CONTROL(управление состоянием)": {
         # 0=DANGER+USELESS -------------------------------
+        # "AT+CPOF": "[DANGER]power off",
+        # "AT+CRESET": "[DANGER]reset",
 
-        # 'AT+CFUN': ["[DANGER]уровень функциональности (0=min, 1=full, 4=offline, 7=reset) # DANGER",
+        # 'AT+CFUN': ["[DANGER]уровень функциональности (0=min, 1=full, 4=offline(flight), 7=reset)",
         #     ('AT+CFUN=?', '+CFUN: (0-1,4-8),(0-1)\nOK'),
         #     ('AT+CFUN', 'ERROR'),
         #     ('AT+CFUN?', '+CFUN: 1\nOK'),
@@ -3847,13 +3929,11 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
         #     ('AT+CFUN=8', 'AT+CFUN?\n[1]+  Done                    timeout 5.0 cat /dev/ttyUSB4'),
         #     ('AT+CFUN?', 'AT+CFUN=8\n[1]+  Done                    timeout 5.0 cat /dev/ttyUSB4'),
         # ],
-        # "AT+CPOF": "[DANGER]power off",
-        # "AT+CRESET": "[DANGER]reset",
         # "AT+CMEE": "[DANGER]error format",
         # "AT+SIMEI": "[DANGER]set IMEI",
 
         # 1=ACCURATE -------------------------------------
-        'AT+CSQ': ['signal quality (RSSI, BER)',
+        'AT+CSQ': ['signal quality (RSSI, BER) разные значения не нужны! это строго чтение, а не запись! поэтому ошибка на запись!!!',
                    ('AT+CSQ=?', '+CSQ: (0-31,99),(0-7,99)\nOK'),
                    ('AT+CSQ', '+CSQ: 23,0\nOK'),
                    ('AT+CSQ?', 'ERROR'),
@@ -3887,7 +3967,7 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
                         ('AT+AUTOCSQ=1', 'OK'),
                         ('AT+AUTOCSQ?', '+AUTOCSQ: 1,0\nOK'),
                         ],
-        'AT+CSQDELTA?': ['порог изменения RSSI',
+        'AT+CSQDELTA?': ['set RSSI delta threshold for signal strength reporting.',
                          ('AT+CSQDELTA=?', '+CSQDELTA: (0-5)\nOK'),
                          ('AT+CSQDELTA', 'OK'),
                          ('AT+CSQDELTA?', '+CSQDELTA: 5\nOK'),
@@ -3955,7 +4035,9 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
     # =========================================================================
     "5=NETWORK(СЕТЬ / РЕГИСТРАЦИЯ / ОПЕРАТОР)": {
         # 0=DANGER+USELESS -------------------------------
-        # 'AT+COPS': ["[DANGER]operator selection # DANGER (может долго висеть на =?)",
+        # 'AT+COPS': ["[DANGER]operator selection (может долго висеть на =?)",
+        #     ("AT+COPS?", "+COPS: 0,2,\"25020\",7\nOK"),
+
         #     ('AT+COPS=?', ''),
         #     ('AT+COPS', ''),
         #     ('AT+COPS?', ''),
@@ -3964,11 +4046,32 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
         # "AT+CPWD": "[DANGER]change password",
         # "AT+CCUG": "[DANGER]closed user group",
         # "AT+CNMP": "[DANGER]preferred mode selection",
-        # "AT+CNBP": "[DANGER]preferred band selection",
+        # "AT+CNBP": """[DANGER]preferred band selection
+            # Value:
+            # 0xFFFFFFFF7FFFFFFF Any (any value)
+            # 7 GSM_DCS_1800
+            # 8 GSM_EGSM_900
+            # 9 GSM_PGSM_900
+            # 16 GSM_450
+            # 17 GSM_480
+            # 18 GSM_750
+            # 19 GSM_850
+            # 20 GSM_RGSM_900
+            # 21 GSM_PCS_1900
+            # 22 WCDMA_IMT_2000
+            # 23 WCDMA_PCS_1900
+            # 24 WCDMA_III_1700
+            # 25 WCDMA_IV_1700
+            # 26 WCDMA_850
+            # 27 WCDMA_800
+            # 48 WCDMA_VII_2600
+            # 49 WCDMA_VIII_900
+            # 50 WCDMA_IX_1700
+        # """,
         # "AT+NETMODE": "[DANGER]WCDMA/TDSCDMA mode select",
         # "AT+WS46": "[DANGER]RAT selection (12=LTE, 22=..., 28=...)",
 
-        # 'AT+COPN': ['[#FIXME!]read operator names (BLOCKING)',
+        # 'AT+COPN': ['[#FIXME!]read operator names (BLOCKING) ЭТО ВООБЩЕ НЕ НУЖНО!!!',
         #             ('AT+COPN=?', 'ERROR\n+CME ERROR: SIM failure'),
         #             ('AT+COPN',
         #              'OK\n+COPN: "20201","C-OTE"\n+COPN: "20205","voda GR"\n+COPN: "20209","WIND"\n+COPN: "20210","WIND"\n+COPN: "20402","Tele2"\n+COPN: "20404","voda NL"\n+COPN: "20408","NL KPN"\n+COPN: "20412","NL Tlfrt"\n+COPN: "20416","TMO NL"\n+COPN: "20601","PROXI"\n+COPN: "20610","mobi*"\n+COPN: "20620","BASE"\n+COPN: "20801","Orange"\n+COPN: "20802","Contact"\n+COPN: "20809","SFR"\n+COPN: "20810","SFR"\n+COPN: "20811","SFR"\n+COPN: "20813","Contact"\n+COPN: "20815","Free"\n+COPN: "20820","BYTEL"\n+COPN: "20888","Contact"\n+COPN: "21201","vala"\n+COPN: "21210","MONACO"\n+COPN: "21303","M-AND"\n+COPN: "21401","voda ES"\n+COPN: "21403","Orange"\n+COPN: "21404","YOIGO"\n+COPN: "21407","Movistar"\n+COPN: "21601","TelenorH"\n+COPN: "21630","THU"\n+COPN: "21670","voda HU"\n+COPN: "21803","HT ERONET"\n+COPN: "21805","m:tel"\n+COPN: "21890","BHMobile"\n+COPN: "21901","HT HR"\n+COPN: "21902","Tele2 HR"\n+COPN: "21910","VIP"\n+COPN: "22001","Telenor"\n+COPN: "22002","ProMonte"\n+COPN: "22003","MTS"\n+COPN: "22004","TMO CG"\n+COPN: "22005","Vip SRB"\n+COPN: "22201","TIM"\n+COPN: "22210","voda IT"\n+COPN: "22288","I WIND"\n+COPN: "22299","3 ITA"\n+COPN: "22601","VF-RO"\n+COPN: "22603","COSMOTE"\n+COPN: "22605","Digi"\n+COPN: "22610","ORANGE"\n+COPN: "22801","Swisscom"\n+COPN: "22802","Sunrise"\n+COPN: "22803","Orange"\n+COPN: "22807","In&Phone"\n+COPN: "22815","OnAir"\n+COPN: "23001","TMO CZ"\n+COPN: "23002","O2 - CZ"\n+COPN: "23003","Vodafone"\n+COPN: "23101","Orange"\n+COPN: "23102","Telekom"\n+COPN: "23106","O2 - SK"\n+COPN: "23201","A1"\n+COPN: "23203","TMA"\n+COPN: "23205","3 AT"\n+COPN: "23207","telering"\n+COPN: "23210","3 AT"\n+COPN: "23212","A1"\n+COPN: "23401","UK01"\n+COPN: "23403","ATL-VOD"\n+COPN: "23407","C&W UK"\n+COPN: "23410","O2 - UK"\n+COPN: "23415","voda UK"\n+COPN: "23419","PMN"\n+COPN: "23420","3 UK"\n+COPN: "23428","Marathon"\n+COPN: "23430","EE"\n+COPN: "23431","EE"\n+COPN: "23432","EE"\n+COPN: "23433","EE"\n+COPN: "23450","JT"\n+COPN: "23455","Sure"\n+COPN: "23458","MANX"'),
@@ -4019,10 +4122,10 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
         #              ('AT+CNAOP?', 'ERROR'),
         #              ],
         # 1=ACCURATE -------------------------------------
-        'AT+CREG?': ['network registration (CS)',
+        'AT+CREG?': ['network registration (CS), =0>disable, =1>регистрация',
                      ('AT+CREG=?', '+CREG: (0-2)\nOK'),
                      ('AT+CREG', 'OK'),
-                     ('AT+CREG?', '+CREG: 0,0\nOK'),
+                     ('AT+CREG?', '+CREG: 0,0\nOK'),        # СЕТИ НЕ ЗАРЕГИСТРИРОВАНЫ???
                      ('AT+CREG=0', 'OK'),
                      ('AT+CREG?', '+CREG: 0,0\nOK'),
                      ('AT+CREG=1', 'OK'),
@@ -4088,7 +4191,7 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
                      ('AT+CPSI', 'ERROR'),
                      ('AT+CPSI?', '+CPSI: NO SERVICE,Online\nOK'),
                      ],
-        'AT+CTZU?': ['automatic time zone update',
+        'AT+CTZU?': ['automatic time zone update, 1=set AUTO, 0=disable',
                      ('AT+CTZU=?', '+CTZU: (0-1)\nOK'),
                      ('AT+CTZU', 'ERROR'),
                      ('AT+CTZU?', '+CTZU: 1\nOK'),
@@ -4215,9 +4318,7 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
     # =========================================================================
     "HARDWARE(питание, ADC, GPIO, I2C)": {
         # 0=DANGER+USELESS -------------------------------
-        # "AT+CVALARM": "[DANGER]low/high voltage alarm",
         # "AT+CMTE": "[DANGER]temperature control / shutdown",
-        # "AT+CPMVT": "[DANGER]low/high voltage power off",
         # "AT+CDELTA": "[DANGER]go to recovery mode",
         # "AT+CRIIC": "[DANGER]read I2C register",
         # "AT+CWIIC": "[DANGER]write I2C register",
@@ -4296,6 +4397,9 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
                       ('AT+CFGRI?', '+CFGRI: 1,60,120\nOK'),
                       ],
         # 2=DOUBT ----------------------------------------
+        "AT+CVALARM": ["[DANGER??]low/high voltage alarm", ],
+        # "AT+CPMVT": "[DANGER???]low/high voltage power off",
+
         # 3=UNKNOWN --------------------------------------
         'AT+CADC': ['read ADC value',
                     ('AT+CADC=?', '+CADC: (0,2)\nOK'),
@@ -5075,7 +5179,7 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
                        ('AT+CGEQMIN=9', '+CME ERROR: Operation not supported'),
                        ('AT+CGEQMIN?', 'OK'),
                        ],
-        'AT+CGPADDR': ['show PDP address',
+        'AT+CGPADDR': ['show PDP address (assigned)',
                        ('AT+CGPADDR=?', '+CGPADDR: ()\nOK'),
                        ('AT+CGPADDR', 'OK'),
                        ('AT+CGPADDR?', 'ERROR'),
