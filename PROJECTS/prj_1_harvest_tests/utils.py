@@ -24,8 +24,6 @@ class Harvest:
         # попытка определить номер телефона
         "AT+CNUM",
         "AT+CRSM",
-        # "AT+CPBS=\"ON\"; +CPBR=1",  # Чтение своего номера из книги
-        # "AT+CPBS=\'ON\'; +CPBR=1",  # Чтение своего номера из книги
         "AT+CIMI",                # IMSI (для идентификации)
         # "AT+CRSM=176,28589,0,0,12",  # Чтение EF_MSISDN с SIM (прямой доступ)
 
@@ -689,6 +687,11 @@ PASSED
     ) -> str:
         """
         Отправить AT-команду на уже настроенный порт (stty raw + echo off).
+
+        # NOTE --------------------------------------------------------------------------
+        ДЛЯ ПРЯМОЙ ОТПРАВКИ по UART - достаточно
+        [timeout 5.0 cat /dev/ttyUSB2 & sleep 0.3; printf 'AT+CPBS=?\r\n' > /dev/ttyUSB2]
+        # NOTE --------------------------------------------------------------------------
 
         ClientSerial(COM16.115200,occupied=o,isopen=True){'write': b"timeout 2 cat /dev/ttyUSB2 & sleep 0.1; printf 'AT+COPS?\\r\\n' > /dev/ttyUSB2; sleep 0.4; kill %1 2>/dev/null\r\n"}
         ClientSerial(COM16.115200,occupied=o,isopen=True)READ(
@@ -3455,7 +3458,28 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
     # ТАЙМАУТЫ
     # при отправке нескольких команд - выжидать паузы! или до результата OK! - это решит многие проблемы наложения!
 
+    # =========================================================================
+    # ИСПОЛЬЗОВАНИЕ СРАЗУ НЕССКОЛЬКО КОМАНД В ОДНОМ ЗАПРОСЕ
+    # чтение своих номеров
+    # "AT+CPBS=\"ON\"; +CPBR=1",  # Чтение своего номера из книги
+    # "AT+CPBS=\'ON\'; +CPBR=1",  # Чтение своего номера из книги
 
+    # 1. всегда в начале AT!!! можно ставить AT+param или ATI, нельзя просто AT пустой!!! (иначе будет ошибка!)
+    # все остальные просто сочетаем через +
+    # 2. ДВОЕТОЧИЕ - разделитель!!!
+    # 3. ПРОБЕЛ не важен! ни на что не влияет!!!
+    # ---- Sent utf8 encoded message: "timeout 5.0 cat /dev/ttyUSB2 & sleep 0.3; printf 'ATI;+CPBS?;+CPBR=1\\r\\n' > /dev/ttyUSB2\r\n" ----
+    # Manufacturer: INCORPORATED
+    # Model: A7682E-R
+    # Revision: A7682M6_V1.11.1
+    # IMEI1: 865286077380516
+    # IMEI2: 865286076965218
+    # +GCAP: +CGSM,+FCLASS,+DS
+    #
+    # +CPBS: "ON",0,2
+    #
+    # +CME ERROR: not found
+    # root@harvest05:~#
 
     # =========================================================================
     # УНИВЕРСАЛЬНЫЕ КОМАНДЫ
@@ -4996,24 +5020,45 @@ OK
     # =========================================================================
     # "PHONEBOOK": {
     #     # 0=DANGER+USELESS -------------------------------
-    #     # 1=ACCURATE -------------------------------------
-    #     # 2=DOUBT ----------------------------------------
-    #     # 3=UNKNOWN --------------------------------------
-    #
-    #
-    #     # "AT+CPBF": "[DANGER]find phonebook entries",
     #     # "AT+CPBW": "[DANGER]write phonebook entry",
+    #     # "AT+CPBF": "[USELESS]find phonebook entries",
+
+    #     # 1=ACCURATE -------------------------------------
+    #     'AT+CPBS': ['select phonebook memory (SM=sim/ME/DC/MC/RC/FD=sim fixdialling-phonebook/ON=MSISDN list/LD/EN)',
+    #                 # SIM ВСТАВЛЕНА
+    #                 ('AT+CPBS=?', '+CPBS: ("SM","FD","ON","AP")'),
+    #                 ('AT+CPBS?', '+CPBS: "SM",0,100'),
+    #                 ('AT+CPBS', 'OK'),
+
+    #                 ('AT+CPBS=ON', 'ERROR'),
+    #                 ('AT+CPBS="ON"', 'OK'),
+    #                 ('AT+CPBS?', '+CPBS: "SM",0,100'),    # НЕСМОТРЯ НА ТО ЧТО БЫЛ ЗАПРОС НА УСТАНОВКУ НОВОГО ЗНАЧЕНИЯ и он прошел ОК - все равно значение по факту не изменилось!!!
+    #                 ('AT+CPBS="AP"', 'OK'),
+    #                 ('AT+CPBS?', '+CPBS: "+CPBS: "AP",0,0'),
+    #                 ('AT+CPBS="FD"', 'OK'),
+    #                 ('AT+CPBS?', '+CPBS: "+CPBS: "FD",0,20'),
     #
-    #     'AT+CPBS': ['select phonebook memory (SM/ME/DC/MC/RC/FD/ON/LD/EN)',
+    #                 # SIM НЕ ВСТАВЛЕНА
     #                 ('AT+CPBS=?', 'ERROR'),
     #                 ('AT+CPBS', 'ERROR'),
     #                 ('AT+CPBS?', 'ERROR'),
     #                 ],
     #     'AT+CPBR': ['read phonebook entries',
+    #               1=SIM СТОИТ!!!
+    #                 ('AT+CPBR=?', '+CPBR: (1-100),20,28'),
+    #                 ('AT+CPBR', 'ERROR'),
+    #                 ('AT+CPBR?', '+CME ERROR: unknown error'),
+    #                   НЕТИПОВОЕ ИСПОЛЬЗОВАНИЕ - запрос индекса -> выдаст результат чтения с этого индекса!
+    #                 ('AT+CPBR=0', '+CME ERROR: invalid index'),
+    #                 ('AT+CPBR=1', '+CME ERROR: not found'),
+    #
+    #                  2=SIM не вставлена!
     #                 ('AT+CPBR=?', '+CME ERROR: unknown error'),
     #                 ('AT+CPBR', 'ERROR'),
     #                 ('AT+CPBR?', '+CME ERROR: unknown error'),
     #                 ],
+    #     # 2=DOUBT ----------------------------------------
+    #     # 3=UNKNOWN --------------------------------------
     # },
 
     # =========================================================================
