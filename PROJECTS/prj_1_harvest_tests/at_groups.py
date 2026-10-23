@@ -4,9 +4,10 @@
 1. настроить порт - требуется каждый раз после перезагрузки
 
 2. отправить команду
-
-
+timeout 5.0 cat /dev/ttyUSB2 & sleep 0.3; printf 'AT+CLBS=?\r\n' > /dev/ttyUSB2
 """
+# ======================================================================================================================
+import pytest
 
 
 # ======================================================================================================================
@@ -138,15 +139,12 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
     # AT+CGACT=1,1 — активирует GPRS-соединение и разрешает входящие подключения.
     # AT+CGDCONT=1,"ip","адрес_APN — задаёт тип соединения (например, IP) и адрес точки доступа (APN). Пример: AT+CGDCONT=1,"ip","airtelgprs.com".
 
-
-
-
     # =========================================================================
     # =========================================================================
     # =========================================================================
     # GROUPS
     # =========================================================================
-    "1=MODEM": {
+    "-1=MODEM": {
         # 0=DANGER+USELESS -------------------------------
         # "AT+CPOF": "[DANGER]power off module",
 
@@ -342,8 +340,8 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
             ],
     },
 
-    # ==========================================================================
-    "2=SIM": {
+    # =========================================================================
+    "-2=SIM": {
         # 0=DANGER+USELESS -------------------------------
         # "AT+CPWD": "[DANGER]смена пароля (PIN/PUK)",
 
@@ -438,7 +436,7 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
     },
 
     # =========================================================================
-    "3=V25TER_BASIC(V.25TER БАЗОВЫЕ (управление модемом))": {
+    "-3=V25TER_BASIC(V.25TER БАЗОВЫЕ (управление модемом))": {
         # 0=DANGER+USELESS -------------------------------
         # "ATE": "[???DANGER]echo on/off, ATE0->off, ATE1->on", # нетиповая команда!!!
 
@@ -553,7 +551,7 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
     },
 
     # =========================================================================
-    "4=STATUS_CONTROL(управление состоянием)": {
+    "-4=STATUS_CONTROL(управление состоянием)": {
         # 0=DANGER+USELESS -------------------------------
         # "AT+CPOF": "[DANGER]power off",
         # "AT+CRESET": "[DANGER]reset",
@@ -673,7 +671,7 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
     },
 
     # =========================================================================
-    "5=NETWORK(СЕТЬ / РЕГИСТРАЦИЯ / ОПЕРАТОР)": {
+    "-5=NETWORK(СЕТЬ / РЕГИСТРАЦИЯ / ОПЕРАТОР)": {
         # 0=DANGER+USELESS -------------------------------
         # 'AT+COPS': ["[DANGER]operator selection (может долго висеть на =?)",
         #     ("AT+COPS?", "+COPS: 0,2,\"25020\",7\nOK"),
@@ -905,6 +903,31 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
                     ('AT+CESQ?', '+CME ERROR: unknown error'),
                     ('AT+CESQ=9', '+CME ERROR: unknown error'),
                     ('AT+CESQ?', '+CME ERROR: unknown error'),
+
+                    # еще вариант с симкой!!!
+                    ('AT+CESQ=?', '+CESQ: (0-63,99),(0-7,99),(0-96,255),(0-49,255),(0-34,255),(0-97,255)\nOK'),
+                    ('AT+CESQ', '+CESQ: 47,0,255,255,255,255\nOK'),
+                    ('AT+CESQ?', '+CME ERROR: 100'),
+                    ('AT+CESQ=0', '+CME ERROR: 100'),
+                    ('AT+CESQ?', '+CME ERROR: 100'),
+                    ('AT+CESQ=1', '+CME ERROR: 100'),
+                    ('AT+CESQ?', '+CME ERROR: 100'),
+                    ('AT+CESQ=2', '+CME ERROR: 100'),
+                    ('AT+CESQ?', '+CME ERROR: 100'),
+                    ('AT+CESQ=3', '+CME ERROR: 100'),
+                    ('AT+CESQ?', '+CME ERROR: 100'),
+                    ('AT+CESQ=4', '+CME ERROR: 100'),
+                    ('AT+CESQ?', '+CME ERROR: 100'),
+                    ('AT+CESQ=5', '+CME ERROR: 100'),
+                    ('AT+CESQ?', '+CME ERROR: 100'),
+                    ('AT+CESQ=6', '+CME ERROR: 100'),
+                    ('AT+CESQ?', '+CME ERROR: 100'),
+                    ('AT+CESQ=7', '+CME ERROR: 100'),
+                    ('AT+CESQ?', '+CME ERROR: 100'),
+                    ('AT+CESQ=8', '+CME ERROR: 100'),
+                    ('AT+CESQ?', '+CME ERROR: 100'),
+                    ('AT+CESQ=9', '+CME ERROR: 100'),
+                    ('AT+CESQ?', '+CME ERROR: 100'),
                     ],
         'AT+CPOL?': ['preferred operator list',
                     # без симки
@@ -950,7 +973,7 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
                     ],
         # 2=DOUBT ----------------------------------------
         'AT+CIREG': ['IMS registration (может быть не поддержано)',
-                     # без симки и с
+                     # без симки
                      ('AT+CIREG=?', '+CIREG: (0-3)\nOK'),
                      ('AT+CIREG', '+CME ERROR: Operation not supported'),
                      ('AT+CIREG?', '+CME ERROR: Operation not supported'),
@@ -962,6 +985,19 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
                      ('AT+CIREG?', '+CME ERROR: Operation not supported'),
                      ('AT+CIREG=3', '+CME ERROR: Operation not supported'),
                      ('AT+CIREG?', '+CME ERROR: Operation not supported'),
+
+                     # c симкой - на одном и томже блоке дает то один вариант то другой!!!
+                     ('AT+CIREG=?', '+CIREG: (0-3)\nOK'),
+                     ('AT+CIREG', '+CME ERROR: 4'),
+                     ('AT+CIREG?', '+CME ERROR: 4'),
+                     ('AT+CIREG=0', '+CME ERROR: 4'),
+                     ('AT+CIREG?', '+CME ERROR: 4'),
+                     ('AT+CIREG=1', '+CME ERROR: 4'),
+                     ('AT+CIREG?', '+CME ERROR: 4'),
+                     ('AT+CIREG=2', '+CME ERROR: 4'),
+                     ('AT+CIREG?', '+CME ERROR: 4'),
+                     ('AT+CIREG=3', '+CME ERROR: 4'),
+                     ('AT+CIREG?', '+CME ERROR: 4'),
                      ],
         # 3=UNKNOWN --------------------------------------
         'AT+CSMOD': ['show network system mode',
@@ -977,10 +1013,9 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
                     ('AT+CIMS', 'ERROR'),
                     ('AT+CIMS?', 'ERROR'),
                     ],
-        'AT+CLBS': ['base station location (LBS)',
-                    (
-                        'AT+CLBS=?',
-                        '+CLBS: (1,2,3,4,9),(1-15),(-180.000000-180.000000),(-90.000000-90.000000),(0-2)\nOK'),
+        '-AT+CLBS?': ['[NOTE=wait longer!!! нужно около 10сек!!!]base station location (LBS)',
+                    # no sim
+                    ('AT+CLBS=?', '+CLBS: (1,2,3,4,9),(1-15),(-180.000000-180.000000),(-90.000000-90.000000),(0-2)\nOK'),
                     ('AT+CLBS', 'ERROR'),
                     ('AT+CLBS?', 'ERROR'),
                     ('AT+CLBS=0', 'ERROR'),
@@ -1003,8 +1038,16 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
                     ('AT+CLBS?', 'ERROR'),
                     ('AT+CLBS=9', 'ERROR'),
                     ('AT+CLBS?', 'ERROR'),
-                    ],
+
+                    # sim
+                     ('AT+CLBS=?',
+                      '+CLBS: (1,2,3,4,9),(1-15),(-180.000000-180.000000),(-90.000000-90.000000),(0-2)\nOK'),
+                     ('AT+CLBS', 'ERROR'),
+                     ('AT+CLBS?', '+CSQ: 23,99\nOK\n+CNSMOD: 1,8\nOK'), #
+
+                     ],
         'AT+CLBSCFG': ['LBS configure',
+                       # без симки и с
                        ('AT+CLBSCFG=?', '+CLBSCFG: (0,1),(1-3),"ParamValue"\nOK'),
                        ('AT+CLBSCFG', 'ERROR'),
                        ('AT+CLBSCFG?', 'ERROR'),
@@ -1020,6 +1063,7 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
                        ('AT+CLBSCFG?', 'ERROR'),
                        ],
         'AT+CASSISTLOC': ['base station location for LTE/CDMA',
+                          # без симки и с
                           ('AT+CASSISTLOC=?', 'ERROR'),
                           ('AT+CASSISTLOC', 'ERROR'),
                           ('AT+CASSISTLOC?', 'ERROR'),
@@ -1027,7 +1071,7 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
     },
 
     # =========================================================================
-    "HARDWARE(питание, ADC, GPIO, I2C)": {
+    "-HARDWARE(питание, ADC, GPIO, I2C)": {
         # 0=DANGER+USELESS -------------------------------
         # "AT+CMTE": "[DANGER]temperature control / shutdown",
         # "AT+CDELTA": "[DANGER]go to recovery mode",
@@ -1039,6 +1083,33 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
         # "AT+CSCLK": "[DANGER]UART sleep",
         # "AT+CMUX": "[DANGER]UART multiplexer # DANGER",
 
+        # "AT+CVALARM": ["[DANGER??]low/high voltage alarm",
+        #                # с сим
+        #                ('AT+CVALARM=?', '+CVALARM: (0,1),(3300-4000),(4001-4300)\nOK'),
+        #                ('AT+CVALARM', 'ERROR'),
+        #                ('AT+CVALARM?', '+CVALARM: 0,3300,4300\nOK'),
+        #                ('AT+CVALARM=0', 'OK'),
+        #                ('AT+CVALARM?', '+CVALARM: 0,3300,4300\nOK'),
+        #                ('AT+CVALARM=1', 'OK'),
+        #                ('AT+CVALARM?', '+CVALARM: 1,3300,4300\nOK'),
+        #                ('AT+CVALARM=3300', 'ERROR'),
+        #                ('AT+CVALARM?', '+CVALARM: 1,3300,4300\nOK'),
+        #                ('AT+CVALARM=3301', 'ERROR'),
+        #                ('AT+CVALARM?', '+CVALARM: 1,3300,4300\nOK'),
+        #                ('AT+CVALARM=3302', 'ERROR'),
+        #                ('AT+CVALARM?', '+CVALARM: 1,3300,4300\nOK'),
+        #                ('AT+CVALARM=3303', 'ERROR'),
+        #                ('AT+CVALARM?', '+CVALARM: 1,3300,4300\nOK'),
+        #                ('AT+CVALARM=3304', 'ERROR'),
+        #                ('AT+CVALARM?', '+CVALARM: 1,3300,4300\nOK'),
+        #                ('AT+CVALARM=3305', 'ERROR'),
+        #                ('AT+CVALARM?', '+CVALARM: 1,3300,4300\nOK'),
+        #                ('AT+CVALARM=3306', 'ERROR'),
+        #                ('AT+CVALARM?', '+CVALARM: 1,3300,4300\nOK'),
+        #                ('AT+CVALARM=3307', 'ERROR'),
+        #                ('AT+CVALARM?', '+CVALARM: 1,3300,4300\nOK'),
+        #                ],
+        # "AT+CPMVT": "[DANGER???]low/high voltage power off",
         # 1=ACCURATE -------------------------------------
         'AT+CBC': ['battery/voltage',
                    ('AT+CBC=?', 'ERROR'),
@@ -1051,6 +1122,7 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
                         ('AT+CPMUTEMP?', 'ERROR'),
                         ],
         'AT+CVAUXS?': ['state of VREG_AUX1 pin',
+                       # без симки и с
                        ('AT+CVAUXS=?', '+CVAUXS: (0,1)\nOK'),
                        ('AT+CVAUXS', 'ERROR'),
                        ('AT+CVAUXS?', '+CVAUXS: 1\nOK'),
@@ -1060,6 +1132,7 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
                        ('AT+CVAUXS?', '+CVAUXS: 1\nOK'),
                        ],
         'AT+CVAUXV?': ['voltage of VREG_AUX1 pin',
+                       # без симки и с
                        ('AT+CVAUXV=?', '+CVAUXV: (2500,2600,2700,2800,2850,2900,3000,3100,3300)\nOK'),
                        ('AT+CVAUXV', 'ERROR'),
                        ('AT+CVAUXV?', '+CVAUXV: 3000\nOK'),
@@ -1082,7 +1155,8 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
                        ('AT+CVAUXV=3300', 'OK'),
                        ('AT+CVAUXV?', '+CVAUXV: 3300\nOK'),
                        ],
-        'AT+CFGRI?': ['RI pin on URC',
+        '-AT+CFGRI?': ['RI pin on URC',
+                      # без симки и с
                       ('AT+CFGRI=?', '+CFGRI: (0-1),(10-6000),(20-6000)\nOK'),
                       ('AT+CFGRI', 'OK'),
                       ('AT+CFGRI?', '+CFGRI: 0,60,120\nOK'),
@@ -1108,11 +1182,9 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
                       ('AT+CFGRI?', '+CFGRI: 1,60,120\nOK'),
                       ],
         # 2=DOUBT ----------------------------------------
-        "AT+CVALARM": ["[DANGER??]low/high voltage alarm", ],
-        # "AT+CPMVT": "[DANGER???]low/high voltage power off",
-
         # 3=UNKNOWN --------------------------------------
         'AT+CADC': ['read ADC value',
+                    # без симки и с
                     ('AT+CADC=?', '+CADC: (0,2)\nOK'),
                     ('AT+CADC', 'ERROR'),
                     ('AT+CADC?', 'ERROR'),
@@ -1122,11 +1194,13 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
                     ('AT+CADC?', 'ERROR'),
                     ],
         'AT+CADC2': ['read ADC2 value',
+                     # без симки и с
                      ('AT+CADC2=?', 'ERROR'),
                      ('AT+CADC2', 'ERROR'),
                      ('AT+CADC2?', 'ERROR'),
                      ],
         'AT+CGGETV': ['GPIO get value',
+                      # без симки и с
                       ('AT+CGGETV=?', '+CGGETV: (1,2,3,4,5,6)\nOK'),
                       ('AT+CGGETV', 'ERROR'),
                       ('AT+CGGETV?', '+CME ERROR: Operation not supported'),
@@ -1144,6 +1218,7 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
                       ('AT+CGGETV?', '+CME ERROR: Operation not supported'),
                       ],
         'AT+CGISR': ['GPIO interrupt trigger',
+                     # без симки и с
                      ('AT+CGISR=?', 'ERROR'),
                      ('AT+CGISR', 'ERROR'),
                      ('AT+CGISR?', 'ERROR'),
@@ -1751,7 +1826,7 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
     # =========================================================================
     # 9. GPRS / PDP
     # =========================================================================
-    "GPRS/PDP": {
+    "-GPRS/PDP": {
         # 0=DANGER+USELESS -------------------------------
         # 1=ACCURATE -------------------------------------
         # 2=DOUBT ----------------------------------------
@@ -1764,6 +1839,7 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
         # "AT+CGDATA": "[DANGER]enter data state (PPP)",
 
         'AT+CGREG': ['GPRS registration status',
+                     # no sim
                      ('AT+CGREG=?', '+CGREG: (0-2)\nOK'),
                      ('AT+CGREG', 'OK'),
                      ('AT+CGREG?', '+CGREG: 0,0\nOK'),
@@ -1773,8 +1849,20 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
                      ('AT+CGREG?', '+CGREG: 1,0\nOK'),
                      ('AT+CGREG=2', 'OK'),
                      ('AT+CGREG?', '+CGREG: 2,0,"0000","00000000"\nOK'),
+
+                    # sim
+                     ('AT+CGREG=?', '+CGREG: (0-2)\nOK'),
+                     ('AT+CGREG', 'OK'),
+                     ('AT+CGREG?', '+CGREG: 0,1\nOK'),
+                     ('AT+CGREG=0', 'OK'),
+                     ('AT+CGREG?', '+CGREG: 0,1\nOK'),
+                     ('AT+CGREG=1', 'OK'),
+                     ('AT+CGREG?', '+CGREG: 1,1\nOK'),
+                     ('AT+CGREG=2', 'OK'),
+                     ('AT+CGREG?', '+CGREG: 2,1,"6835","00002860"\nOK'),
                      ],
         'AT+CGATT': ['packet domain attach/detach',
+                     # без сим
                      ('AT+CGATT=?', '+CGATT: (0-1)\nOK'),
                      ('AT+CGATT', 'ERROR'),
                      ('AT+CGATT?', '+CGATT: 0\nOK'),
@@ -1782,6 +1870,15 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
                      ('AT+CGATT?', '+CGATT: 0\nOK'),
                      ('AT+CGATT=1', '+CME ERROR: operation not allowed'),
                      ('AT+CGATT?', '+CGATT: 0\nOK'),
+
+                     # с сим
+                     ('AT+CGATT=?', '+CGATT: (0-1)\nOK'),
+                     ('AT+CGATT', 'ERROR'),
+                     ('AT+CGATT?', '+CGATT: 1\nOK'),
+                     ('AT+CGATT=0', '+CGEV: ME DETACH\nOK'),
+                     ('AT+CGATT?', '+CGREG: 0\n+CEREG: 0\n+CGATT: 0\nOK'),
+                     ('AT+CGATT=1', '+CGREG: 2\n+CGREG: 0'),
+                     ('AT+CGATT?', '+CGREG: 1,6835,00002860\nOK\n+CGATT: 1\nOK'),
                      ],
         'AT+CGTFT': ['traffic flow template',
                      ('AT+CGTFT=?',
@@ -1791,6 +1888,32 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
                      ('AT+CGTFT=0', '+CME ERROR: Incorrect parameters'),
                      ('AT+CGTFT?', '+CGTFT:\nOK'),
                      ('AT+CGTFT=1', '+CME ERROR: Operation not supported'),
+                     ('AT+CGTFT?', '+CGTFT:\nOK'),
+                     ('AT+CGTFT=2', '+CME ERROR: Operation not supported'),
+                     ('AT+CGTFT?', '+CGTFT:\nOK'),
+                     ('AT+CGTFT=3', '+CME ERROR: Operation not supported'),
+                     ('AT+CGTFT?', '+CGTFT:\nOK'),
+                     ('AT+CGTFT=4', '+CME ERROR: Operation not supported'),
+                     ('AT+CGTFT?', '+CGTFT:\nOK'),
+                     ('AT+CGTFT=5', '+CME ERROR: Operation not supported'),
+                     ('AT+CGTFT?', '+CGTFT:\nOK'),
+                     ('AT+CGTFT=6', '+CME ERROR: Operation not supported'),
+                     ('AT+CGTFT?', '+CGTFT:\nOK'),
+                     ('AT+CGTFT=7', '+CME ERROR: Operation not supported'),
+                     ('AT+CGTFT?', '+CGTFT:\nOK'),
+                     ('AT+CGTFT=8', '+CME ERROR: Operation not supported'),
+                     ('AT+CGTFT?', '+CGTFT:\nOK'),
+                     ('AT+CGTFT=9', '+CME ERROR: Operation not supported'),
+                     ('AT+CGTFT?', '+CGTFT:\nOK'),
+
+                    # с сим
+                     ('AT+CGTFT=?',
+                      '+CGTFT: "IP",(1-15),(0-255),,(0-255),(0-65535.0-65535),(0-65535.0-65535),(0-FFFFFFFF),(0-255.0-255),(0-FFFFF)\n+CGTFT: "IPV6",(1-15),(0-255),,(0-255),(0-65535.0-65535),(0-65535.0-65535),(0-FFFFFFFF),(0-255.0-255),(0-FFFFF)\n+CGTFT: "IPV4V6",(1-15),(0-255),,(0-255),(0-65535.0-65535),(0-65535.0-65535),(0-FFFFFFFF),(0-255.0-255),(0-FFFFF)\nOK'),
+                     ('AT+CGTFT', 'OK'),
+                     ('AT+CGTFT?', '+CGTFT:\nOK'),
+                     ('AT+CGTFT=0', '+CME ERROR: Incorrect parameters'),
+                     ('AT+CGTFT?', '+CGTFT:\nOK'),
+                     ('AT+CGTFT=1', 'OK'),
                      ('AT+CGTFT?', '+CGTFT:\nOK'),
                      ('AT+CGTFT=2', '+CME ERROR: Operation not supported'),
                      ('AT+CGTFT?', '+CGTFT:\nOK'),
@@ -1833,8 +1956,34 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
                       ('AT+CGQREQ?', 'OK'),
                       ('AT+CGQREQ=9', '+CME ERROR: Operation not supported'),
                       ('AT+CGQREQ?', 'OK'),
+
+                       #с сим
+                      ('AT+CGQREQ=?', '+CGQREQ: "IP",(0-3),(0-4),(0-5),(0-9),(0-18,31)\nOK'),
+                      ('AT+CGQREQ', 'OK'),
+                      ('AT+CGQREQ?', '+CGQREQ: 1,0,0,0,0,0\nOK'),
+                      ('AT+CGQREQ=0', '+CME ERROR: Incorrect parameters'),
+                      ('AT+CGQREQ?', '+CGQREQ: 1,0,0,0,0,0\nOK'),
+                      ('AT+CGQREQ=1', 'OK'),
+                      ('AT+CGQREQ?', '+CGQREQ: 1,0,0,0,0,0\nOK'),
+                      ('AT+CGQREQ=2', '+CME ERROR: Operation not supported'),
+                      ('AT+CGQREQ?', '+CGQREQ: 1,0,0,0,0,0\nOK'),
+                      ('AT+CGQREQ=3', '+CME ERROR: Operation not supported'),
+                      ('AT+CGQREQ?', '+CGQREQ: 1,0,0,0,0,0\nOK'),
+                      ('AT+CGQREQ=4', '+CME ERROR: Operation not supported'),
+                      ('AT+CGQREQ?', '+CGQREQ: 1,0,0,0,0,0\nOK'),
+                      ('AT+CGQREQ=5', '+CME ERROR: Operation not supported'),
+                      ('AT+CGQREQ?', '+CGQREQ: 1,0,0,0,0,0\nOK'),
+                      ('AT+CGQREQ=6', '+CME ERROR: Operation not supported'),
+                      ('AT+CGQREQ?', '+CGQREQ: 1,0,0,0,0,0\nOK'),
+                      ('AT+CGQREQ=7', '+CME ERROR: Operation not supported'),
+                      ('AT+CGQREQ?', '+CGQREQ: 1,0,0,0,0,0\nOK'),
+                      ('AT+CGQREQ=8', '+CME ERROR: Operation not supported'),
+                      ('AT+CGQREQ?', '+CGQREQ: 1,0,0,0,0,0\nOK'),
+                      ('AT+CGQREQ=9', '+CME ERROR: Operation not supported'),
+                      ('AT+CGQREQ?', '+CGQREQ: 1,0,0,0,0,0\nOK'),
                       ],
         'AT+CGEQREQ': ['3G QoS profile (requested)',
+                       # без сим
                        ('AT+CGEQREQ=?',
                         '+CGEQREQ: "IP",(0-4),(0-256000),(0-256000),(0-256000),(0-256000),(0-2),(0-1520),("0E0","1E1","1E2","7E3","1E3","1E4","1E5","1E6"),("0E0","5E2","1E2","5E3","4E3","1E3","1E4","1E5","1E6","6E8"),(0-3),(0-950),(0-3),(0-1),(0-1)\nOK'),
                        ('AT+CGEQREQ', 'OK'),
@@ -1859,8 +2008,35 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
                        ('AT+CGEQREQ?', 'OK'),
                        ('AT+CGEQREQ=9', '+CME ERROR: Operation not supported'),
                        ('AT+CGEQREQ?', 'OK'),
+
+                       # с сим
+                       ('AT+CGEQREQ=?',
+                        '+CGEQREQ: "IP",(0-4),(0-256000),(0-256000),(0-256000),(0-256000),(0-2),(0-1520),("0E0","1E1","1E2","7E3","1E3","1E4","1E5","1E6"),("0E0","5E2","1E2","5E3","4E3","1E3","1E4","1E5","1E6","6E8"),(0-3),(0-950),(0-3),(0-1),(0-1)\nOK'),
+                       ('AT+CGEQREQ', 'OK'),
+                       ('AT+CGEQREQ?', '+CGEQREQ: 1,4,0,0,0,0,2,0,"0E0","0E0",3,0,0,0,0\nOK'),
+                       ('AT+CGEQREQ=0', '+CME ERROR: Incorrect parameters'),
+                       ('AT+CGEQREQ?', '+CGEQREQ: 1,4,0,0,0,0,2,0,"0E0","0E0",3,0,0,0,0\nOK'),
+                       ('AT+CGEQREQ=1', 'OK'),
+                       ('AT+CGEQREQ?', '+CGEQREQ: 1,4,0,0,0,0,2,0,"0E0","0E0",0,0,0,0,0\nOK'),
+                       ('AT+CGEQREQ=2', '+CME ERROR: Operation not supported'),
+                       ('AT+CGEQREQ?', '+CGEQREQ: 1,4,0,0,0,0,2,0,"0E0","0E0",0,0,0,0,0\nOK'),
+                       ('AT+CGEQREQ=3', '+CME ERROR: Operation not supported'),
+                       ('AT+CGEQREQ?', '+CGEQREQ: 1,4,0,0,0,0,2,0,"0E0","0E0",0,0,0,0,0\nOK'),
+                       ('AT+CGEQREQ=4', '+CME ERROR: Operation not supported'),
+                       ('AT+CGEQREQ?', '+CGEQREQ: 1,4,0,0,0,0,2,0,"0E0","0E0",0,0,0,0,0\nOK'),
+                       ('AT+CGEQREQ=5', '+CME ERROR: Operation not supported'),
+                       ('AT+CGEQREQ?', '+CGEQREQ: 1,4,0,0,0,0,2,0,"0E0","0E0",0,0,0,0,0\nOK'),
+                       ('AT+CGEQREQ=6', '+CME ERROR: Operation not supported'),
+                       ('AT+CGEQREQ?', '+CGEQREQ: 1,4,0,0,0,0,2,0,"0E0","0E0",0,0,0,0,0\nOK'),
+                       ('AT+CGEQREQ=7', '+CME ERROR: Operation not supported'),
+                       ('AT+CGEQREQ?', '+CGEQREQ: 1,4,0,0,0,0,2,0,"0E0","0E0",0,0,0,0,0\nOK'),
+                       ('AT+CGEQREQ=8', '+CME ERROR: Operation not supported'),
+                       ('AT+CGEQREQ?', '+CGEQREQ: 1,4,0,0,0,0,2,0,"0E0","0E0",0,0,0,0,0\nOK'),
+                       ('AT+CGEQREQ=9', '+CME ERROR: Operation not supported'),
+                       ('AT+CGEQREQ?', '+CGEQREQ: 1,4,0,0,0,0,2,0,"0E0","0E0",0,0,0,0,0\nOK'),
                        ],
         'AT+CGQMIN': ['QoS profile (minimum acceptable)',
+                      # без сим
                       ('AT+CGQMIN=?', '+CGQMIN: "IP",(0-3),(0-4),(0-5),(0-9),(0-18,31)\nOK'),
                       ('AT+CGQMIN', 'OK'),
                       ('AT+CGQMIN?', 'OK'),
@@ -1884,8 +2060,34 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
                       ('AT+CGQMIN?', 'OK'),
                       ('AT+CGQMIN=9', '+CME ERROR: Operation not supported'),
                       ('AT+CGQMIN?', 'OK'),
+
+                      # с сим
+                      ('AT+CGQMIN=?', '+CGQMIN: "IP",(0-3),(0-4),(0-5),(0-9),(0-18,31)\nOK'),
+                      ('AT+CGQMIN', 'OK'),
+                      ('AT+CGQMIN?', '+CGQMIN: 1,3,4,5,1,1\nOK'),
+                      ('AT+CGQMIN=0', '+CME ERROR: Incorrect parameters'),
+                      ('AT+CGQMIN?', '+CGQMIN: 1,3,4,5,1,1\nOK'),
+                      ('AT+CGQMIN=1', 'OK'),
+                      ('AT+CGQMIN?', '+CGQMIN: 1,0,0,0,0,0\nOK'),
+                      ('AT+CGQMIN=2', '+CME ERROR: Operation not supported'),
+                      ('AT+CGQMIN?', '+CGQMIN: 1,0,0,0,0,0\nOK'),
+                      ('AT+CGQMIN=3', '+CME ERROR: Operation not supported'),
+                      ('AT+CGQMIN?', '+CGQMIN: 1,0,0,0,0,0\nOK'),
+                      ('AT+CGQMIN=4', '+CME ERROR: Operation not supported'),
+                      ('AT+CGQMIN?', '+CGQMIN: 1,0,0,0,0,0\nOK'),
+                      ('AT+CGQMIN=5', '+CME ERROR: Operation not supported'),
+                      ('AT+CGQMIN?', '+CGQMIN: 1,0,0,0,0,0\nOK'),
+                      ('AT+CGQMIN=6', '+CME ERROR: Operation not supported'),
+                      ('AT+CGQMIN?', '+CGQMIN: 1,0,0,0,0,0\nOK'),
+                      ('AT+CGQMIN=7', '+CME ERROR: Operation not supported'),
+                      ('AT+CGQMIN?', '+CGQMIN: 1,0,0,0,0,0\nOK'),
+                      ('AT+CGQMIN=8', '+CME ERROR: Operation not supported'),
+                      ('AT+CGQMIN?', '+CGQMIN: 1,0,0,0,0,0\nOK'),
+                      ('AT+CGQMIN=9', '+CME ERROR: Operation not supported'),
+                      ('AT+CGQMIN?', '+CGQMIN: 1,0,0,0,0,0\nOK'),
                       ],
         'AT+CGEQMIN': ['3G QoS profile (minimum acceptable)',
+                       # без сим
                        ('AT+CGEQMIN=?',
                         '+CGEQMIN: "IP",(0-4),(0-256000),(0-256000),(0-256000),(0-256000),(0-2),(0-1520),("0E0","1E1","1E2","7E3","1E3","1E4","1E5","1E6"),("0E0","5E2","1E2","5E3","4E3","1E3","1E4","1E5","1E6","6E8"),(0-3),(0-950),(0-3),(0-1),(0-1)\nOK'),
                        ('AT+CGEQMIN', 'OK'),
@@ -1910,13 +2112,48 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
                        ('AT+CGEQMIN?', 'OK'),
                        ('AT+CGEQMIN=9', '+CME ERROR: Operation not supported'),
                        ('AT+CGEQMIN?', 'OK'),
+
+                       # с сим
+                       ('AT+CGEQMIN=?',
+                        '+CGEQMIN: "IP",(0-4),(0-256000),(0-256000),(0-256000),(0-256000),(0-2),(0-1520),("0E0","1E1","1E2","7E3","1E3","1E4","1E5","1E6"),("0E0","5E2","1E2","5E3","4E3","1E3","1E4","1E5","1E6","6E8"),(0-3),(0-950),(0-3),(0-1),(0-1)\nOK'),
+                       ('AT+CGEQMIN', 'OK'),
+                       ('AT+CGEQMIN?', '+CGEQMIN: 1,4,0,0,0,0,2,0,"0E0","0E0",3,0,0,0,0\nOK'),
+                       ('AT+CGEQMIN=0', '+CME ERROR: Incorrect parameters'),
+                       ('AT+CGEQMIN?', '+CGEQMIN: 1,4,0,0,0,0,2,0,"0E0","0E0",3,0,0,0,0\nOK'),
+                       ('AT+CGEQMIN=1', 'OK'),
+                       ('AT+CGEQMIN?', '+CGEQMIN: 1,4,0,0,0,0,2,0,"0E0","0E0",0,0,0,0,0\nOK'),
+                       ('AT+CGEQMIN=2', '+CME ERROR: Operation not supported'),
+                       ('AT+CGEQMIN?', '+CGEQMIN: 1,4,0,0,0,0,2,0,"0E0","0E0",0,0,0,0,0\nOK'),
+                       ('AT+CGEQMIN=3', '+CME ERROR: Operation not supported'),
+                       ('AT+CGEQMIN?', '+CGEQMIN: 1,4,0,0,0,0,2,0,"0E0","0E0",0,0,0,0,0\nOK'),
+                       ('AT+CGEQMIN=4', '+CME ERROR: Operation not supported'),
+                       ('AT+CGEQMIN?', '+CGEQMIN: 1,4,0,0,0,0,2,0,"0E0","0E0",0,0,0,0,0\nOK'),
+                       ('AT+CGEQMIN=5', '+CME ERROR: Operation not supported'),
+                       ('AT+CGEQMIN?', '+CGEQMIN: 1,4,0,0,0,0,2,0,"0E0","0E0",0,0,0,0,0\nOK'),
+                       ('AT+CGEQMIN=6', '+CME ERROR: Operation not supported'),
+                       ('AT+CGEQMIN?', '+CGEQMIN: 1,4,0,0,0,0,2,0,"0E0","0E0",0,0,0,0,0\nOK'),
+                       ('AT+CGEQMIN=7', '+CME ERROR: Operation not supported'),
+                       ('AT+CGEQMIN?', '+CGEQMIN: 1,4,0,0,0,0,2,0,"0E0","0E0",0,0,0,0,0\nOK'),
+                       ('AT+CGEQMIN=8', '+CME ERROR: Operation not supported'),
+                       ('AT+CGEQMIN?', '+CGEQMIN: 1,4,0,0,0,0,2,0,"0E0","0E0",0,0,0,0,0\nOK'),
+                       ('AT+CGEQMIN=9', '+CME ERROR: Operation not supported'),
+                       ('AT+CGEQMIN?', '+CGEQMIN: 1,4,0,0,0,0,2,0,"0E0","0E0",0,0,0,0,0\nOK'),
                        ],
         'AT+CGPADDR': ['show PDP address (assigned)',
+                       # без симки
                        ('AT+CGPADDR=?', '+CGPADDR: ()\nOK'),
                        ('AT+CGPADDR', 'OK'),
                        ('AT+CGPADDR?', 'ERROR'),
+
+                       # с сим
+                       ('AT+CGPADDR=?', '+CGPADDR: (1)\nOK'),
+                       ('AT+CGPADDR', '+CGPADDR: 1,0.0.0.0\nOK'),
+                       ('AT+CGPADDR?', 'ERROR'),
+                       ('AT+CGPADDR=1', '+CGPADDR: 1,0.0.0.0\nOK'),
+                       ('AT+CGPADDR?', 'ERROR'),
                        ],
         'AT+CGCLASS': ['GPRS mobile station class',
+                       # без симки и с
                        ('AT+CGCLASS=?', '+CGCLASS: ("A")\nOK'),
                        ('AT+CGCLASS', 'OK'),
                        ('AT+CGCLASS?', '+CGCLASS: "A"\nOK'),
@@ -1924,6 +2161,7 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
                        ('AT+CGCLASS?', '+CGCLASS: "A"\nOK'),
                        ],
         'AT+CGEREP': ['GPRS event reporting',
+                      # без симки и с
                       ('AT+CGEREP=?', '+CGEREP: (0-2),(0-1)\nOK'),
                       ('AT+CGEREP', 'OK'),
                       ('AT+CGEREP?', '+CGEREP: 2,0\nOK'),
@@ -1935,17 +2173,45 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
                       ('AT+CGEREP?', '+CGEREP: 2,0\nOK'),
                       ],
         'AT+CGAUTH': ['PDP-IP authentication (PAP/CHAP)',
+                      # без симки
                       ('AT+CGAUTH=?', 'ERROR'),
                       ('AT+CGAUTH', 'ERROR'),
                       ('AT+CGAUTH?', 'ERROR'),
+
+                      # с симкой
+                      ('AT+CGAUTH=?', '+CGAUTH: (1-15),(0-2),50,50\nOK'),
+                      ('AT+CGAUTH', 'OK'),
+                      ('AT+CGAUTH?', '+CGAUTH: 1,0\nOK'),
+                      ('AT+CGAUTH=0', 'ERROR'),
+                      ('AT+CGAUTH?', '+CGAUTH: 1,0\nOK'),
+                      ('AT+CGAUTH=1', 'OK'),
+                      ('AT+CGAUTH?', '+CGAUTH: 1,0\nOK'),
+                      ('AT+CGAUTH=2', 'ERROR'),
+                      ('AT+CGAUTH?', '+CGAUTH: 1,0\nOK'),
+                      ('AT+CGAUTH=3', 'ERROR'),
+                      ('AT+CGAUTH?', '+CGAUTH: 1,0\nOK'),
+                      ('AT+CGAUTH=4', 'ERROR'),
+                      ('AT+CGAUTH?', '+CGAUTH: 1,0\nOK'),
+                      ('AT+CGAUTH=5', 'ERROR'),
+                      ('AT+CGAUTH?', '+CGAUTH: 1,0\nOK'),
+                      ('AT+CGAUTH=6', 'ERROR'),
+                      ('AT+CGAUTH?', '+CGAUTH: 1,0\nOK'),
+                      ('AT+CGAUTH=7', 'ERROR'),
+                      ('AT+CGAUTH?', '+CGAUTH: 1,0\nOK'),
+                      ('AT+CGAUTH=8', 'ERROR'),
+                      ('AT+CGAUTH?', '+CGAUTH: 1,0\nOK'),
+                      ('AT+CGAUTH=9', 'ERROR'),
+                      ('AT+CGAUTH?', '+CGAUTH: 1,0\nOK'),
                       ],
         'AT+CGCONTRDP': ['PDP context dynamic parameters',
+                         # без симки и с
                          ('AT+CGCONTRDP=?', 'OK'),
                          ('AT+CGCONTRDP', 'OK'),
                          ('AT+CGCONTRDP?',
                           '+CGCONTRDP: (<p_cid>), (<bearer_id>),(<apn>),(<source_addr and subnet_mask>),(<gw_addr>), (<DNS_prim_addr>), (<DNS_sec_addr>), (<P-CSCF_prim_addr>), (<P-CSCF_sec_addr>),(<IM_CN_Signalling_Flag>)r\nOK'),
                          ],
         'AT+CDNSSRV': ['DNS server IP',
+                       # без симки и с
                        ('AT+CDNSSRV=?', 'ERROR'),
                        ('AT+CDNSSRV', 'ERROR'),
                        ('AT+CDNSSRV?', 'ERROR'),
@@ -2033,7 +2299,7 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
     # =========================================================================
     # 13. INTERNET SERVICE (TCP/IP стек модуля)
     # =========================================================================
-    "INTERNET_SERVICE": {
+    "-INTERNET_SERVICE": {
         # 0=DANGER+USELESS -------------------------------
         # "AT+CSOCKSETPN": ["[DANGER]set active PDP context profile",
         #                 ('AT+CSOCKSETPN=?', '+CSOCKSETPN: 1,(1,6)'),
@@ -2047,6 +2313,7 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
 
         # 1=ACCURATE -------------------------------------
         'AT+CTCPKA?': ['TCP heartbeat',
+                       # no +sim
                        ('AT+CTCPKA=?', 'OK'),
                        ('AT+CTCPKA', 'ERROR'),
                        ('AT+CTCPKA?', '+CTCPKA: 0,120,10,10\nOK'),
@@ -2054,47 +2321,56 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
         # 2=DOUBT ----------------------------------------
         # 3=UNKNOWN --------------------------------------
         'AT+CIPDNSSET': ['DNS query parameters',
+                         # no +sim
                          ('AT+CIPDNSSET=?', 'ERROR'),
                          ('AT+CIPDNSSET', 'ERROR'),
                          ('AT+CIPDNSSET?', 'ERROR'),
                          ],
         'AT+CDNSGIP': ['query IP by domain name',
+                       # no +sim
                        ('AT+CDNSGIP=?', 'OK'),
                        ('AT+CDNSGIP', 'ERROR'),
                        ('AT+CDNSGIP?', 'ERROR'),
                        ],
         'AT+CDNSGHNAME': ['query domain name by IP',
+                          # no +sim
                           ('AT+CDNSGHNAME=?', 'ERROR'),
                           ('AT+CDNSGHNAME', 'ERROR'),
                           ('AT+CDNSGHNAME?', 'ERROR'),
                           ],
         'AT+CTCPFIN': ['TCP FIN config',
+                       # no +sim
                        ('AT+CTCPFIN=?', 'ERROR'),
                        ('AT+CTCPFIN', 'ERROR'),
                        ('AT+CTCPFIN?', 'ERROR'),
                        ],
 
         'AT+CTEUTP': ['unknown TCP packet echo',
+                      # no +sim
                       ('AT+CTEUTP=?', 'ERROR'),
                       ('AT+CTEUTP', 'ERROR'),
                       ('AT+CTEUTP?', 'ERROR'),
                       ],
         'AT+CUPURE': ['UDP port unreachable ICMP echo=везде Error даже с ',
+                      # no +sim
                       ('AT+CUPURE=?', 'ERROR'),
                       ('AT+CUPURE', 'ERROR'),
                       ('AT+CUPURE?', 'ERROR'),
                       ],
         'AT+CINICMPALLOW': ['ICMP filter',
+                            # no +sim
                             ('AT+CINICMPALLOW=?', 'ERROR'),
                             ('AT+CINICMPALLOW', 'ERROR'),
                             ('AT+CINICMPALLOW?', 'ERROR'),
                             ],
         'AT+CDNSSRV': ['DNS server IP',
+                       # no +sim
                        ('AT+CDNSSRV=?', 'ERROR'),
                        ('AT+CDNSSRV', 'ERROR'),
                        ('AT+CDNSSRV?', 'ERROR'),
                        ],
         'AT+CHTPSERV': ['HTP server info',
+                        # no +sim
                         ('AT+CHTPSERV=?',
                          '+CHTPSERV: "ADD","HOST",(1-65535),(0-1)[,"PROXY",(1-65535)]\n+CHTPSERV: "DEL",(0-15)\nOK'),
                         ('AT+CHTPSERV', 'ERROR'),
@@ -2143,7 +2419,7 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
     # =========================================================================
     # 15. GPS / GNSS
     # =========================================================================
-    "GPS_GNSS": {
+    "GPS_GNSS=ВСЕ КОМАНДЫ ИДУТ ERROR!!! даже с симкой!!!": {
         # 0=DANGER+USELESS -------------------------------
         # "AT+CGPSDEL": "[DANGER]delete GPS info",
         # "AT+CGPSXD": "[DANGER]download XTRA file",
@@ -2151,6 +2427,17 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
         # 1=ACCURATE -------------------------------------
         # 2=DOUBT ----------------------------------------
         # 3=UNKNOWN --------------------------------------
+
+        'AT+CGNSSPWR': ['pwr for gnss module=не у всех есть! harvester-НЕТ! ',
+                    # HARVESTER - ВСЕ ERROR!!!
+
+                    # NAVIA
+                    ('AT+CGNSSPWR=?', '+CGNSSPWR: (0,1),(0,1),(0,1)'),
+                    ('AT+CGNSSPWR', 'ERROR'),
+                    ('AT+CGNSSPWR?', '+CGNSSPWR: 1,0,1'),
+
+                    ('AT+CGNSSPWR=1', 'OK\n+CGNSSPWR: READY!'),     # выдает через паузу!!!
+                    ],
         'AT+CGPS': ['start/stop GPS session',
                     # ИЗ ДОКУМЕНТАЦИИ -----------------
                     # ('AT+CGPS=?', '+CGPSINFO: (0-255)'),
@@ -2161,10 +2448,15 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
                     # ('AT+CGPS=1', 'OK'),    # enable
                     # ('AT+CGPS=1,1', 'OK'),    # enable
 
-                    # РЕАЛЬНО -------------------------
+                    # РЕАЛЬНО harvester+navia -------------------------
                     ('AT+CGPS=?', 'ERROR'),
                     ('AT+CGPS', 'ERROR'),
                     ('AT+CGPS?', 'ERROR'),
+
+                    ('AT+CGPS=0', 'ERROR'),
+                    ('AT+CGPS=1', 'ERROR'),
+                    # РЕАЛЬНО  -------------------------
+
                     ],
         'AT+CGPSINFO': ['get GPS fixed position',
                         # ИЗ ДОКУМЕНТАЦИИ -----------------
@@ -2173,11 +2465,31 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
                         # ('AT+CGPSINFO?', '+CGPSINFO: 0'),
 
                         # РЕАЛЬНО -------------------------
+                        # harvester
                         ('AT+CGPSINFO=?', 'ERROR'),
                         ('AT+CGPSINFO', 'ERROR'),
                         ('AT+CGPSINFO?', 'ERROR'),
-                        ],
 
+                        # navia
+                        ('AT+CGPSINFO=?', '+CGPSINFO: (0-255)'),
+                        ('AT+CGPSINFO', '+CGPSINFO: ,,,,,,,,'),
+                        ('AT+CGPSINFO?', '+CGPSINFO: 0'),
+
+                        ('AT+CGPSINFO=6', 'OK'),
+                        ('AT+CGPSINFO?', '+CGPSINFO: 6'),
+                        ('AT+CGPSINFO', '+CGPSINFO: ,,,,,,,,'),
+                        ],
+        'AT+CGNSSINFO': ['GNSS fixed position',
+                         # harvester noSim
+                         ('AT+CGNSSINFO=?', 'ERROR'),
+                         ('AT+CGNSSINFO', 'ERROR'),
+                         ('AT+CGNSSINFO?', 'ERROR'),
+
+                         # harvester noSim
+                         ('AT+CGNSSINFO=?', '+CGNSSINFO: (0-255)'),
+                         ('AT+CGNSSINFO', '+CGNSSINFO: ,,,,,,,,'),
+                         ('AT+CGNSSINFO?', '+CGNSSINFO: 0'),
+                         ],
         # control --------------
         'AT+CGPSCOLD': ['cold start GPS',
                         ('AT+CGPSCOLD=?', 'ERROR'),
@@ -2198,87 +2510,115 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
                        # AT+CGPSURL?
                        # +CGPSURL: ”123.123.123.123:8888”
 
-                       # РЕАЛЬНО ---------------
+                       # РЕАЛЬНО harvester+navia!!! тоесть даже в navia ее нет!!!---------------
                        ('AT+CGPSURL=?', 'ERROR'),
                        ('AT+CGPSURL', 'ERROR'),
                        ('AT+CGPSURL?', 'ERROR'),
                        ],
         'AT+CGPSSSL': ['AGPS transport security',
+                       # РЕАЛЬНО harvester+navia!!!---------------
                        ('AT+CGPSSSL=?', 'ERROR'),
                        ('AT+CGPSSSL', 'ERROR'),
                        ('AT+CGPSSSL?', 'ERROR'),
                        ],
         'AT+CGPSAUTO': ['auto-start GPS',
+                        # harvester
                         ('AT+CGPSAUTO=?', 'ERROR'),
                         ('AT+CGPSAUTO', 'ERROR'),
                         ('AT+CGPSAUTO?', 'ERROR'),
+
+                        # navia
+                        ('AT+CGPSAUTO=?', '+CGPSAUTO: (0,1)'),
+                        ('AT+CGPSAUTO', 'OK'),
+                        ('AT+CGPSAUTO?', '+CGPSAUTO: 0'),
+                        ('AT+CGPSAUTO=0', 'OK'),
+                        ('AT+CGPSAUTO?', '+CGPSAUTO: 0'),
+                        ('AT+CGPSAUTO=1', 'OK'),
+                        ('AT+CGPSAUTO?', '+CGPSAUTO: 1'),
                         ],
 
         'AT+CGPSNMEA': ['NMEA sentence type',
+                        # РЕАЛЬНО harvester+navia!!!---------------
                         ('AT+CGPSNMEA=?', 'ERROR'),
                         ('AT+CGPSNMEA', 'ERROR'),
                         ('AT+CGPSNMEA?', 'ERROR'),
                         ],
         'AT+CGPSNEMARATE': ['NMEA output rate',
-                            ('AT+CGPSNEMARATE=?', 'ERROR'),
-                            ('AT+CGPSNEMARATE', 'ERROR'),
-                            ('AT+CGPSNEMARATE?', 'ERROR'),
-                            ],
+                        # РЕАЛЬНО harvester+navia!!!---------------
+                        ('AT+CGPSNEMARATE=?', 'ERROR'),
+                        ('AT+CGPSNEMARATE', 'ERROR'),
+                        ('AT+CGPSNEMARATE?', 'ERROR'),
+                        ],
         'AT+CGPSMD': ['AGPS MO method',
+                      # РЕАЛЬНО harvester+navia!!!---------------
                       ('AT+CGPSMD=?', 'ERROR'),
                       ('AT+CGPSMD', 'ERROR'),
                       ('AT+CGPSMD?', 'ERROR'),
                       ],
         'AT+CGPSFTM': ['START GPS test mode',       # IMPORTANT AGPS
-                       ('AT+CGPSFTM=?', 'ERROR'),
-                       ('AT+CGPSFTM', 'ERROR'),
-                       ('AT+CGPSFTM?', 'ERROR'),
-                       ],
+               # harvester
+               ('AT+CGPSFTM=?', 'ERROR'),
+               ('AT+CGPSFTM', 'ERROR'),
+               ('AT+CGPSFTM?', 'ERROR'),
+
+               # navia
+               ('AT+CGPSFTM=?', 'OK'),
+               ('AT+CGPSFTM', 'ERROR'),
+               ('AT+CGPSFTM?', '+CGPSFTM: 0'),
+               ],
         'AT+CGPSXE': ['GPS XTRA enable',
-                      ('AT+CGPSXE=?', 'ERROR'),
-                      ('AT+CGPSXE', 'ERROR'),
-                      ('AT+CGPSXE?', 'ERROR'),
-                      ],
+              # РЕАЛЬНО harvester+navia!!!---------------
+              ('AT+CGPSXE=?', 'ERROR'),
+              ('AT+CGPSXE', 'ERROR'),
+              ('AT+CGPSXE?', 'ERROR'),
+              ],
         'AT+CGPSXDAUTO': ['auto-download XTRA',
-                          ('AT+CGPSXDAUTO=?', 'ERROR'),
-                          ('AT+CGPSXDAUTO', 'ERROR'),
-                          ('AT+CGPSXDAUTO?', 'ERROR'),
-                          ],
+              # РЕАЛЬНО harvester+navia!!!---------------
+              ('AT+CGPSXDAUTO=?', 'ERROR'),
+              ('AT+CGPSXDAUTO', 'ERROR'),
+              ('AT+CGPSXDAUTO?', 'ERROR'),
+              ],
         'AT+CGPSINFOCFG': ['report NMEA-0183 sentence',
-                           ('AT+CGPSINFOCFG=?', 'ERROR'),
-                           ('AT+CGPSINFOCFG', 'ERROR'),
-                           ('AT+CGPSINFOCFG?', 'ERROR'),
-                           ],
+               # РЕАЛЬНО harvester+navia!!!---------------
+               ('AT+CGPSINFOCFG=?', 'ERROR'),
+               ('AT+CGPSINFOCFG', 'ERROR'),
+               ('AT+CGPSINFOCFG?', 'ERROR'),
+               ],
         'AT+CGPSPMD': ['positioning mode',
-                       ('AT+CGPSPMD=?', 'ERROR'),
-                       ('AT+CGPSPMD', 'ERROR'),
-                       ('AT+CGPSPMD?', 'ERROR'),
-                       ],
+               # РЕАЛЬНО harvester+navia!!!---------------
+               ('AT+CGPSPMD=?', 'ERROR'),
+               ('AT+CGPSPMD', 'ERROR'),
+               ('AT+CGPSPMD?', 'ERROR'),
+               ],
         'AT+CGPSMSB': ['based mode switch to standalone',
-                       ('AT+CGPSMSB=?', 'ERROR'),
-                       ('AT+CGPSMSB', 'ERROR'),
-                       ('AT+CGPSMSB?', 'ERROR'),
-                       ],
+               # РЕАЛЬНО harvester+navia!!!---------------
+               ('AT+CGPSMSB=?', 'ERROR'),
+               ('AT+CGPSMSB', 'ERROR'),
+               ('AT+CGPSMSB?', 'ERROR'),
+               ],
         'AT+CGPSHOR': ['positioning accuracy',
-                       ('AT+CGPSHOR=?', 'ERROR'),
-                       ('AT+CGPSHOR', 'ERROR'),
-                       ('AT+CGPSHOR?', 'ERROR'),
-                       ],
+               # РЕАЛЬНО harvester+navia!!!---------------
+               ('AT+CGPSHOR=?', 'ERROR'),
+               ('AT+CGPSHOR', 'ERROR'),
+               ('AT+CGPSHOR?', 'ERROR'),
+               ],
         'AT+CGPSNOTIFY': ['LCS respond positioning request',
-                          ('AT+CGPSNOTIFY=?', 'ERROR'),
-                          ('AT+CGPSNOTIFY', 'ERROR'),
-                          ('AT+CGPSNOTIFY?', 'ERROR'),
-                          ],
-        'AT+CGNSSINFO': ['GNSS fixed position',
-                         ('AT+CGNSSINFO=?', 'ERROR'),
-                         ('AT+CGNSSINFO', 'ERROR'),
-                         ('AT+CGNSSINFO?', 'ERROR'),
-                         ],
+              # РЕАЛЬНО harvester+navia!!!---------------
+              ('AT+CGPSNOTIFY=?', 'ERROR'),
+              ('AT+CGPSNOTIFY', 'ERROR'),
+              ('AT+CGPSNOTIFY?', 'ERROR'),
+                      ],
         'AT+CGNSSMODE': ['GNSS support mode',
-                         ('AT+CGNSSMODE=?', 'ERROR'),
-                         ('AT+CGNSSMODE', 'ERROR'),
-                         ('AT+CGNSSMODE?', 'ERROR'),
-                         ],
+                 # harvester noSim
+                 ('AT+CGNSSMODE=?', 'ERROR'),
+                 ('AT+CGNSSMODE', 'ERROR'),
+                 ('AT+CGNSSMODE?', 'ERROR'),
+
+                # navia SIM
+                 ('AT+CGNSSMODE=?', '+CGNSSMODE: (1-4)'),
+                 ('AT+CGNSSMODE', 'OK'),
+                 ('AT+CGNSSMODE?', '+CGNSSINFO: 0'),
+                 ],
     },
 
     # =========================================================================
@@ -2290,6 +2630,7 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
 
         # 1=ACCURATE -------------------------------------
         'AT+WS46?': ['RAT selection',
+                     # no sim
                      ('AT+WS46=?', '+WS46: (12,22,25,28,29,30,31)\nOK'),
                      ('AT+WS46', 'OK'),
                      ('AT+WS46?', '+WS46:12\nOK'),
@@ -2304,6 +2645,25 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
                      ('AT+WS46=29', 'OK'),
                      ('AT+WS46?', '+WS46:28\nOK'),
                      ('AT+WS46=30', 'OK'),
+                     ('AT+WS46?', '+WS46:30\nOK'),
+                     ('AT+WS46=31', 'OK'),
+                     ('AT+WS46?', '+WS46:30\nOK'),
+
+                     # sim
+                     ('AT+WS46=?', '+WS46: (12,22,25,28,29,30,31)\nOK'),
+                     ('AT+WS46', 'OK'),
+                     ('AT+WS46?', '+WS46:12\nOK'),
+                     ('AT+WS46=12', 'OK'),
+                     ('AT+WS46?', '+WS46:12\nOK'),
+                     ('AT+WS46=22', 'OK'),
+                     ('AT+WS46?', '+WS46:12\nOK'),
+                     ('AT+WS46=25', 'OK'),
+                     ('AT+WS46?', '+WS46:12\nOK'),
+                     ('AT+WS46=28', '+CGREG: 0\n+CEREG: 0'),
+                     ('AT+WS46?', 'OK\n+CGEV: ME DETACH\n+WS46:28\nOK\n+CREG: 0'),
+                     ('AT+WS46=29', 'OK'),
+                     ('AT+WS46?', '+WS46:28\nOK'),
+                     ('AT+WS46=30', 'OK\n+CGEV: ME DETACH'),
                      ('AT+WS46?', '+WS46:30\nOK'),
                      ('AT+WS46=31', 'OK'),
                      ('AT+WS46?', '+WS46:30\nOK'),
@@ -2332,8 +2692,35 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
                     ('AT+CESQ?', '+CME ERROR: unknown error'),
                     ('AT+CESQ=9', '+CME ERROR: unknown error'),
                     ('AT+CESQ?', '+CME ERROR: unknown error'),
+
+                    # sim
+                    ('AT+CESQ=?', '+CESQ: (0-63,99),(0-7,99),(0-96,255),(0-49,255),(0-34,255),(0-97,255)\nOK'),
+                    ('AT+CESQ', '+CESQ: 99,99,255,255,255,255\nOK'),
+                    ('AT+CESQ?', '+CME ERROR: unknown error'),
+                    ('AT+CESQ=0',
+                     '+CEREG: 1,0B3D,0BD15979,7\n+CGREG: 1,0B3D,0BD15979\n+CGEV: EPS PDN ACT 1\n+CME ERROR: unknown error'),
+                    ('AT+CESQ?', '+CME ERROR: unknown error'),
+                    ('AT+CESQ=1', '+CME ERROR: unknown error'),
+                    ('AT+CESQ?', '+CME ERROR: unknown error'),
+                    ('AT+CESQ=2', '+CME ERROR: unknown error'),
+                    ('AT+CESQ?', '+CME ERROR: unknown error'),
+                    ('AT+CESQ=3', '+CME ERROR: unknown error\n+CREG: 1,0B3D,0BD15979'),
+                    ('AT+CESQ?', '+CME ERROR: unknown error'),
+                    ('AT+CESQ=4', '+CEREG: 1,0B3D,0BD1591A,7\n+CME ERROR: unknown error'),
+                    ('AT+CESQ?', '+CME ERROR: unknown error'),
+                    ('AT+CESQ=5', '+CME ERROR: unknown error'),
+                    ('AT+CESQ?', '+CME ERROR: unknown error'),
+                    ('AT+CESQ=6', '+CME ERROR: unknown error'),
+                    ('AT+CESQ?', '+CME ERROR: unknown error'),
+                    ('AT+CESQ=7', '+CME ERROR: unknown error'),
+                    ('AT+CESQ?', '+CME ERROR: unknown error'),
+                    ('AT+CESQ=8', '+CME ERROR: unknown error'),
+                    ('AT+CESQ?', '+CME ERROR: unknown error'),
+                    ('AT+CESQ=9', '+CME ERROR: unknown error'),
+                    ('AT+CESQ?', '+CME ERROR: unknown error'),
                     ],
         'AT+CPINR?': ['PIN retries',
+                      # no sim
                       ('AT+CPINR=?', '+CPINR: (0-3),(0-3),(0-10),(0-10)\nOK'),
                       ('AT+CPINR', '+CME ERROR: Operation not supported'),
                       ('AT+CPINR?', '+CME ERROR: SIM not inserted'),
@@ -2357,10 +2744,43 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
                       ('AT+CPINR?', '+CME ERROR: SIM not inserted'),
                       ('AT+CPINR=9', 'ERROR'),
                       ('AT+CPINR?', '+CME ERROR: SIM not inserted'),
+
+                      # sim
+                    ('AT+CPINR=?', '+CPINR: (0-3),(0-3),(0-10),(0-10)\nOK'),
+                    ('AT+CPINR', '+CME ERROR: Operation not supported'),
+                    ('AT+CPINR?', '+CPINR:3,3,10,10\nOK'),
+                    ('AT+CPINR=0', 'ERROR'),
+                    ('AT+CPINR?', '+CPINR:3,3,10,10\nOK'),
+                    ('AT+CPINR=1', 'ERROR'),
+                    ('AT+CPINR?', '+CPINR:3,3,10,10\nOK'),
+                    ('AT+CPINR=2', 'ERROR'),
+                    ('AT+CPINR?', '+CPINR:3,3,10,10\nOK'),
+                    ('AT+CPINR=3', 'ERROR'),
+                    ('AT+CPINR?', '+CPINR:3,3,10,10\nOK'),
+                    ('AT+CPINR=4', 'ERROR'),
+                    ('AT+CPINR?', '+CPINR:3,3,10,10\nOK'),
+                    ('AT+CPINR=5', 'ERROR'),
+                    ('AT+CPINR?', '+CPINR:3,3,10,10\nOK'),
+                    ('AT+CPINR=6', 'ERROR'),
+                    ('AT+CPINR?', '+CPINR:3,3,10,10\nOK'),
+                    ('AT+CPINR=7', 'ERROR'),
+                    ('AT+CPINR?', '+CPINR:3,3,10,10\nOK'),
+                    ('AT+CPINR=8', 'ERROR'),
+                    ('AT+CPINR?', '+CPINR:3,3,10,10\nOK'),
+                    ('AT+CPINR=9', 'ERROR'),
+                    ('AT+CPINR?', '+CPINR:3,3,10,10\nOK'),
                       ],
         'AT+CGCONTRDP?': ['PDP context dynamic params',
+                          # no sim
                           ('AT+CGCONTRDP=?', 'OK'),
                           ('AT+CGCONTRDP', 'OK'),
+                          ('AT+CGCONTRDP?',
+                           '+CGCONTRDP: (<p_cid>), (<bearer_id>),(<apn>),(<source_addr and subnet_mask>),(<gw_addr>), (<DNS_prim_addr>), (<DNS_sec_addr>), (<P-CSCF_prim_addr>), (<P-CSCF_sec_addr>),(<IM_CN_Signalling_Flag>)r\nOK'),
+
+                          # sim
+                          ('AT+CGCONTRDP=?', '+CGCONTRDP: 1\nOK'),
+                          ('AT+CGCONTRDP',
+                           '+CGCONTRDP: 1,5,"next.MNC047.MCC250.GPRS","10.5.58.143","","100.77.4.4","100.77.8.8","","",0,01400\nOK'),
                           ('AT+CGCONTRDP?',
                            '+CGCONTRDP: (<p_cid>), (<bearer_id>),(<apn>),(<source_addr and subnet_mask>),(<gw_addr>), (<DNS_prim_addr>), (<DNS_sec_addr>), (<P-CSCF_prim_addr>), (<P-CSCF_sec_addr>),(<IM_CN_Signalling_Flag>)r\nOK'),
                           ],
@@ -2411,6 +2831,18 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
                     ],
     },
 }
+
+
+# ======================================================================================================================
+@pytest.mark.parametrize(
+    argnames="group_name, cmds",
+    argvalues=AT_GROUPS.items(),
+    ids=AT_GROUPS.keys(),
+)
+def test__at_param__GROUPS(group_name, cmds, harvest, gsm_at__port):
+    if group_name.startswith("-"):
+        pytest.skip(f"skip group by startswith {group_name=}")
+    harvest.at_cmds__explore(cmds=cmds, port=gsm_at__port)
 
 
 # ======================================================================================================================
