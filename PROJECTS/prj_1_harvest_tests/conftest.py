@@ -34,8 +34,8 @@ def pytest_addoption(parser):
         nargs="?",
         const=SSH_HOST,
 
-        # default=None,       # default=SERIAL
-        default=SSH_HOST,     # default=SSH
+        default=None,       # default=SERIAL
+        # default=SSH_HOST,     # default=SSH
 
         help="SSH-хост: без значения → harvest05",
     )

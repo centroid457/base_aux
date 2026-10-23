@@ -1,4 +1,15 @@
 # ======================================================================================================================
+"""
+как отправить команду на устройство
+1. настроить порт - требуется каждый раз после перезагрузки
+
+2. отправить команду
+
+
+"""
+
+
+# ======================================================================================================================
 AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
     # =========================================================================
     # ОПРЕДЕЛЕНИЯ
@@ -162,42 +173,50 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
 
         # 1=ACCURATE -------------------------------------
         'AT': ['эхо, проверка связи',
+            # без симки + с симкой
             ('AT=?', 'ERROR'),
             ('AT', 'OK'),
             ('AT?', 'ERROR'),
             ],
         'ATI': ['информация о производителе/модели/ревизии/IMEI',
+            # без симки + с симкой
             ('ATI=?', 'ERROR'),
             ('ATI', 'Manufacturer: INCORPORATED\nModel: A7682E-R\nRevision: A7682M6_V1.11.1\nIMEI1: 865286077380516\nIMEI2: 865286076965218\n+GCAP: +CGSM,+FCLASS,+DS\nOK'),
             ('ATI?', 'ERROR'),
             ],
         # ATI1 - 9 TODO: add???
         'AT+CGMI': ['ID=manufacturer',
+            # без симки + с симкой
             ('AT+CGMI=?', 'OK'),
             ('AT+CGMI', 'INCORPORATED\nOK'),
             ('AT+CGMI?', 'INCORPORATED\nOK'),
             ],
         'AT+CGMM': ['ID=model',
+            # без симки + с симкой
             ('AT+CGMM=?', 'OK'),
             ('AT+CGMM', 'A7682E-R\nOK'),
             ('AT+CGMM?', 'A7682E-R\nOK'),
             ],
         'AT+CGMR': ['ID=revision',
+                    # без симки + с симкой
                     ('AT+CGMR=?', 'OK'),
                     ('AT+CGMR', '+CGMR: A011B02A7682M6_DS_FOTA\nOK'),
                     ('AT+CGMR?', '+CGMR: A011B02A7682M6_DS_FOTA\nOK'),
                     ],
         'AT+CGSN': ['ID=IMEI / serial number /ProductSn',
+                    # без симки + с симкой
                     ('AT+CGSN=?', 'OK'),
                     ('AT+CGSN', '865286077380516\nOK'),
                     ('AT+CGSN?', 'ERROR'),
                     ],
         'AT+GSN': ['ID=IMEI (алиас)',
+                   # без симки + с симкой
                    ('AT+GSN=?', 'OK'),
                    ('AT+GSN', '865286077380516\nOK'),
                    ('AT+GSN?', 'ERROR'),
                    ],
         'AT+CPAS': ['phone activity status',
+                    # без симки + с симкой
                     ('AT+CPAS=?', '+CPAS: (0,3,4)\nOK'),
                     ('AT+CPAS', '+CPAS: 0\nOK'),
                     ('AT+CPAS?', '+CME ERROR: Operation not supported'),
@@ -209,6 +228,7 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
                     ('AT+CPAS?', '+CME ERROR: Operation not supported'),
                     ],
         'AT+CCLK?': ['real time clock',
+                     # без симки + с симкой
                      ('AT+CCLK=?', 'OK'),
                      ('AT+CCLK', 'ERROR'),
                      ('AT+CCLK?', '+CCLK: "70/01/01,00:23:56+00"\nOK'),
@@ -225,39 +245,77 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
 6 – use cmux vritual port3 to output URCs
 7 – use cmux vritual port4 to output URCs
         ''',
-                     ('AT+CATR=?', '+CATR: (0-7)\nOK'),
-                     ('AT+CATR', 'ERROR'),
-                     ('AT+CATR?', '+CATR: 0\nOK'),
-                     ('AT+CATR=0', 'OK'),
-                     ('AT+CATR?', '+CATR: 0\nOK'),
-                     ('AT+CATR=1', 'OK'),
-                     ('AT+CATR?', '+CATR: 1\nOK'),
-                     ('AT+CATR=2', 'OK'),
-                     ('AT+CATR?', '+CATR: 2\nOK'),
-                     ('AT+CATR=3', 'OK'),
-                     ('AT+CATR?', '+CATR: 3\nOK'),
-                     ('AT+CATR=4', 'OK'),
-                     ('AT+CATR?', '+CATR: 4\nOK'),
-                     ('AT+CATR=5', 'OK'),
-                     ('AT+CATR?', '+CATR: 5\nOK'),
-                     ('AT+CATR=6', 'OK'),
-                     ('AT+CATR?', '+CATR: 6\nOK'),
-                     ('AT+CATR=7', 'OK'),
-                     ('AT+CATR?', '+CATR: 7\nOK'),
-                     ],
+             # без симки + с симкой
+             ('AT+CATR=?', '+CATR: (0-7)\nOK'),
+             ('AT+CATR', 'ERROR'),
+             ('AT+CATR?', '+CATR: 0\nOK'),
+             ('AT+CATR=0', 'OK'),
+             ('AT+CATR?', '+CATR: 0\nOK'),
+             ('AT+CATR=1', 'OK'),
+             ('AT+CATR?', '+CATR: 1\nOK'),
+             ('AT+CATR=2', 'OK'),
+             ('AT+CATR?', '+CATR: 2\nOK'),
+             ('AT+CATR=3', 'OK'),
+             ('AT+CATR?', '+CATR: 3\nOK'),
+             ('AT+CATR=4', 'OK'),
+             ('AT+CATR?', '+CATR: 4\nOK'),
+             ('AT+CATR=5', 'OK'),
+             ('AT+CATR?', '+CATR: 5\nOK'),
+             ('AT+CATR=6', 'OK'),
+             ('AT+CATR?', '+CATR: 6\nOK'),
+             ('AT+CATR=7', 'OK'),
+             ('AT+CATR?', '+CATR: 7\nOK'),
+             ],
+        'AT+CSPN?': ['service provider name',
+             # без симки
+             ('AT+CSPN=?', 'ERROR'),
+             ('AT+CSPN', 'ERROR'),
+             ('AT+CSPN?', 'ERROR'),
 
+             # с симкой
+             ('AT+CSPN=?', 'OK'),
+             ('AT+CSPN', 'ERROR'),
+             ('AT+CSPN?', '+CSPN: "Next Mobile",1\nOK'),
+             ],
+        'AT+GCAP?': ['''список поддерживаемых возможностей (+CGSM, +FCLASS, +DS)
+            List of additional capabilities.
+            +CGSM GSM function is supported
+            +FCLASS FAX function is supported
+            +DS Data compression is supported
+            +ES Synchronous data mode is supported.
+            +CIS707-A CDMA data service command set
+            +CIS-856 EVDO data service command set
+            +MS Mobile Specific command set
+            
+            AT+GCAP
+            +GCAP:+CGSM,+FCLASS,+DS
+            OK
+            ''',
+             # без симки
+             ('AT+GCAP=?', 'OK'),
+             ('AT+GCAP', 'ERROR'),
+             ('AT+GCAP?', 'ERROR'),
+
+             # с симкой
+             ('AT+GCAP=?', 'OK'),
+            ('AT+GCAP', '+GCAP: +CGSM,+FCLASS,+DS\nOK'),
+            ('AT+GCAP?', '+GCAP: +CGSM,+FCLASS,+DS\nOK'),
+            ],
         # 2=DOUBT ----------------------------------------
         'AT+CACM?': ['accumulated call meter',
+                     # без симки + с симкой
                      ('AT+CACM=?', 'OK'),
                      ('AT+CACM', '+CME ERROR: Operation not supported'),
                      ('AT+CACM?', '+CME ERROR: unknown error'),
                      ],
         'AT+CAMM?': ['accumulated call meter maximum',
+                     # без симки + с симкой
                      ('AT+CAMM=?', 'OK'),
                      ('AT+CAMM', '+CME ERROR: Operation not supported'),
                      ('AT+CAMM?', '+CME ERROR: unknown error'),
                      ],
         'AT+CPUC?': ['price per unit and currency',
+                     # без симки + с симкой
                      ('AT+CPUC=?', 'OK'),
                      ('AT+CPUC', 'ERROR'),
                      ('AT+CPUC?', '+CME ERROR: unknown error'),
@@ -265,50 +323,30 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
 
         # 3=UNKNOWN --------------------------------------
         'AT+CGGMM': ['model identification (SIMCom-вариант)',
+            # без симки + с симкой
             ('AT+CGGMM=?', 'ERROR'),
             ('AT+CGGMM', 'ERROR'),
             ('AT+CGGMM?', 'ERROR'),
             ],
         'AT+CGGMR': ['revision identification (SIMCom-вариант)',
+            # без симки + с симкой
             ('AT+CGGMR=?', 'ERROR'),
             ('AT+CGGMR', 'ERROR'),
             ('AT+CGGMR?', 'ERROR'),
             ],
-        'AT+GCAP': ['''список поддерживаемых возможностей (+CGSM, +FCLASS, +DS)
-        List of additional capabilities.
-+CGSM GSM function is supported
-+FCLASS FAX function is supported
-+DS Data compression is supported
-+ES Synchronous data mode is supported.
-+CIS707-A CDMA data service command set
-+CIS-856 EVDO data service command set
-+MS Mobile Specific command set
-
-AT+GCAP
-+GCAP:+CGSM,+FCLASS,+DS
-OK
-''',
-            ('AT+GCAP=?', 'OK'),
-            ('AT+GCAP', 'ERROR'),
-            ('AT+GCAP?', 'ERROR'),
-            ],
         'AT+SMEID': ['MEID (CDMA)',
+            # без симки + с симкой
             ('AT+SMEID=?', 'ERROR'),
             ('AT+SMEID', 'ERROR'),
             ('AT+SMEID?', 'ERROR'),
-            ],
-        'AT+CSPN': ['service provider name',
-            ('AT+CSPN=?', 'ERROR'),
-            ('AT+CSPN', 'ERROR'),
-            ('AT+CSPN?', 'ERROR'),
             ],
     },
 
     # ==========================================================================
     "2=SIM": {
         # 0=DANGER+USELESS -------------------------------
-
         # "AT+CPWD": "[DANGER]смена пароля (PIN/PUK)",
+
         # 'AT+CSVM': ['[USELESS]voice mail subscriber number',
         #     ('AT+CSVM=?', 'ERROR'),
         #     ('AT+CSVM', 'ERROR'),
@@ -317,31 +355,57 @@ OK
 
         # 1=ACCURATE -------------------------------------
         'AT+CICCID': ['ICCID SIM-карты',
+                      # без симки
                       ('AT+CICCID=?', 'OK'),
                       ('AT+CICCID', '+CME ERROR: SIM not inserted'),
                       ('AT+CICCID?', '+CME ERROR: SIM not inserted'),
+
+                      # с симкой!!!
+                      ('AT+CICCID=?', 'OK'),
+                      ('AT+CICCID', '+ICCID: 8970147000029053642\nOK'),
+                      ('AT+CICCID?', '+CME ERROR: Operation not supported'),
                       ],
         'AT+CIMI': ['IMSI (IMSI SIM-карты) international mobile subscriber identity (460010222028133)',
                     ('AT+CIMI=?', 'OK'),
-                    ('AT+CIMI', '+CME ERROR: SIM failure'),
+                    ('AT+CIMI', '+CME ERROR: SIM failure'),   # без симки
+                    ('AT+CIMI', '250470002905364\nOK'),       # с симкой
                     ('AT+CIMI?', '+CME ERROR: Operation not supported'),
                     ],
         'AT+SPIC': ['остаток попыток ввода PIN/PUK',
                     ('AT+SPIC=?', 'OK'),
-                    ('AT+SPIC', '+CME ERROR: SIM not inserted'),
+                    ('AT+SPIC', '+CME ERROR: SIM not inserted'),    # без симки
+                    ('AT+SPIC', '+SPIC: 3,10,3,10\nOK'),            # с симкой
                     ('AT+SPIC?', 'ERROR'),
                     ],
         'AT+CPIN?': ['статус PIN (READY / SIM PIN / SIM PUK)',
                      ('AT+CPIN=?', 'OK'),
                      ('AT+CPIN', 'ERROR'),
-                     ('AT+CPIN?', '+CME ERROR: SIM not inserted'),
+                     ('AT+CPIN?', '+CME ERROR: SIM not inserted'),   # без симки
+                     ('AT+CPIN?', '+CPIN: READY\nOK'),               # с симкой
                      ],
+        'AT+CNUM?': ['основной запрос номера (недоступен на M2M sim)',
+                     # ПРИМЕР ИЗ ДОКУМЕНТАЦИИ ------------------------
+                     # [+CNUM: <alpha>,<number>,<type>[<CR><LF>
+                     # +CNUM: <alpha>, <number>,<type> [...]]]
 
-        # 2=DOUBT ----------------------------------------
+                     # +CNUM: "","13697252277",129
+
+                     # РЕАЛЬНО НА M2M sim - harvester ------------------------
+                     # без симки
+                     ('AT+CNUM=?', 'ERROR'),
+                     ('AT+CNUM', 'ERROR'),
+                     ('AT+CNUM?', 'ERROR'),
+
+                     # с симкой!!!
+                     ('AT+CNUM=?', 'OK'),
+                     ('AT+CNUM', 'OK'),
+                     ('AT+CNUM?', '+CME ERROR: Operation not supported'),
+                     ],
         'AT+CPINR?': ['остаток попыток PIN (3GPP-вариант)',
                       ('AT+CPINR=?', '+CPINR: (0-3),(0-3),(0-10),(0-10)\nOK'),
                       ('AT+CPINR', '+CME ERROR: Operation not supported'),
-                      ('AT+CPINR?', '+CME ERROR: SIM not inserted'),
+                      ('AT+CPINR?', '+CME ERROR: SIM not inserted'),    # без симки!!! - везде!
+                      ('AT+CPINR?', '+CPINR:3,3,10,10\nOK'),            # с симкой - и дальше везде!!!
                       ('AT+CPINR=0', 'ERROR'),
                       ('AT+CPINR?', '+CME ERROR: SIM not inserted'),
                       ('AT+CPINR=1', 'ERROR'),
@@ -363,25 +427,14 @@ OK
                       ('AT+CPINR=9', 'ERROR'),
                       ('AT+CPINR?', '+CME ERROR: SIM not inserted'),
                       ],
-
+        # 2=DOUBT ----------------------------------------
         # 3=UNKNOWN --------------------------------------
         'AT+CIMIM': ['IMSI (второй симки?) (USIM)',
+                     # с симкой и без!
                      ('AT+CIMIM=?', 'ERROR'),
                      ('AT+CIMIM', 'ERROR'),
                      ('AT+CIMIM?', 'ERROR'),
                      ],
-        'AT+CNUM': ['основной запрос номера (недоступен на M2M sim)',
-                    # ПРИМЕР ИЗ ДОКУМЕНТАЦИИ ------------------------
-                    # [+CNUM: <alpha>,<number>,<type>[<CR><LF>
-                    # +CNUM: <alpha>, <number>,<type> [...]]]
-
-                    # +CNUM: "","13697252277",129
-
-                    # РЕАЛЬНО НА M2M sim - harvester ------------------------
-                    ('AT+CNUM=?', 'ERROR'),
-                    ('AT+CNUM', 'ERROR'),
-                    ('AT+CNUM?', 'ERROR'),
-                    ],
     },
 
     # =========================================================================
@@ -464,18 +517,24 @@ OK
 
         # 1=ACCURATE -------------------------------------
         'ATV': ['result code format (numeric/verbose)',
+                # с симкой и без
                 ('ATV=?', 'ERROR'),
                 ('ATV', 'OK'),
                 ('ATV?', 'ERROR'),
                 ],
         'ATX': ['CONNECT result code format',
+                # с симкой и без
                 ('ATX=?', 'ERROR'),
                 ('ATX', 'OK'),
                 ('ATX?', 'ERROR'),
                 ],
-
+        'AT&E': ['CONNECT result code format (speed)',
+                 ('AT&E=?', 'ERROR'),
+                 ('AT&E', 'ERROR'),  # без симки
+                 ('AT&E', 'OK'),  # с симкой
+                 ('AT&E?', 'ERROR'),
+                 ],
         # 2=DOUBT ----------------------------------------
-
         # 3=UNKNOWN --------------------------------------
         'AT&V': ['display current configuration=',
                  # AT&V=ДОЛЖЕН ПОКАЗАТЬ НАСТРОЙКИ!!!
@@ -485,15 +544,11 @@ OK
                  # +WS46: 12; +CBST: 0,0,1;
                  # ……
                  # OK
-
                  ('AT&V=?', 'ERROR'),
-                 ('AT&V', 'ERROR'),
+                 ('AT&V', 'ERROR'),     # без симки
+                 ('AT&V',               # с симкой
+                  '&C: 1; &D: 0; &F: 0; &W: 0; E: 0; Q: 0; V: 1; X: 1; Z: 0; S0: 0; S2: 43; S3: 13; S4: 10; S5: 8; S6: 2; S7: 1; S8: 2; S9: 6; S10: 7; S11: 63; S30: 10; +FCLASS: 0; +IFC: 0,0; +IPR: 115200; +CSCS: UCS2; +CREG: 0; +CGREG: 0; +CEREG: 0; +CGDCONT: (1,"IP","next"); +CGDSCONT: ; +CGACT: (1,0); +CGEQMIN: (1,4,0,0,0,0,2,0,"0E0","0E0",3,0,0,0,0); +CGQMIN: (1,3,4,5,1,1); +CGEREP: (2,0); +CGCLASS: "A"; +CGAUTH: (1,0); +CPBS: "SM"; +CMEE: 2; +CFUN: 1; +CMGF: 0; +CSCA: ("++79006199795",145); +CSMP: 17,167,0,0; +CSDH: 0; +CPMS: "SM",0,30,"SM",0,30,"SM",0,30;\nOK'),
                  ('AT&V?', 'ERROR'),
-                 ],
-        'AT&E': ['CONNECT result code format (speed)',
-                 ('AT&E=?', 'ERROR'),
-                 ('AT&E', 'ERROR'),
-                 ('AT&E?', 'ERROR'),
                  ],
     },
 
@@ -529,7 +584,8 @@ OK
         # 1=ACCURATE -------------------------------------
         'AT+CSQ': ['signal quality (RSSI, BER) разные значения не нужны! это строго чтение, а не запись! поэтому ошибка на запись!!!',
                    ('AT+CSQ=?', '+CSQ: (0-31,99),(0-7,99)\nOK'),
-                   ('AT+CSQ', '+CSQ: 23,0\nOK'),
+                   ('AT+CSQ', '+CSQ: 23,0\nOK'),    # без симки
+                   ('AT+CSQ', '+CSQ: 25,0\nOK'),    # с симкой
                    ('AT+CSQ?', 'ERROR'),
                    ('AT+CSQ=0', 'ERROR'),
                    ('AT+CSQ?', 'ERROR'),
@@ -553,6 +609,7 @@ OK
                    ('AT+CSQ?', 'ERROR'),
                    ],
         'AT+AUTOCSQ?': ['автоматический отчёт CSQ',
+                        # без и с симкой
                         ('AT+AUTOCSQ=?', '+AUTOCSQ: (0-1),(0-1)\nOK'),
                         ('AT+AUTOCSQ', 'ERROR'),
                         ('AT+AUTOCSQ?', '+AUTOCSQ: 1,0\nOK'),
@@ -562,6 +619,7 @@ OK
                         ('AT+AUTOCSQ?', '+AUTOCSQ: 1,0\nOK'),
                         ],
         'AT+CSQDELTA?': ['set RSSI delta threshold for signal strength reporting.',
+                         # без и с симкой
                          ('AT+CSQDELTA=?', '+CSQDELTA: (0-5)\nOK'),
                          ('AT+CSQDELTA', 'OK'),
                          ('AT+CSQDELTA?', '+CSQDELTA: 5\nOK'),
@@ -578,13 +636,9 @@ OK
                          ('AT+CSQDELTA=5', 'OK'),
                          ('AT+CSQDELTA?', '+CSQDELTA: 5\nOK'),
                          ],
-        'AT+CCLK?': ['real time clock',
-                     ('AT+CCLK=?', 'OK'),
-                     ('AT+CCLK', 'ERROR'),
-                     ('AT+CCLK?', '+CCLK: "70/01/01,00:50:36+00"\nOK'),
-                     ],
 
         'AT+CPAS': ['phone activity status',
+                    # без и с симкой
                     ('AT+CPAS=?', '+CPAS: (0,3,4)\nOK'),
                     ('AT+CPAS', '+CPAS: 0\nOK'),
                     ('AT+CPAS?', '+CME ERROR: Operation not supported'),
@@ -595,31 +649,23 @@ OK
                     ('AT+CPAS=4', 'ERROR'),
                     ('AT+CPAS?', '+CME ERROR: Operation not supported'),
                     ],
-
         # 2=DOUBT ----------------------------------------
         'AT+CSIM': ['generic SIM access (APDU)',
+                    # без и с симкой
                     ('AT+CSIM=?', 'OK'),
                     ('AT+CSIM', 'ERROR'),
                     ('AT+CSIM?', '+CME ERROR: Operation not supported'),
                     ],
         'AT+CRSM': ['restricted SIM access (READ/UPDATE BINARY/RECORD)',
+                    # без и с симкой
                     ('AT+CRSM=?', 'OK'),
                     ('AT+CRSM', 'ERROR'),
                     ('AT+CRSM?', '+CME ERROR: Operation not supported'),
                     ],
 
         # 3=UNKNOWN --------------------------------------
-        'AT+CSPN': ['service provider name',
-                    ('AT+CSPN=?', 'ERROR'),
-                    ('AT+CSPN', 'ERROR'),
-                    ('AT+CSPN?', 'ERROR'),
-                    ],
-        'AT+SMEID': ['MEID',
-                     ('AT+SMEID=?', 'ERROR'),
-                     ('AT+SMEID', 'ERROR'),
-                     ('AT+SMEID?', 'ERROR'),
-                     ],
         'AT+CSVM': ['voice mail number',
+                    # без и с симкой
                     ('AT+CSVM=?', 'ERROR'),
                     ('AT+CSVM', 'ERROR'),
                     ('AT+CSVM?', 'ERROR'),
@@ -717,6 +763,7 @@ OK
         #              ],
         # 1=ACCURATE -------------------------------------
         'AT+CREG?': ['network registration (CS), =0>disable, =1>регистрация',
+                     # без симки
                      ('AT+CREG=?', '+CREG: (0-2)\nOK'),
                      ('AT+CREG', 'OK'),
                      ('AT+CREG?', '+CREG: 0,0\nOK'),        # СЕТИ НЕ ЗАРЕГИСТРИРОВАНЫ???
@@ -726,8 +773,20 @@ OK
                      ('AT+CREG?', '+CREG: 1,0\nOK'),
                      ('AT+CREG=2', 'OK'),
                      ('AT+CREG?', '+CREG: 2,0\nOK'),
+
+                     # с симкой
+                     ('AT+CREG=?', '+CREG: (0-2)\nOK'),
+                     ('AT+CREG', 'OK'),
+                     ('AT+CREG?', '+CREG: 0,1\nOK'),
+                     ('AT+CREG=0', 'OK'),
+                     ('AT+CREG?', '+CREG: 0,1\nOK'),
+                     ('AT+CREG=1', 'OK'),
+                     ('AT+CREG?', '+CREG: 1,1\nOK'),
+                     ('AT+CREG=2', 'OK'),
+                     ('AT+CREG?', '+CREG: 2,1,0321,000008B1\nOK'),
                      ],
         'AT+CGREG?': ['GPRS registration (PS)',
+                      # без симки
                       ('AT+CGREG=?', '+CGREG: (0-2)\nOK'),
                       ('AT+CGREG', 'OK'),
                       ('AT+CGREG?', '+CGREG: 0,0\nOK'),
@@ -737,8 +796,20 @@ OK
                       ('AT+CGREG?', '+CGREG: 1,0\nOK'),
                       ('AT+CGREG=2', 'OK'),
                       ('AT+CGREG?', '+CGREG: 2,0,"0000","00000000"\nOK'),
+
+                      # с симкой
+                      ('AT+CGREG=?', '+CGREG: (0-2)\nOK'),
+                      ('AT+CGREG', 'OK'),
+                      ('AT+CGREG?', '+CGREG: 0,1\nOK'),
+                      ('AT+CGREG=0', 'OK'),
+                      ('AT+CGREG?', '+CGREG: 0,1\nOK'),
+                      ('AT+CGREG=1', 'OK'),
+                      ('AT+CGREG?', '+CGREG: 1,1\nOK'),
+                      ('AT+CGREG=2', 'OK'),
+                      ('AT+CGREG?', '+CGREG: 2,1,"0321","000008b1"\nOK'),
                       ],
         'AT+CEREG?': ['EPS registration (LTE)',
+                      # без симки и с
                       ('AT+CEREG=?', '+CEREG: (0-2)\nOK'),
                       ('AT+CEREG', 'OK'),
                       ('AT+CEREG?', '+CEREG: 0,0\nOK'),
@@ -750,6 +821,7 @@ OK
                       ('AT+CEREG?', '+CEREG: 2,0,0000,00000000\nOK'),
                       ],
         'AT+CUSD?': ['USSD',
+                     # без симки и с
                      ('AT+CUSD=?', '+CUSD: (0-2)\nOK'),
                      ('AT+CUSD', 'OK'),
                      ('AT+CUSD?', '+CUSD: 0\nOK'),
@@ -761,6 +833,7 @@ OK
                      ('AT+CUSD?', '+CUSD: 1\nOK'),
                      ],
         'AT+CAOC?': ['advice of charge',
+                     # без симки и с
                      ('AT+CAOC=?', '+CAOC: (0-2)\nOK'),
                      ('AT+CAOC', 'ERROR'),
                      ('AT+CAOC?', '+CAOC: 2\nOK'),
@@ -772,6 +845,7 @@ OK
                      ('AT+CAOC?', '+CAOC: 2\nOK'),
                      ],
         'AT+CSSN?': ['supplementary service notifications',
+                     # без симки и с
                      ('AT+CSSN=?', '+CSSN: (0-1),(0-1)\nOK'),
                      ('AT+CSSN', 'ERROR'),
                      ('AT+CSSN?', '+CSSN: 1,0\nOK'),
@@ -783,9 +857,11 @@ OK
         'AT+CPSI?': ['UE system information',
                      ('AT+CPSI=?', 'OK'),
                      ('AT+CPSI', 'ERROR'),
-                     ('AT+CPSI?', '+CPSI: NO SERVICE,Online\nOK'),
+                     ('AT+CPSI?', '+CPSI: NO SERVICE,Online\nOK'),  # без симки
+                     ('AT+CPSI?', '+CPSI: GSM,Online,250-01,0x321,2225,874 DCS 1800,47,0,29-61\nOK'),   # с симкой
                      ],
         'AT+CTZU?': ['automatic time zone update, 1=set AUTO, 0=disable',
+                     # без симки и с
                      ('AT+CTZU=?', '+CTZU: (0-1)\nOK'),
                      ('AT+CTZU', 'ERROR'),
                      ('AT+CTZU?', '+CTZU: 1\nOK'),
@@ -795,6 +871,7 @@ OK
                      ('AT+CTZU?', '+CTZU: 1\nOK'),
                      ],
         'AT+CTZR?': ['time zone reporting',
+                     # без симки и с
                      ('AT+CTZR=?', '+CTZR: (0-1)\nOK'),
                      ('AT+CTZR', 'OK'),
                      ('AT+CTZR?', '+CTZR: 0\nOK'),
@@ -805,7 +882,8 @@ OK
                      ],
         'AT+CESQ': ['extended signal quality',
                     ('AT+CESQ=?', '+CESQ: (0-63,99),(0-7,99),(0-96,255),(0-49,255),(0-34,255),(0-97,255)\nOK'),
-                    ('AT+CESQ', '+CESQ: 45,0,255,255,255,255\nOK'),
+                    ('AT+CESQ', '+CESQ: 45,0,255,255,255,255\nOK'),     # без симки
+                    ('AT+CESQ', '+CESQ: 51,0,255,255,255,255\nOK'),     # с симкой
                     ('AT+CESQ?', '+CME ERROR: unknown error'),
                     ('AT+CESQ=0', '+CME ERROR: unknown error'),
                     ('AT+CESQ?', '+CME ERROR: unknown error'),
@@ -828,14 +906,51 @@ OK
                     ('AT+CESQ=9', '+CME ERROR: unknown error'),
                     ('AT+CESQ?', '+CME ERROR: unknown error'),
                     ],
-
-        # 2=DOUBT ----------------------------------------
-        'AT+CPOL': ['preferred operator list',
+        'AT+CPOL?': ['preferred operator list',
+                    # без симки
                     ('AT+CPOL=?', '+CME ERROR: SIM failure'),
                     ('AT+CPOL', 'ERROR\n+CME ERROR: SIM failure'),
                     ('AT+CPOL?', 'ERROR\n+CME ERROR: SIM failure'),
+
+                    # с симкой
+                    ('AT+CPOL=?', '+CPOL: (1-30),(0-2)\nOK'),
+                    ('AT+CPOL', '+CME ERROR: Incorrect parameters'),
+                    ('AT+CPOL?',
+                     '+CPOL: 1,2,"25020",0,0,0,1\n+CPOL: 2,2,"25020",0,0,1,0\n+CPOL: 3,2,"25020",1,0,0,0\n+CPOL: 4,2,"25039",0,0,0,1\n+CPOL: 5,2,"25039",0,0,1,0\n+CPOL: 6,2,"25039",1,0,0,0\n+CPOL: 7,2,"25099",0,0,0,1\n+CPOL: 8,2,"25099",0,0,1,0\n+CPOL: 9,2,"25099",1,0,0,0\n+CPOL: 10,2,"25095",0,0,0,1\n+CPOL: 11,2,"25095",0,0,1,0\n+CPOL: 12,2,"25095",1,0,0,0\n+CPOL: 13,2,"25001",0,0,0,1\n+CPOL: 14,2,"25001",0,0,1,0\n+CPOL: 15,2,"25001",1,0,0,0\n+CPOL: 16,2,"25058",0,0,0,1\n+CPOL: 17,2,"25058",0,0,1,0\n+CPOL: 18,2,"25058",1,0,0,0\n+CPOL: 19,2,"25002",0,0,0,1\n+CPOL: 20,2,"25002",0,0,1,0\n+CPOL: 21,2,"25002",1,0,0,0\n+CPOL: 22,2,"25007",0,0,0,1\n+CPOL: 23,2,"25007",0,0,1,0\n+CPOL: 24,2,"25007",1,0,0,0\n+CPOL: 25,2,"25035",0,0,0,1\n+CPOL: 26,2,"25035",0,0,1,0\n+CPOL: 27,2,"25035",1,0,0,0\nOK'),
+                    ('AT+CPOL=0', '+CME ERROR: Incorrect parameters'),
+                    ('AT+CPOL?',
+                     '+CPOL: 1,2,"25020",0,0,0,1\n+CPOL: 2,2,"25020",0,0,1,0\n+CPOL: 3,2,"25020",1,0,0,0\n+CPOL: 4,2,"25039",0,0,0,1\n+CPOL: 5,2,"25039",0,0,1,0\n+CPOL: 6,2,"25039",1,0,0,0\n+CPOL: 7,2,"25099",0,0,0,1\n+CPOL: 8,2,"25099",0,0,1,0\n+CPOL: 9,2,"25099",1,0,0,0\n+CPOL: 10,2,"25095",0,0,0,1\n+CPOL: 11,2,"25095",0,0,1,0\n+CPOL: 12,2,"25095",1,0,0,0\n+CPOL: 13,2,"25001",0,0,0,1\n+CPOL: 14,2,"25001",0,0,1,0\n+CPOL: 15,2,"25001",1,0,0,0\n+CPOL: 16,2,"25058",0,0,0,1\n+CPOL: 17,2,"25058",0,0,1,0\n+CPOL: 18,2,"25058",1,0,0,0\n+CPOL: 19,2,"25002",0,0,0,1\n+CPOL: 20,2,"25002",0,0,1,0\n+CPOL: 21,2,"25002",1,0,0,0\n+CPOL: 22,2,"25007",0,0,0,1\n+CPOL: 23,2,"25007",0,0,1,0\n+CPOL: 24,2,"25007",1,0,0,0\n+CPOL: 25,2,"25035",0,0,0,1\n+CPOL: 26,2,"25035",0,0,1,0\n+CPOL: 27,2,"25035",1,0,0,0\nOK'),
+                    ('AT+CPOL=1', 'OK'),
+                    ('AT+CPOL?',
+                     '+CPOL: 1,2,"25020",0,0,1,0\n+CPOL: 2,2,"25020",1,0,0,0\n+CPOL: 3,2,"25039",0,0,0,1\n+CPOL: 4,2,"25039",0,0,1,0\n+CPOL: 5,2,"25039",1,0,0,0\n+CPOL: 6,2,"25099",0,0,0,1\n+CPOL: 7,2,"25099",0,0,1,0\n+CPOL: 8,2,"25099",1,0,0,0\n+CPOL: 9,2,"25095",0,0,0,1\n+CPOL: 10,2,"25095",0,0,1,0\n+CPOL: 11,2,"25095",1,0,0,0\n+CPOL: 12,2,"25001",0,0,0,1\n+CPOL: 13,2,"25001",0,0,1,0\n+CPOL: 14,2,"25001",1,0,0,0\n+CPOL: 15,2,"25058",0,0,0,1\n+CPOL: 16,2,"25058",0,0,1,0\n+CPOL: 17,2,"25058",1,0,0,0\n+CPOL: 18,2,"25002",0,0,0,1\n+CPOL: 19,2,"25002",0,0,1,0\n+CPOL: 20,2,"25002",1,0,0,0\n+CPOL: 21,2,"25007",0,0,0,1\n+CPOL: 22,2,"25007",0,0,1,0\n+CPOL: 23,2,"25007",1,0,0,0\n+CPOL: 24,2,"25035",0,0,0,1\n+CPOL: 25,2,"25035",0,0,1,0\n+CPOL: 26,2,"25035",1,0,0,0\nOK'),
+                    ('AT+CPOL=2', 'OK'),
+                    ('AT+CPOL?',
+                     '+CPOL: 1,2,"25020",0,0,1,0\n+CPOL: 2,2,"25039",0,0,0,1\n+CPOL: 3,2,"25039",0,0,1,0\n+CPOL: 4,2,"25039",1,0,0,0\n+CPOL: 5,2,"25099",0,0,0,1\n+CPOL: 6,2,"25099",0,0,1,0\n+CPOL: 7,2,"25099",1,0,0,0\n+CPOL: 8,2,"25095",0,0,0,1\n+CPOL: 9,2,"25095",0,0,1,0\n+CPOL: 10,2,"25095",1,0,0,0\n+CPOL: 11,2,"25001",0,0,0,1\n+CPOL: 12,2,"25001",0,0,1,0\n+CPOL: 13,2,"25001",1,0,0,0\n+CPOL: 14,2,"25058",0,0,0,1\n+CPOL: 15,2,"25058",0,0,1,0\n+CPOL: 16,2,"25058",1,0,0,0\n+CPOL: 17,2,"25002",0,0,0,1\n+CPOL: 18,2,"25002",0,0,1,0\n+CPOL: 19,2,"25002",1,0,0,0\n+CPOL: 20,2,"25007",0,0,0,1\n+CPOL: 21,2,"25007",0,0,1,0\n+CPOL: 22,2,"25007",1,0,0,0\n+CPOL: 23,2,"25035",0,0,0,1\n+CPOL: 24,2,"25035",0,0,1,0\n+CPOL: 25,2,"25035",1,0,0,0\nOK'),
+                    ('AT+CPOL=3', 'OK'),
+                    ('AT+CPOL?',
+                     '+CPOL: 1,2,"25020",0,0,1,0\n+CPOL: 2,2,"25039",0,0,0,1\n+CPOL: 3,2,"25039",1,0,0,0\n+CPOL: 4,2,"25099",0,0,0,1\n+CPOL: 5,2,"25099",0,0,1,0\n+CPOL: 6,2,"25099",1,0,0,0\n+CPOL: 7,2,"25095",0,0,0,1\n+CPOL: 8,2,"25095",0,0,1,0\n+CPOL: 9,2,"25095",1,0,0,0\n+CPOL: 10,2,"25001",0,0,0,1\n+CPOL: 11,2,"25001",0,0,1,0\n+CPOL: 12,2,"25001",1,0,0,0\n+CPOL: 13,2,"25058",0,0,0,1\n+CPOL: 14,2,"25058",0,0,1,0\n+CPOL: 15,2,"25058",1,0,0,0\n+CPOL: 16,2,"25002",0,0,0,1\n+CPOL: 17,2,"25002",0,0,1,0\n+CPOL: 18,2,"25002",1,0,0,0\n+CPOL: 19,2,"25007",0,0,0,1\n+CPOL: 20,2,"25007",0,0,1,0\n+CPOL: 21,2,"25007",1,0,0,0\n+CPOL: 22,2,"25035",0,0,0,1\n+CPOL: 23,2,"25035",0,0,1,0\n+CPOL: 24,2,"25035",1,0,0,0\nOK'),
+                    ('AT+CPOL=4', 'OK'),
+                    ('AT+CPOL?',
+                     '+CPOL: 1,2,"25020",0,0,1,0\n+CPOL: 2,2,"25039",0,0,0,1\n+CPOL: 3,2,"25039",1,0,0,0\n+CPOL: 4,2,"25099",0,0,1,0\n+CPOL: 5,2,"25099",1,0,0,0\n+CPOL: 6,2,"25095",0,0,0,1\n+CPOL: 7,2,"25095",0,0,1,0\n+CPOL: 8,2,"25095",1,0,0,0\n+CPOL: 9,2,"25001",0,0,0,1\n+CPOL: 10,2,"25001",0,0,1,0\n+CPOL: 11,2,"25001",1,0,0,0\n+CPOL: 12,2,"25058",0,0,0,1\n+CPOL: 13,2,"25058",0,0,1,0\n+CPOL: 14,2,"25058",1,0,0,0\n+CPOL: 15,2,"25002",0,0,0,1\n+CPOL: 16,2,"25002",0,0,1,0\n+CPOL: 17,2,"25002",1,0,0,0\n+CPOL: 18,2,"25007",0,0,0,1\n+CPOL: 19,2,"25007",0,0,1,0\n+CPOL: 20,2,"25007",1,0,0,0\n+CPOL: 21,2,"25035",0,0,0,1\n+CPOL: 22,2,"25035",0,0,1,0\n+CPOL: 23,2,"25035",1,0,0,0\nOK'),
+                    ('AT+CPOL=5', 'OK'),
+                    ('AT+CPOL?',
+                     '+CPOL: 1,2,"25020",0,0,1,0\n+CPOL: 2,2,"25039",0,0,0,1\n+CPOL: 3,2,"25039",1,0,0,0\n+CPOL: 4,2,"25099",0,0,1,0\n+CPOL: 5,2,"25095",0,0,0,1\n+CPOL: 6,2,"25095",0,0,1,0\n+CPOL: 7,2,"25095",1,0,0,0\n+CPOL: 8,2,"25001",0,0,0,1\n+CPOL: 9,2,"25001",0,0,1,0\n+CPOL: 10,2,"25001",1,0,0,0\n+CPOL: 11,2,"25058",0,0,0,1\n+CPOL: 12,2,"25058",0,0,1,0\n+CPOL: 13,2,"25058",1,0,0,0\n+CPOL: 14,2,"25002",0,0,0,1\n+CPOL: 15,2,"25002",0,0,1,0\n+CPOL: 16,2,"25002",1,0,0,0\n+CPOL: 17,2,"25007",0,0,0,1\n+CPOL: 18,2,"25007",0,0,1,0\n+CPOL: 19,2,"25007",1,0,0,0\n+CPOL: 20,2,"25035",0,0,0,1\n+CPOL: 21,2,"25035",0,0,1,0\n+CPOL: 22,2,"25035",1,0,0,0\nOK'),
+                    ('AT+CPOL=6', 'OK'),
+                    ('AT+CPOL?',
+                     '+CPOL: 1,2,"25020",0,0,1,0\n+CPOL: 2,2,"25039",0,0,0,1\n+CPOL: 3,2,"25039",1,0,0,0\n+CPOL: 4,2,"25099",0,0,1,0\n+CPOL: 5,2,"25095",0,0,0,1\n+CPOL: 6,2,"25095",1,0,0,0\n+CPOL: 7,2,"25001",0,0,0,1\n+CPOL: 8,2,"25001",0,0,1,0\n+CPOL: 9,2,"25001",1,0,0,0\n+CPOL: 10,2,"25058",0,0,0,1\n+CPOL: 11,2,"25058",0,0,1,0\n+CPOL: 12,2,"25058",1,0,0,0\n+CPOL: 13,2,"25002",0,0,0,1\n+CPOL: 14,2,"25002",0,0,1,0\n+CPOL: 15,2,"25002",1,0,0,0\n+CPOL: 16,2,"25007",0,0,0,1\n+CPOL: 17,2,"25007",0,0,1,0\n+CPOL: 18,2,"25007",1,0,0,0\n+CPOL: 19,2,"25035",0,0,0,1\n+CPOL: 20,2,"25035",0,0,1,0\n+CPOL: 21,2,"25035",1,0,0,0\nOK'),
+                    ('AT+CPOL=7', 'OK'),
+                    ('AT+CPOL?',
+                     '+CPOL: 1,2,"25020",0,0,1,0\n+CPOL: 2,2,"25039",0,0,0,1\n+CPOL: 3,2,"25039",1,0,0,0\n+CPOL: 4,2,"25099",0,0,1,0\n+CPOL: 5,2,"25095",0,0,0,1\n+CPOL: 6,2,"25095",1,0,0,0\n+CPOL: 7,2,"25001",0,0,1,0\n+CPOL: 8,2,"25001",1,0,0,0\n+CPOL: 9,2,"25058",0,0,0,1\n+CPOL: 10,2,"25058",0,0,1,0\n+CPOL: 11,2,"25058",1,0,0,0\n+CPOL: 12,2,"25002",0,0,0,1\n+CPOL: 13,2,"25002",0,0,1,0\n+CPOL: 14,2,"25002",1,0,0,0\n+CPOL: 15,2,"25007",0,0,0,1\n+CPOL: 16,2,"25007",0,0,1,0\n+CPOL: 17,2,"25007",1,0,0,0\n+CPOL: 18,2,"25035",0,0,0,1\n+CPOL: 19,2,"25035",0,0,1,0\n+CPOL: 20,2,"25035",1,0,0,0\nOK'),
+                    ('AT+CPOL=8', 'OK'),
+                    ('AT+CPOL?',
+                     '+CPOL: 1,2,"25020",0,0,1,0\n+CPOL: 2,2,"25039",0,0,0,1\n+CPOL: 3,2,"25039",1,0,0,0\n+CPOL: 4,2,"25099",0,0,1,0\n+CPOL: 5,2,"25095",0,0,0,1\n+CPOL: 6,2,"25095",1,0,0,0\n+CPOL: 7,2,"25001",0,0,1,0\n+CPOL: 8,2,"25058",0,0,0,1\n+CPOL: 9,2,"25058",0,0,1,0\n+CPOL: 10,2,"25058",1,0,0,0\n+CPOL: 11,2,"25002",0,0,0,1\n+CPOL: 12,2,"25002",0,0,1,0\n+CPOL: 13,2,"25002",1,0,0,0\n+CPOL: 14,2,"25007",0,0,0,1\n+CPOL: 15,2,"25007",0,0,1,0\n+CPOL: 16,2,"25007",1,0,0,0\n+CPOL: 17,2,"25035",0,0,0,1\n+CPOL: 18,2,"25035",0,0,1,0\n+CPOL: 19,2,"25035",1,0,0,0\nOK'),
+                    ('AT+CPOL=9', 'OK'),
+                    ('AT+CPOL?',
+                     '+CPOL: 1,2,"25020",0,0,1,0\n+CPOL: 2,2,"25039",0,0,0,1\n+CPOL: 3,2,"25039",1,0,0,0\n+CPOL: 4,2,"25099",0,0,1,0\n+CPOL: 5,2,"25095",0,0,0,1\n+CPOL: 6,2,"25095",1,0,0,0\n+CPOL: 7,2,"25001",0,0,1,0\n+CPOL: 8,2,"25058",0,0,0,1\n+CPOL: 9,2,"25058",1,0,0,0\n+CPOL: 10,2,"25002",0,0,0,1\n+CPOL: 11,2,"25002",0,0,1,0\n+CPOL: 12,2,"25002",1,0,0,0\n+CPOL: 13,2,"25007",0,0,0,1\n+CPOL: 14,2,"25007",0,0,1,0\n+CPOL: 15,2,"25007",1,0,0,0\n+CPOL: 16,2,"25035",0,0,0,1\n+CPOL: 17,2,"25035",0,0,1,0\n+CPOL: 18,2,"25035",1,0,0,0\nOK'),
                     ],
+        # 2=DOUBT ----------------------------------------
         'AT+CIREG': ['IMS registration (может быть не поддержано)',
+                     # без симки и с
                      ('AT+CIREG=?', '+CIREG: (0-3)\nOK'),
                      ('AT+CIREG', '+CME ERROR: Operation not supported'),
                      ('AT+CIREG?', '+CME ERROR: Operation not supported'),
@@ -850,12 +965,14 @@ OK
                      ],
         # 3=UNKNOWN --------------------------------------
         'AT+CSMOD': ['show network system mode',
+                     # без симки и с
                      ('AT+CSMOD=?', 'ERROR'),
                      ('AT+CSMOD', 'ERROR'),
                      ('AT+CSMOD?', 'ERROR'),
                      ],
 
         'AT+CIMS': ['IMS status (может быть не поддержано)',
+                    # без симки и с
                     ('AT+CIMS=?', 'ERROR'),
                     ('AT+CIMS', 'ERROR'),
                     ('AT+CIMS?', 'ERROR'),
@@ -2061,7 +2178,7 @@ OK
                         ('AT+CGPSINFO?', 'ERROR'),
                         ],
 
-        # control
+        # control --------------
         'AT+CGPSCOLD': ['cold start GPS',
                         ('AT+CGPSCOLD=?', 'ERROR'),
                         ('AT+CGPSCOLD', 'ERROR'),
@@ -2073,7 +2190,15 @@ OK
                        ('AT+CGPSHOT?', 'ERROR'),
                        ],
 
+        # AGPS  --------------
         'AT+CGPSURL': ['AGPS server URL',
+                       # ИЗ ДОКУМЕНТАЦИИ ---------------
+                       # AT+CGPSURL=”123.123.123.123:8888”
+                       # OK
+                       # AT+CGPSURL?
+                       # +CGPSURL: ”123.123.123.123:8888”
+
+                       # РЕАЛЬНО ---------------
                        ('AT+CGPSURL=?', 'ERROR'),
                        ('AT+CGPSURL', 'ERROR'),
                        ('AT+CGPSURL?', 'ERROR'),
@@ -2088,6 +2213,7 @@ OK
                         ('AT+CGPSAUTO', 'ERROR'),
                         ('AT+CGPSAUTO?', 'ERROR'),
                         ],
+
         'AT+CGPSNMEA': ['NMEA sentence type',
                         ('AT+CGPSNMEA=?', 'ERROR'),
                         ('AT+CGPSNMEA', 'ERROR'),
@@ -2103,7 +2229,7 @@ OK
                       ('AT+CGPSMD', 'ERROR'),
                       ('AT+CGPSMD?', 'ERROR'),
                       ],
-        'AT+CGPSFTM': ['GPS test mode',
+        'AT+CGPSFTM': ['START GPS test mode',       # IMPORTANT AGPS
                        ('AT+CGPSFTM=?', 'ERROR'),
                        ('AT+CGPSFTM', 'ERROR'),
                        ('AT+CGPSFTM?', 'ERROR'),
