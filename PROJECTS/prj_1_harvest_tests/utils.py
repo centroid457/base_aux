@@ -1,8 +1,6 @@
-import json
 import logging
 import base64
 
-from PROJECTS.prj_1_harvest_tests.at_groups import AT_GROUPS
 from base_aux.aux_eq.m4_eq_valid3_derivatives import *
 from base_aux.clients.m1_client_0__base import ClientBase
 
@@ -1059,7 +1057,8 @@ PASSED
         # changes
         for value in self.at_param__parse_variants(response) or []:
             cmds_pretend.append(f"{cmd_clear}={value}")
-            cmds_pretend.append(f"{cmd_clear}?")
+            cmds_pretend.append(f"{cmd_clear}?")    # NEED BOTH!!! this is the value - SETUP MODE
+            cmds_pretend.append(f"{cmd_clear}")     # NEED BOTH!!! this is the value - READ VALUE on mode
 
         # 3=FINAL -----------------------
         result.extend(self.at_cmd__dump_sequence(cmds=cmds_pretend, port=port, timeout=timeout, timeout_continue=timeout_continue))
@@ -1078,7 +1077,10 @@ PASSED
         # ----------------------------------
         for index, cmd in enumerate(cmds):
             print(f"\n{index=}/{count=}")
-            step = self.at_cmd__explore(cmd=cmd, **kwargs)
+            if cmd.startswith("-"):
+                step = None
+            else:
+                step = self.at_cmd__explore(cmd=cmd, **kwargs)
             result[cmd] = step
 
         # PRINTOUT -------------------------
@@ -3444,13 +3446,6 @@ def test__at_param__parse_variants(source, _EXPECTED):
 
 # ----------------------------------------------------------------------------------------------------------------------
 # @pytest.mark.skip
-@pytest.mark.parametrize(
-    argnames="group_name, cmds",
-    argvalues=AT_GROUPS.items(),
-    ids=AT_GROUPS.keys(),
-)
-def test__at_param__GROUPS(group_name, cmds, harvest, gsm_at__port):
-    harvest.at_cmds__explore(cmds=cmds, port=gsm_at__port)
 
 
 # ======================================================================================================================

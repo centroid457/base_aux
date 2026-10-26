@@ -178,10 +178,21 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
             ],
         'ATI': ['информация о производителе/модели/ревизии/IMEI',
             # без симки + с симкой
+            # HARVESTER
             ('ATI=?', 'ERROR'),
             ('ATI', 'Manufacturer: INCORPORATED\nModel: A7682E-R\nRevision: A7682M6_V1.11.1\nIMEI1: 865286077380516\nIMEI2: 865286076965218\n+GCAP: +CGSM,+FCLASS,+DS\nOK'),
             ('ATI?', 'ERROR'),
-            ],
+
+            # NAVIA
+            ('ATI',
+                '''
+                Manufacturer: INCORPORATED
+                Model: A7672E-FASE
+                Revision: A7672M7_V1.11.1
+                IMEI: 868569082628848
+                +GCAP: +CGSM,+FCLASS,+DS
+                '''),
+                ],
         # ATI1 - 9 TODO: add???
         'AT+CGMI': ['ID=manufacturer',
             # без симки + с симкой
@@ -1040,14 +1051,17 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
                     ('AT+CLBS?', 'ERROR'),
 
                     # sim
-                     ('AT+CLBS=?',
-                      '+CLBS: (1,2,3,4,9),(1-15),(-180.000000-180.000000),(-90.000000-90.000000),(0-2)\nOK'),
+                     ('AT+CLBS=?', '+CLBS: (1,2,3,4,9),(1-15),(-180.000000-180.000000),(-90.000000-90.000000),(0-2)\nOK'),
                      ('AT+CLBS', 'ERROR'),
-                     ('AT+CLBS?', '+CSQ: 23,99\nOK\n+CNSMOD: 1,8\nOK'), #
+                     ('AT+CLBS?', '+CSQ: 23,99\nOK\n+CNSMOD: 1,8\nOK'),
 
+                      ('AT+CLBS=?', '+CLBS: (1,2,3,4,9),(1-15),(-180.000000-180.000000),(-90.000000-90.000000),(0-2)\nOK'),
+                      ('AT+CLBS', 'ERROR'),
+                      ('AT+CLBS?', 'ERROR'),
                      ],
         'AT+CLBSCFG': ['LBS configure',
                        # без симки и с
+                       # navia
                        ('AT+CLBSCFG=?', '+CLBSCFG: (0,1),(1-3),"ParamValue"\nOK'),
                        ('AT+CLBSCFG', 'ERROR'),
                        ('AT+CLBSCFG?', 'ERROR'),
@@ -2421,8 +2435,18 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
     # =========================================================================
     "GPS_GNSS=ВСЕ КОМАНДЫ ИДУТ ERROR!!! даже с симкой!!!": {
         # 0=DANGER+USELESS -------------------------------
-        # "AT+CGPSDEL": "[DANGER]delete GPS info",
-        # "AT+CGPSXD": "[DANGER]download XTRA file",
+        # "AT+CGPSDEL": ["[DANGER]delete GPS info=After executing the command, GPS start is cold start=must be executed after GPS stopped.",
+        #         # NAVIA
+        #         ('AT+CGPSDEL=?', 'ERROR'),
+        #         ('AT+CGPSDEL', 'ERROR'),
+        #         ('AT+CGPSDEL?', 'ERROR'),
+        # ],
+        # "AT+CGPSXD": "[DANGER]download XTRA file into module",
+        #         # NAVIA
+        #         ('AT+CGPSXD=?', 'ERROR'),
+        #         ('AT+CGPSXD', 'ERROR'),
+        #         ('AT+CGPSXD?', 'ERROR'),
+        # ],
 
         # 1=ACCURATE -------------------------------------
         # 2=DOUBT ----------------------------------------
@@ -2436,7 +2460,7 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
                     ('AT+CGNSSPWR', 'ERROR'),
                     ('AT+CGNSSPWR?', '+CGNSSPWR: 1,0,1'),
 
-                    ('AT+CGNSSPWR=1', 'OK\n+CGNSSPWR: READY!'),     # выдает через паузу!!!
+                    ('AT+CGNSSPWR=1', 'OK\n+CGNSSPWR: READY!'),     # выдает через паузу!!! около 10с
                     ],
         'AT+CGPS': ['start/stop GPS session',
                     # ИЗ ДОКУМЕНТАЦИИ -----------------
@@ -2500,6 +2524,11 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
                        ('AT+CGPSHOT=?', 'ERROR'),
                        ('AT+CGPSHOT', 'ERROR'),
                        ('AT+CGPSHOT?', 'ERROR'),
+
+                       # navia
+                       ('AT+CGPSHOT=?', 'OK'),
+                       ('AT+CGPSHOT', 'OK'),
+                       ('AT+CGPSHOT?', 'ERROR'),
                        ],
 
         # AGPS  --------------
@@ -2543,7 +2572,7 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
                         ('AT+CGPSNMEA', 'ERROR'),
                         ('AT+CGPSNMEA?', 'ERROR'),
                         ],
-        'AT+CGPSNEMARATE': ['NMEA output rate',
+        'AT+CGPSNEMARATE': ['set NMEA output rate',
                         # РЕАЛЬНО harvester+navia!!!---------------
                         ('AT+CGPSNEMARATE=?', 'ERROR'),
                         ('AT+CGPSNEMARATE', 'ERROR'),
@@ -2572,7 +2601,7 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
               ('AT+CGPSXE', 'ERROR'),
               ('AT+CGPSXE?', 'ERROR'),
               ],
-        'AT+CGPSXDAUTO': ['auto-download XTRA',
+        'AT+CGPSXDAUTO': ['auto-download XTRA file into module',
               # РЕАЛЬНО harvester+navia!!!---------------
               ('AT+CGPSXDAUTO=?', 'ERROR'),
               ('AT+CGPSXDAUTO', 'ERROR'),
@@ -2607,8 +2636,8 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
               ('AT+CGPSNOTIFY=?', 'ERROR'),
               ('AT+CGPSNOTIFY', 'ERROR'),
               ('AT+CGPSNOTIFY?', 'ERROR'),
-                      ],
-        'AT+CGNSSMODE': ['GNSS support mode',
+              ],
+        'AT+CGNSSMODE': ['GNSS support mode=GPS, GLONASS, BEIDOU and QZSS',
                  # harvester noSim
                  ('AT+CGNSSMODE=?', 'ERROR'),
                  ('AT+CGNSSMODE', 'ERROR'),
@@ -2618,6 +2647,11 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
                  ('AT+CGNSSMODE=?', '+CGNSSMODE: (1-4)'),
                  ('AT+CGNSSMODE', 'OK'),
                  ('AT+CGNSSMODE?', '+CGNSSINFO: 0'),
+
+                # navia-2=
+                 ('AT+CGNSSMODE=?', '+CGNSSMODE: (1-4)'),
+                 ('AT+CGNSSMODE', 'OK'),
+                 ('AT+CGNSSMODE?', '+CGNSSINFO: 3'),
                  ],
     },
 
