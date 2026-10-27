@@ -13,138 +13,12 @@ import pytest
 # ======================================================================================================================
 AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
     # =========================================================================
-    # ОПРЕДЕЛЕНИЯ
-    # -------------------------------------------------------------------------
-    # COMMAND LINE - whole line
-    # PREFIX AT
-    # SYMBOL +
-    # PARAMETER - имя параметра в строке после AT+
-    # SUBPARAMETERS - внутренние параметры внутри параметра!
-
-    # =========================================================================
-    # ВАЖНОСТЬ В РАБОТЕ!!!
-    # -------------------------------------------------------------------------
-    # ТАЙМАУТЫ
-    # при отправке нескольких команд - выжидать паузы! или до результата OK! - это решит многие проблемы наложения!
-
-    # =========================================================================
-    # ИСПОЛЬЗОВАНИЕ СРАЗУ НЕССКОЛЬКО КОМАНД В ОДНОМ ЗАПРОСЕ
-    # чтение своих номеров
-    # "AT+CPBS=\"ON\"; +CPBR=1",  # Чтение своего номера из книги
-    # "AT+CPBS=\'ON\'; +CPBR=1",  # Чтение своего номера из книги
-
-    # 1. всегда в начале AT!!! можно ставить AT+param или ATI, нельзя просто AT пустой!!! (иначе будет ошибка!)
-    # все остальные просто сочетаем через +
-    # 2. ДВОЕТОЧИЕ - разделитель!!!
-    # 3. ПРОБЕЛ не важен! ни на что не влияет!!!
-    # ---- Sent utf8 encoded message: "timeout 5.0 cat /dev/ttyUSB2 & sleep 0.3; printf 'ATI;+CPBS?;+CPBR=1\\r\\n' > /dev/ttyUSB2\r\n" ----
-    # Manufacturer: INCORPORATED
-    # Model: A7682E-R
-    # Revision: A7682M6_V1.11.1
-    # IMEI1: 865286077380516
-    # IMEI2: 865286076965218
-    # +GCAP: +CGSM,+FCLASS,+DS
-    #
-    # +CPBS: "ON",0,2
-    #
-    # +CME ERROR: not found
-    # root@harvest05:~#
-
-    # =========================================================================
-    # УНИВЕРСАЛЬНЫЕ КОМАНДЫ
-    # -------------------------------------------------------------------------
-    # A/ - отправить предыдущую команду! если ее еще не было то аналог AT = тоесть просто ОК вернет!
-
-    # =========================================================================
     # СТРУКТУРА группы команд!!!
     # -------------------------------------------------------------------------
     # 0=DANGER+USELESS -------------------------------
     # 1=ACCURATE -------------------------------------
     # 2=DOUBT ----------------------------------------
     # 3=UNKNOWN --------------------------------------
-
-    # =========================================================================
-    # КАК ОПРЕДЕЛИТЬ ЕСТЬ ЛИ КОМАНДА ВООБЩЕ ИЛИ НЕТ в системе
-    # -------------------------------------------------------------------------
-    # [=?] запрос вариантов вроде всегда решает!!! если ERROR - то нет такой команды!!!
-
-    # =========================================================================
-    # КОМАНДА КОНЕЧНАЯ = та версия что выдает нужный результат напрямую!
-    # тоесть когда точно нужно знать что отправлять для получения данных
-    # ВОПРОС - нужен ли знак вопроса или нет.
-
-    # как определить конечное имя
-    # -------------------------------------------------------------------------
-    # ВАРИАНТ-0=допустимых может быть несколько
-    # 'AT+CGMR': ['revision identification',
-    #             ('AT+CGMR=?', 'OK'),
-    #             ('AT+CGMR', '+CGMR: A011B02A7682M6_DS_FOTA\nOK'),   # РЕАЛЬНЫЙ ЗАПРОС <<<------- использовать простой!
-    #             ('AT+CGMR?', '+CGMR: A011B02A7682M6_DS_FOTA\nOK'),  # РЕАЛЬНЫЙ ЗАПРОС <<<-------
-
-    # ВАРИАНТ-1
-    # 'AT+GSN': ['IMEI (алиас)',
-    #            ('AT+GSN=?', 'OK'),
-    #            ('AT+GSN', '865286077380516\nOK'),     # РЕАЛЬНЫЙ ЗАПРОС <<<-------
-    #            ('AT+GSN?', 'ERROR'),                  # НЕКОРРЕКТНЫЙ синтаксис
-
-    # ВАРИАНТ-2
-    # 'AT+CIMI': ['IMSI (IMSI SIM-карты)',
-    #             ('AT+CIMI=?', 'OK'),                      # всегда может работать НО это запрос доступных вариантов
-    #             ('AT+CIMI', '+CME ERROR: SIM failure'),   # РЕАЛЬНЫЙ ЗАПРОС <<<-------
-    #             ('AT+CIMI?', '+CME ERROR: Operation not supported'),  # НЕКОРРЕКТНЫЙ синтаксис
-
-    # ВАРИАНТ-3-1=с изменяемыми значениями=правильно запрашивать значение!
-    # 'AT+CSQDELTA': ['порог изменения RSSI',
-    #                 ('AT+CSQDELTA=?', '+CSQDELTA: (0-5)\nOK'),
-    #                 ('AT+CSQDELTA', 'OK'),
-    #                 ('AT+CSQDELTA?', '+CSQDELTA: 5\nOK'),     # РЕАЛЬНЫЙ ЗАПРОС <<<-------
-    #                 ('AT+CSQDELTA=0', 'OK'),
-    #                 ('AT+CSQDELTA?', '+CSQDELTA: 0\nOK'),
-    #                 ('AT+CSQDELTA=1', 'OK'),
-    #                 ('AT+CSQDELTA?', '+CSQDELTA: 1\nOK'),
-    #                 ('AT+CSQDELTA=2', 'OK'),
-    #                 ('AT+CSQDELTA?', '+CSQDELTA: 2\nOK'),
-    #                 ('AT+CSQDELTA=3', 'OK'),
-    #                 ('AT+CSQDELTA?', '+CSQDELTA: 3\nOK'),
-    #                 ('AT+CSQDELTA=4', 'OK'),
-    #                 ('AT+CSQDELTA?', '+CSQDELTA: 4\nOK'),
-    #                 ('AT+CSQDELTA=5', 'OK'),
-    #                 ('AT+CSQDELTA?', '+CSQDELTA: 5\nOK'),
-    #                 ],
-
-    # ВАРИАНТ-3-2=с изменяемыми значениями=иногда правильно дает по прямому запросу
-    # 'AT+CPAS': ['phone activity status',
-    #             ('AT+CPAS=?', '+CPAS: (0,3,4)\nOK'),
-    #             ('AT+CPAS', '+CPAS: 0\nOK'),                     # РЕАЛЬНЫЙ ЗАПРОС <<<-------
-    #             ('AT+CPAS?', '+CME ERROR: Operation not supported'),
-    #             ('AT+CPAS=0', 'ERROR'),
-    #             ('AT+CPAS?', '+CME ERROR: Operation not supported'),
-    #             ('AT+CPAS=3', 'ERROR'),
-    #             ('AT+CPAS?', '+CME ERROR: Operation not supported'),
-    #             ('AT+CPAS=4', 'ERROR'),
-    #             ('AT+CPAS?', '+CME ERROR: Operation not supported'),
-    #             ],
-
-    # =========================================================================
-    # ПОЛУЧЕНИЕ ДОПУСТИМЫХ ЗНАЧЕНИЙ
-    # -------------------------------------------------------------------------
-
-    # =========================================================================
-    # УСТАНОВКА ЗНАЧЕНИЙ
-    # -------------------------------------------------------------------------
-    # 1=ОДНО ЗНАЧЕНИЕ
-
-    # СТРОКОВОЕ  значение=ВОЙНЫЕ КАВЫЧКИ!!!
-    # It needs double quotation marks.
-
-    # -------------------------------------------------------------------------
-    # 2=НЕСКОЛЬКО ЗНАЧЕНИЙ
-    # ПОЗИЦИОННЫЕ ЗНАЧЕНИЯ
-    # AT+CFUN=<fun>[,<rst>]
-    # OK
-
-    # AT+CGACT=1,1 — активирует GPRS-соединение и разрешает входящие подключения.
-    # AT+CGDCONT=1,"ip","адрес_APN — задаёт тип соединения (например, IP) и адрес точки доступа (APN). Пример: AT+CGDCONT=1,"ip","airtelgprs.com".
 
     # =========================================================================
     # =========================================================================
@@ -602,6 +476,7 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
                    ('AT+CSQ=?', '+CSQ: (0-31,99),(0-7,99)\nOK'),
                    ('AT+CSQ', '+CSQ: 23,0\nOK'),    # без симки
                    ('AT+CSQ', '+CSQ: 25,0\nOK'),    # с симкой
+                   ('AT+CSQ', '+CSQ: 28,99\nOK'),   # с симкой
                    ('AT+CSQ?', 'ERROR'),
                    ('AT+CSQ=0', 'ERROR'),
                    ('AT+CSQ?', 'ERROR'),
@@ -1085,6 +960,7 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
                        ],
         'AT+CASSISTLOC': ['base station location for LTE/CDMA',
                           # без симки и с
+                          # navia
                           ('AT+CASSISTLOC=?', 'ERROR'),
                           ('AT+CASSISTLOC', 'ERROR'),
                           ('AT+CASSISTLOC?', 'ERROR'),
@@ -2422,8 +2298,6 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
     },
 
     # =========================================================================
-    # 15. GPS / GNSS
-    # =========================================================================
     "GPS_GNSS=обязательно АКТИВИРОВАТЬ питание!": {
         # 0=DANGER+USELESS -------------------------------
         # "AT+CGPSDEL": ["[DANGER]delete GPS info=After executing the command, GPS start is cold start=must be executed after GPS stopped.",
@@ -2440,6 +2314,16 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
         # ],
 
         # 1=ACCURATE -------------------------------------
+        # ИНФО О ЧИПЕ
+        'AT+CGNSSPROD': ['[TIME] Get GNSS Production Info - НУЖНО 10 СЕКУНД НА ОТВЕТ!!!!',
+                         # NAVIA
+                         ('AT+CGNSSPROD=?', 'OK'),
+                         ('AT+CGNSSPROD', 'PRODUCT: UNICORECOMM,UC6228CI,R3.4.21.0Build16211\nOK'),
+                         ('AT+CGNSSPROD?', 'ERROR'),
+
+                        # из доков
+                         ('AT+CGNSSPROD', 'PRODUCT: UC6228CI,G1L1E1,N/A,R3.4.21.0Build16211\nOK'),
+                         ],
         # ВКЛЮЧЕНИЕ ПИТАНИЯ
         'AT+CGNSSPWR?': ['pwr for gnss module=не у всех есть! harvester-НЕТ! ',
                         # HARVESTER - ВСЕ ERROR!!!
@@ -2490,6 +2374,11 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
                         ('AT+CGPSCOLD', 'ERROR'),
                         ('AT+CGPSCOLD?', 'ERROR'),
                         ],
+        'AT+CGPSWARM': ['Warm Start GPS',
+                        ('AT+CGPSWARM=?', 'OK'),
+                        ('AT+CGPSWARM', 'OK'),
+                        ('AT+CGPSWARM?', 'ERROR'),
+                        ],
         'AT+CGPSHOT': ['hot start GPS',
                        ('AT+CGPSHOT=?', 'ERROR'),
                        ('AT+CGPSHOT', 'ERROR'),
@@ -2516,6 +2405,26 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
                         ('AT+CGPSAUTO=1', 'OK'),
                         ('AT+CGPSAUTO?', '+CGPSAUTO: 1'),
                         ],
+
+        'AT+CGPSNMEARATE': ['Set NMEA Output Rate',
+                            # navia
+                            ('AT+CGPSNMEARATE=?', '+CGPSNMEARATE: (1,2,5)\nOK'),
+                            ('AT+CGPSNMEARATE', 'OK'),
+                            ('AT+CGPSNMEARATE?', '+CGPSNMEARATE: 1\nOK'),
+                            ('AT+CGPSNMEARATE=2', 'OK'),
+                            ('AT+CGPSNMEARATE?', '+CGPSNMEARATE: 2\nOK'),
+                            ],
+
+        'AT+CGNSSPORTSWITCH': ['Select output port for NMEA',
+                               # navia
+                               ('AT+CGNSSPORTSWITCH=?', '+CGNSSPORTSWITCH: (0,1),(0,1)\nOK'),
+                               ('AT+CGNSSPORTSWITCH', 'ERROR'),
+                               ('AT+CGNSSPORTSWITCH?', '+CGNSSPORTSWITCH: 0,0\nOK'),
+                               ('AT+CGNSSPORTSWITCH=0,1', 'OK'),
+                               ('AT+CGNSSPORTSWITCH?', '+CGNSSPORTSWITCH: 0,1\nOK'),
+                               ('AT+CGNSSPORTSWITCH=1,1', 'OK'),
+                               ('AT+CGNSSPORTSWITCH?', '+CGNSSPORTSWITCH: 1,1\nOK'),
+                               ],
 
         # 2=DOUBT ----------------------------------------
         # 3=UNKNOWN --------------------------------------
@@ -2666,7 +2575,7 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
     },
 
     # =========================================================================
-    # 16. РАЗНОЕ / ВЕНДОРСКОЕ
+    # 16. РАЗНОЕ
     # =========================================================================
     "MISC/VENDOR(может быть не указан в мануале)": {
         # 0=DANGER+USELESS -------------------------------
@@ -2873,6 +2782,434 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
                     ('AT+CIMS', 'ERROR'),
                     ('AT+CIMS?', 'ERROR'),
                     ],
+    },
+    # =========================================================================
+    "-11=TCP_IP_STACK(Socket Service)": {
+        'AT+NETOPEN': ['[DANGER]Start Socket Service (Активирует PDP контекст)',
+                       # navia
+                       ('AT+NETOPEN=?', 'ERROR'),
+                       ('AT+NETOPEN', '+NETOPEN: 0'),
+                       ('AT+NETOPEN?', '+NETOPEN: 1'),
+
+                       # из доков
+                       ('AT+NETOPEN=?', '+NETOPEN: (1-15)\nOK'),
+                       ('AT+NETOPEN', 'ERROR'),
+                       ('AT+NETOPEN?', '+NETOPEN: 0\nOK'),
+                       ('AT+NETOPEN=1', 'OK\n+NETOPEN: 0,1'),
+                       ('AT+NETOPEN?', '+NETOPEN: 1\nOK'),
+                       ],
+        'AT+NETCLOSE': ['[DANGER]Stop Socket Service (Деактивирует PDP)',
+                        # navia
+                        ('AT+NETCLOSE=?', 'OK'),
+
+                        # из доков
+                        ('AT+NETCLOSE=?', 'OK'),
+                        ('AT+NETCLOSE', 'ERROR'),
+                        ('AT+NETCLOSE?', 'ERROR'),
+                        ('AT+NETCLOSE=1', 'OK\n+NETCLOSE: 0,1'),
+                        ],
+        'AT+CIPOPEN': ['[DANGER]Establish Connection (TCP/UDP)',
+                       # NAVIA
+                       ('AT+CIPOPEN=?', '+CIPOPEN: (0-9),("TCP","UDP","UDP SERVER")\nOK'),
+                       ('AT+CIPOPEN', 'ERROR'),
+                       ('AT+CIPOPEN?', '+CIPOPEN: 0\n+CIPOPEN: 1\n+CIPOPEN: 2\n...\n+CIPOPEN: 9\nOK'),
+
+                       ('AT+CIPOPEN=0,"TCP","1.1.1.1",80', 'OK\n+CIPOPEN: 0,0'),    # из доков
+                       ],
+
+
+
+
+        'AT+CIPSEND': ['[DANGER]Send Data (Ждет ввода данных и Ctrl+Z)',
+                        # из доков
+                       ('AT+CIPSEND=?', '+CIPSEND: (0-9),(1-1500)\nOK'),
+                       ('AT+CIPSEND', 'ERROR'),
+                       ('AT+CIPSEND?', 'OK'),
+                       ('AT+CIPSEND=0,5', '> (ждет ввода)'),
+                       ],
+        'AT+CIPCLOSE': ['[DANGER]Close Socket',
+                        # из доков
+                        ('AT+CIPCLOSE=?', '+CIPCLOSE: (0-9)\nOK'),
+                        ('AT+CIPCLOSE', 'ERROR'),
+                        ('AT+CIPCLOSE?', '+CIPCLOSE: 0,0,0,0,0,0,0,0,0,0\nOK'),
+                        ('AT+CIPCLOSE=0', 'OK\n+CIPCLOSE: 0,0'),
+                        ],
+        'AT+CIPRXGET': ['Set data retrieve mode',
+                        # из доков
+                        ('AT+CIPRXGET=?', '+CIPRXGET: (0-4),(0-9),(1-1500)\nOK'),
+                        ('AT+CIPRXGET', 'ERROR'),
+                        ('AT+CIPRXGET?', '+CIPRXGET: 1\nOK'),
+                        ('AT+CIPRXGET=1', 'OK'),
+                        ],
+        'AT+CIPHEAD': ['Add IP Header',
+                       # из доков
+                       ('AT+CIPHEAD=?', '+CIPHEAD: (0-1)\nOK'),
+                       ('AT+CIPHEAD', 'OK'),
+                       ('AT+CIPHEAD?', '+CIPHEAD: 1\nOK'),
+                       ('AT+CIPHEAD=1', 'OK'),
+                       ],
+        'AT+CIPMODE': ['Transparent mode (0/1)',
+                       # из доков
+                       ('AT+CIPMODE=?', '+CIPMODE: (0-1)\nOK'),
+                       ('AT+CIPMODE', 'OK'),
+                       ('AT+CIPMODE?', '+CIPMODE: 0\nOK'),
+                       ('AT+CIPMODE=1', 'OK'),
+                       ],
+        'AT+SERVERSTART': ['[DANGER]Start TCP Server',
+                           # из доков
+                           ('AT+SERVERSTART=?', '+SERVERSTART: (0-65535),(0-3)\nOK'),
+                           ('AT+SERVERSTART', 'ERROR'),
+                           ('AT+SERVERSTART?', 'ERROR'),
+                           ('AT+SERVERSTART=8080,0', 'OK'),
+                           ],
+        'AT+CIPSETAPN': ['Set up PDP/APN channels',
+                         # из доков
+                         ('AT+CIPSETAPN=?', 'OK'),
+                         ('AT+CIPSETAPN', 'ERROR'),
+                         ('AT+CIPSETAPN?', 'ERROR'),
+                         ],
+    },
+
+    # =========================================================================
+    "-12=HTTP_SERVICE": {
+        'AT+HTTPINIT': ['[DANGER]Start HTTP Service',
+                        # navia
+                        ('AT+HTTPINIT=?', '+HTTPINIT: (1-n)\nOK'),
+                        ('AT+HTTPINIT', 'OK'),
+                        ('AT+HTTPINIT?', 'ERROR'),
+                        ('AT+HTTPINIT=1', 'ERROR'),
+                        ],
+        'AT+HTTPTERM': ['Stop HTTP Service',
+                        ('AT+HTTPTERM=?', '+HTTPTERM: (1-15)\nOK'),
+                        ('AT+HTTPTERM', 'ERROR'),
+                        ('AT+HTTPTERM?', 'ERROR'),
+                        ('AT+HTTPTERM=1', 'OK\n+HTTPTERM: 0,1'),
+                        ],
+        'AT+HTTPPARA': ['Set HTTP Parameters (URL, ContentType)',
+                        ('AT+HTTPPARA=?', 'OK'),    # navia
+                        ('AT+HTTPPARA', 'ERROR'),   # navia
+                        ('AT+HTTPPARA?', 'ERROR'),
+                        ('AT+HTTPPARA="URL","http://example.com"', 'OK'),
+                        ],
+        'AT+HTTPACTION': ['HTTP Method Action (GET/POST/HEAD)',
+                          ('AT+HTTPACTION=?', '+HTTPACTION: (0-4)\nOK'),# navia
+                          ('AT+HTTPACTION', 'ERROR'),# navia
+                          ('AT+HTTPACTION?', 'ERROR'),# navia
+                          ('AT+HTTPACTION=0', 'OK\n+HTTPACTION: 0,200,1024'),
+                          ],
+        'AT+HTTPREAD': ['Read HTTP Response',
+                        ('AT+HTTPREAD=?', 'OK'),# navia
+                        ('AT+HTTPREAD', 'ERROR'),# navia
+                        ('AT+HTTPREAD?', 'ERROR'),# navia
+
+                        ('AT+HTTPREAD?', '+HTTPREAD: LEN,0\nOK'),
+                        ('AT+HTTPREAD=0,100', 'OK\n+HTTPREAD: 100\n<data>'),
+                        ],
+        'AT+HTTPDATA': ['Input HTTP Data (POST)',
+                        ('AT+HTTPDATA=?', 'OK'),# navia
+                        ('AT+HTTPDATA', 'ERROR'),# navia
+                        ('AT+HTTPDATA?', 'ERROR'),# navia
+                        ('AT+HTTPDATA=10,1000', 'DOWNLOAD'),
+                        ],
+        'AT+HTTPHEAD': ['Read HTTP Header',
+                        ('AT+HTTPHEAD=?', 'OK'),# navia
+                        ('AT+HTTPHEAD', 'ERROR'),# navia
+                        ('AT+HTTPHEAD?', 'ERROR'),# navia
+
+                        ('AT+HTTPHEAD', '+HTTPHEAD: 200\n<data>'),
+                        ],
+    },
+    # =========================================================================
+    "-13=MQTT_SERVICE": {
+        'AT+CMQTTSTART': ['[DANGER]Start MQTT Service',
+                          ('AT+CMQTTSTART=?', '+CMQTTSTART: (1-15)\nOK'),
+                          ('AT+CMQTTSTART', 'ERROR'),
+                          ('AT+CMQTTSTART?', 'ERROR'),
+                          ('AT+CMQTTSTART=1', 'OK\n+CMQTTSTART: 0,1'),
+                          ],
+        'AT+CMQTTSTOP': ['Stop MQTT Service',
+                         ('AT+CMQTTSTOP=?', '+CMQTTSTOP: (1-15)\nOK'),
+                         ('AT+CMQTTSTOP', 'ERROR'),
+                         ('AT+CMQTTSTOP?', 'ERROR'),
+                         ('AT+CMQTTSTOP=1', 'OK\n+CMQTTSTOP: 0,1'),
+                         ],
+        'AT+CMQTTACCQ': ['Acquire MQTT Client',
+                         ('AT+CMQTTACCQ=?', '+CMQTTACCQ: (0-1),(1-128)[,(0-1)]\nOK'),# navia
+                         ('AT+CMQTTACCQ', 'ERROR'),
+                         ('AT+CMQTTACCQ?', '+CMQTTACCQ: 0,"clientID",0\nOK'),
+                         ('AT+CMQTTACCQ=0,"clientID",0', 'OK'),
+                         ],
+        'AT+CMQTTCONNECT': ['Connect to MQTT Server',
+                            ('AT+CMQTTCONNECT=?',
+                             '+CMQTTCONNECT: (0-1),(9-256),(1-64800),(0-1)[,<user>,<pass>]\nOK'),# navia
+                            ('AT+CMQTTCONNECT', 'ERROR'),# navia
+                            ('AT+CMQTTCONNECT?', '+CMQTTCONNECT: 0\n+CMQTTCONNECT: 1\nOK'),# navia
+
+                            ('AT+CMQTTCONNECT?', '+CMQTTCONNECT: 0,"tcp://1.2.3.4:1883",20,1\nOK'),
+                            ('AT+CMQTTCONNECT=0,"tcp://1.2.3.4:1883",20,1', 'OK\n+CMQTTCONNECT: 0,0'),
+                            ],
+        'AT+CMQTTDISC': ['Disconnect from MQTT Server',
+                         ('AT+CMQTTDISC=?', '+CMQTTDISC: (0-1),(0,1-180)\nOK'),
+                         ('AT+CMQTTDISC', 'ERROR'),
+                         ('AT+CMQTTDISC?', '+CMQTTDISC: 0,1\nOK'),
+                         ('AT+CMQTTDISC=0', 'OK\n+CMQTTDISC: 0,0'),
+                         ],
+        'AT+CMQTTTOPIC': ['Input Topic of Publish',
+                          ('AT+CMQTTTOPIC=?', '+CMQTTTOPIC: (0-1),(1-1024)\nOK'),
+                          ('AT+CMQTTTOPIC', 'ERROR'),
+                          ('AT+CMQTTTOPIC?', 'ERROR'),
+                          ('AT+CMQTTTOPIC=0,9', '> (ждет топик)'),
+                          ],
+        'AT+CMQTTPAYLOAD': ['Input Payload of Publish',
+                            ('AT+CMQTTPAYLOAD=?', '+CMQTTPAYLOAD: (0-1),(1-10240)\nOK'),
+                            ('AT+CMQTTPAYLOAD', 'ERROR'),
+                            ('AT+CMQTTPAYLOAD?', 'ERROR'),
+                            ('AT+CMQTTPAYLOAD=0,5', '> (ждет payload)'),
+                            ],
+        'AT+CMQTTPUB': ['Publish Message',
+                        ('AT+CMQTTPUB=?', '+CMQTTPUB: (0-1),(0-2),(1-180),(0-1),(0-1)\nOK'),
+                        ('AT+CMQTTPUB', 'ERROR'),
+                        ('AT+CMQTTPUB?', 'ERROR'),
+                        ('AT+CMQTTPUB=0,1,60', 'OK\n+CMQTTPUB: 0,0'),
+                        ],
+        'AT+CMQTTSUB': ['Subscribe Topic',
+                        ('AT+CMQTTSUB=?', '+CMQTTSUB: (0-1),(1-1024),(0-2),(0-1)\nOK'),
+                        ('AT+CMQTTSUB', 'ERROR'),
+                        ('AT+CMQTTSUB?', '+CMQTTSUB: \nOK'),
+                        ('AT+CMQTTSUB=0,9,1', '> (ждет топик)'),
+                        ],
+        'AT+CMQTTUNSUB': ['Unsubscribe Topic',
+                          ('AT+CMQTTUNSUB=?', '+CMQTTUNSUB: (0-1),(1-1024),(0-1)\nOK'),
+                          ('AT+CMQTTUNSUB', 'ERROR'),
+                          ('AT+CMQTTUNSUB?', 'ERROR'),
+                          ('AT+CMQTTUNSUB=0,9', '> (ждет топик)'),
+                          ],
+        'AT+CMQTTREL': ['Release MQTT Client',
+                        ('AT+CMQTTREL=?', '+CMQTTREL: (0-1)\nOK'),
+                        ('AT+CMQTTREL', 'ERROR'),
+                        ('AT+CMQTTREL?', 'OK'),
+                        ('AT+CMQTTREL=0', 'OK'),
+                        ],
+    },
+    # =========================================================================
+    "---14=FTP_SERVICE": {
+        'AT+CFTPSSTART': ['[DANGER]Start FTP Service',
+                          ('AT+CFTPSSTART=?', '+CFTPSSTART: (1-n)\nOK'),# navia
+                          ('AT+CFTPSSTART', 'OK'),# navia
+                          ('AT+CFTPSSTART?', 'ERROR'),# navia
+                          ('AT+CFTPSSTART=1', 'OK\n+CFTPSSTART: 0,1'),
+                          ],
+        'AT+CFTPSSTOP': ['Stop FTP Service',
+                         ('AT+CFTPSSTOP=?', '+CFTPSSTOP: (1-15)\nOK'),
+                         ('AT+CFTPSSTOP', 'ERROR'),
+                         ('AT+CFTPSSTOP?', 'ERROR'),
+                         ('AT+CFTPSSTOP=1', 'OK\n+CFTPSSTOP: 0,1'),
+                         ],
+        'AT+CFTPSLOGIN': ['Login to FTP Server',
+                          ('AT+CFTPSLOGIN=?',
+                           '+CFTPSLOGIN: "ADDRESS",(1-65535),"USERNAME","PASSWORD"[,(0-3)]\nOK'),
+                          ('AT+CFTPSLOGIN', 'ERROR'),
+                          ('AT+CFTPSLOGIN?', '+CFTPSLOGIN: 0\nOK'),
+                          ('AT+CFTPSLOGIN="1.2.3.4",21,"user","pass",0', 'OK\n+CFTPSLOGIN: 0'),
+                          ],
+        'AT+CFTPSLOGOUT': ['Logout from FTP Server',
+                           ('AT+CFTPSLOGOUT=?', 'OK'),
+                           ('AT+CFTPSLOGOUT', 'ERROR'),
+                           ('AT+CFTPSLOGOUT?', 'ERROR'),
+                           ('AT+CFTPSLOGOUT', 'OK\n+CFTPSLOGOUT: 0'),
+                           ],
+        'AT+CFTPSLIST': ['List Directory',
+                         ('AT+CFTPSLIST=?', 'OK'),
+                         ('AT+CFTPSLIST', 'ERROR'),
+                         ('AT+CFTPSLIST?', 'ERROR'),
+                         ('AT+CFTPSLIST="/"', 'OK\n+CFTPSLIST: DATA,100\n...\n+CFTPSLIST: 0'),
+                         ],
+        'AT+CFTPSGETFILE': ['Download File from Server',
+                            ('AT+CFTPSGETFILE=?', '+CFTPSGETFILE: "FILEPATH"[,(1-2)]\nOK'),
+                            ('AT+CFTPSGETFILE', 'ERROR'),
+                            ('AT+CFTPSGETFILE?', 'ERROR'),
+                            ('AT+CFTPSGETFILE="test.txt",1', 'OK\n+CFTPSGETFILE: 0'),
+                            ],
+        'AT+CFTPSPUTFILE': ['Upload File to Server',
+                            ('AT+CFTPSPUTFILE=?', '+CFTPSPUTFILE: "FILEPATH"[,(1-2)]\nOK'),
+                            ('AT+CFTPSPUTFILE', 'ERROR'),
+                            ('AT+CFTPSPUTFILE?', 'ERROR'),
+                            ('AT+CFTPSPUTFILE="test.txt",1', 'OK\n+CFTPSPUTFILE: 0'),
+                            ],
+    },
+    # =========================================================================
+    "---20=WIFI(Только для ASR1803)": {
+        'AT+CWMAP': ['Open/Close WIFI',
+                    # navia
+                     ('AT+CWMAP=?', 'ERROR'),
+                     ('AT+CWMAP', 'ERROR'),
+                     ('AT+CWMAP?', 'ERROR'),
+                     ('AT+CWMAP=1', 'ERROR'),
+
+                     # из доков
+                     ('AT+CWMAP=?', '+CWMAP: (0-1)\nOK'),
+                     ('AT+CWMAP', 'ERROR'),
+                     ('AT+CWMAP?', '+CWMAP: 1\nOK'),
+                     ('AT+CWMAP=0', 'OK'),
+                     ],
+        'AT+CWSSID': ['SSID setting',
+                      # navia
+                      ('AT+CWSSID=?', 'ERROR'),
+                      ('AT+CWSSID', 'ERROR'),
+                      ('AT+CWSSID?', 'ERROR'),
+
+                      # из доков
+                      ('AT+CWSSID=?', 'ERROR'),
+                      ('AT+CWSSID', 'ERROR'),
+                      ('AT+CWSSID?', '+CWSSID: Mrvl-uAP-X-C7FC\nOK'),
+                      ('AT+CWSSID="MyWiFi"', 'OK'),
+                      ],
+        'AT+CWAUTH': ['Authentication setting',
+                      # navia
+                      ('AT+CWAUTH=?', 'ERROR'),
+                      ('AT+CWAUTH', 'ERROR'),
+                      ('AT+CWAUTH?', 'ERROR'),
+
+                      # из доков
+                      ('AT+CWAUTH=?', 'ERROR'),
+                      ('AT+CWAUTH', 'ERROR'),
+                      ('AT+CWAUTH?', '+CWAUTH: 5,4,"12345678"\nOK'),
+                      ('AT+CWAUTH=5,4,"12345678"', 'OK'),
+                      ],
+        'AT+CWMACADDR': ['Get MAC address',
+                         # navia
+                         ('AT+CWMACADDR=?', 'ERROR'),
+                         ('AT+CWMACADDR', 'ERROR'),
+                         ('AT+CWMACADDR?', 'ERROR'),
+
+                         # из доков
+                         ('AT+CWMACADDR=?', '[<number>,<mac_addr>]\nOK'),
+                         ('AT+CWMACADDR', 'ERROR'),
+                         ('AT+CWMACADDR?', '0,00:0A:F5:88:88:8F\nOK'),
+                         ],
+        'AT+CWSTASCAN': ['Scan WIFI network',
+                         ('AT+CWSTASCAN=?', '+CWSTASCAN: (0-1)\nOK'),
+                         ('AT+CWSTASCAN', 'ERROR'),
+                         ('AT+CWSTASCAN?', '+CWSTASCAN: 1\nOK'),
+                         ('AT+CWSTASCAN=1', 'OK'),
+                         ],
+    },
+    # =========================================================================
+    "---21=BLUETOOTH": {
+        'AT+BTPOWER': ['Open/Close BT Device = включение 3секунды до ответа OK!!!',
+                       # navia
+                       ('AT+BTPOWER=?', '+BTPOWER: (0-1)\nOK'),
+                       ('AT+BTPOWER', 'ERROR'),
+                       ('AT+BTPOWER?', '+BTPOWER: 0\nOK'),
+                       ('AT+BTPOWER=1', 'OK'),
+                       ('AT+BTPOWER?', '+BTPOWER: 1\nOK'),
+                       ],
+        'AT+BTHOST': ['Get/Set BT Device Name',
+                      # navia
+                      ('AT+BTHOST=?', 'OK'),
+                      ('AT+BTHOST', 'ERROR'),
+                      ('AT+BTHOST?', '+BTHOST: SIMOCM BT,14:00:20:9A:7D:DF\nOK'),
+                      ('AT+BTHOST?', '+BTHOST: SIMCOM BT,11:22:23:33:33:80\nOK'),   # из доков
+
+                      ('AT+BTHOST=SIMCOM_BT', 'OK'),
+                      ],
+        'AT+BTADDR': ['Get/Set BT Device Address',
+                      # navia
+                      ('AT+BTADDR=?', 'OK'),
+                      ('AT+BTADDR', 'ERROR'),
+                      ('AT+BTADDR?', '+BTADDR: 14:00:20:9A:7D:DF\nOK'),
+
+                      ('AT+BTADDR=11:22:23:33:33:80', 'OK'),
+                      ],
+        'AT+BTSCAN': ['Scan BT Device',
+                      # navia
+                      ('AT+BTSCAN=?', '+BTSCAN: (0-1),(0-1),(6-48)\nOK'),
+                      ('AT+BTSCAN=?', '+BTSCAN: (0-1),(0-1),(1-48)\nOK'), # из доков
+                      ('AT+BTSCAN', 'ERROR'),
+                      ('AT+BTSCAN?', 'ERROR'),      # почемуто не работает!!!
+                      ('AT+BTSCAN=1,0,20', 'OK'),
+
+                      ('AT+BTSCAN?', '+BTSCAN: 0,1,Mi Note 3,F4:F5:DB:C9:03:2C,178\nOK'),
+                      ],
+        'AT+BTPAIR': ['Pair With Other BT Device',
+                      ('AT+BTPAIR=?', '+BTPAIR: (index)\nOK'),
+                      ('AT+BTPAIR', 'ERROR'),
+                      ('AT+BTPAIR?', 'ERROR'),
+                      ('AT+BTPAIR=0,1', 'OK\n+BTPAIRING: 1,KK,04:8C:9A:D7:90:4C,466622'),
+                      ],
+        'AT+BTPAIRED': ['Get Paired BT Device',
+                        # navia
+                        ('AT+BTPAIRED=?', 'OK'),
+                        ('AT+BTPAIRED', '\n'),  # ВООБШЕ НИЧЕГО НЕ ОТВЕЧАЕТ!!!!
+                        ('AT+BTPAIRED?', 'OK'),
+
+                        # дипсик
+                        ('AT+BTPAIRED=?', 'ERROR'),
+                        ('AT+BTPAIRED', 'ERROR'),
+                        ('AT+BTPAIRED?', '+BTPAIRED: 1,KK,04:8C:9A:D7:90:4C\nOK'),
+                        ],
+        'AT+BTSPPSRV': ['Active/Deactive Local SPP Service',
+                        ('AT+BTSPPSRV=?', '+BTSPPSRV: (0-1)\nOK'),
+                        ('AT+BTSPPSRV', 'ERROR'),
+                        ('AT+BTSPPSRV?', '+BTSPPSRV: 1\nOK'),
+                        ('AT+BTSPPSRV=1', 'OK'),
+                        ],
+        'AT+BTSPPCONN': ['Establish/Release SPP Connection',
+                         ('AT+BTSPPCONN=?', '+BTSPPCONN: (0-1)\nOK'),
+                         ('AT+BTSPPCONN', 'ERROR'),
+                         ('AT+BTSPPCONN?', '+BTSPPCONN: 1\nOK'),
+                         ('AT+BTSPPCONN=1,1', 'OK\n+BTSPPCONN: 1,990,04:8C:9A:D7:90:4C'),
+                         ],
+        'AT+BTSPPSEND': ['SPP Send Data',
+                         ('AT+BTSPPSEND=?', 'ERROR'),
+                         ('AT+BTSPPSEND', 'ERROR'),
+                         ('AT+BTSPPSEND?', 'ERROR'),
+                         ('AT+BTSPPSEND="00310032"', 'OK\n+BTSPPSEND: 1'),
+                         ],
+    },
+    # =========================================================================
+    "---22=OTHER_NEW(A76XX)": {
+        # 0=DANGER+USELESS -------------------------------
+        # 1=ACCURATE -------------------------------------
+        'AT+SIGNS': ['Query the antenna RSRP RSRQ RSSI',
+                     ('AT+SIGNS=?', '+SIGNS:\nOK'),
+                     ('AT+SIGNS',
+                      '+RSRP0:-93\n+RSRP1:-112\n+RSRQ0:-7\n+RSRQ1:-8\n+RSSI0:-48\n+RSSI1:-67\n+TXPOWER:24\n+MAXTXPOWER:23\nOK'),
+                     ('AT+SIGNS?',
+                      '+RSRP0:-93\n+RSRP1:-112\n+RSRQ0:-7\n+RSRQ1:-8\n+RSSI0:-48\n+RSSI1:-67\n+TXPOWER:24\n+MAXTXPOWER:23\nOK'),
+                     ],
+        'AT+SIMEI': ['[DANGER]Set IMEI for the module',
+                     ('AT+SIMEI=?', 'OK'),
+                     ('AT+SIMEI', 'ERROR'),
+                     ('AT+SIMEI?', '+SIMEI: 357396012183175\nOK'),
+                     ('AT+SIMEI=357396012183175', 'OK'),
+                     ],
+        'AT+CPOF': ['[DANGER]Power down the module',
+                    ('AT+CPOF=?', '+CPOF: (0,1)\nOK'),
+                    ('AT+CPOF', 'OK\nPOWER DOWN'),
+                    ('AT+CPOF?', 'ERROR'),
+                    ('AT+CPOF=1', 'OK\nPOWER DOWN'),
+                    ],
+        'AT+CRESET': ['[DANGER]Reset the module',
+                      ('AT+CRESET=?', 'OK'),
+                      ('AT+CRESET', 'OK'),
+                      ('AT+CRESET?', 'ERROR'),
+                      ],
+        'AT+CPINR': ['PIN retries (A76XX версия)',
+                     ('AT+CPINR=?', '+CPINR: (0-3),(0-3),(0-10),(0-10)\nOK'),
+                     ('AT+CPINR', '+CME ERROR: Operation not supported'),
+                     ('AT+CPINR?', '+CPINR:3,3,10,10\nOK'),
+                     ],
+        'AT+CEID': ['Read EID from eSIM card',
+                    ('AT+CEID=?', 'OK'),
+                    ('AT+CEID', '+EID:3506000000000000025000000764040\nOK'),
+                    ('AT+CEID?', 'ERROR'),
+                    ],
+        'AT+CGNSSPROD': ['Get GNSS Production Info',
+                         ('AT+CGNSSPROD=?', 'OK'),
+                         ('AT+CGNSSPROD', 'PRODUCT: UC6228CI,G1L1E1,N/A,R3.4.21.0Build16211\nOK'),
+                         ('AT+CGNSSPROD?', 'ERROR'),
+                         ],
     },
 }
 
