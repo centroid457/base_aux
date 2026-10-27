@@ -2335,7 +2335,59 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
 
                         ('AT+CGNSSPWR=1', 'OK\n+CGNSSPWR: READY!'),  # выдает через паузу!!! около 10с
                         ],
-        # ПОЛУЧЕНИЕ АКТУАЛЬНЫХ ДАННЫХ
+
+        # КООРДИНАТЫ-1=логи первички=спутников
+        'AT+CGPSFTM': ['START GPS test mode',
+                       # harvester
+                       ('AT+CGPSFTM=?', 'ERROR'),
+                       ('AT+CGPSFTM', 'ERROR'),
+                       ('AT+CGPSFTM?', 'ERROR'),
+
+                       # navia
+                       ('AT+CGPSFTM=?', 'OK'),
+                       ('AT+CGPSFTM', 'ERROR'),
+                       ('AT+CGPSFTM?', '+CGPSFTM: 0'),
+
+                       # включение
+                       ('AT+CGPSFTM=1', '''
+                       OK
+                        +GPGSV,03,28,10,27,19,37,13,34,05,27,15,30,17,33,09,21,194,37
+                        +GBGSV
+                        +GAGSV,31,23,36,25
+                        +GPGSV,03,27,10,27,19,35,13,35,05,23,15,25,17,34,09,21,194,37
+                        +GBGSV
+            
+                        # вар 2
+                        +GPGSV,04,37,24,38,03,30,06,25
+                        +GLGSV
+                        +GAGSV,17,22
+                        +GPGSV,04,28,24,36,03,27,06,33
+                        +GLGSV
+                        +GAGSV,17,22
+                        +GPGSV,04,34,24,36,03,30,06,33,14,31
+                        +GLGSV
+                        +GAGSV,17,22
+                        +GPGSV,04,30,24,36,03,29,06,32,14,27
+                        +GLGSV
+                        +GAGSV,17,22
+                        +GPGSV,04,30,24,36,03,25,06,25,14,30
+                        +GLGSV
+                        +GAGSV,17,22
+                        +GPGSV,04,32,24,37,03,25,06,23,14,23
+                        +GLGSV
+                        +GAGSV,17,22
+                        +GPGSV,04,32,24,37,03,31,06,30,14,32
+                        +GLGSV
+                        +GAGSV,17,22
+                        +GPGSV,04,34,24,35,03,29,06,23,14,27
+                        +GLGSV
+                        +GAGSV,17,22
+                        +GPGSV,04,32,24,37,03,28,06,26,14,30
+                        +GLGSV
+                        +GAGSV,17,22
+                       '''),
+                       ],
+        # КООРДИНАТЫ-2=вычисленные достоверные
         'AT+CGPSINFO': ['get GPS fixed position=даст значения только если достоверные!!! иначе пустые запятые!!!',
                         # ИЗ ДОКУМЕНТАЦИИ -----------------
                         # ('AT+CGPSINFO=?', '+CGPSINFO: (0-255)'),
@@ -2390,6 +2442,27 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
                        ('AT+CGPSHOT?', 'ERROR'),
                        ],
         # SETTINGS
+        'AT+CGNSSMODE': ['''GNSS support mode.
+                        1 GPS
+                        2 BDS
+                        3 GPS + BDS
+                        4 GLONASS
+                        ''',
+                         # harvester noSim
+                         ('AT+CGNSSMODE=?', 'ERROR'),
+                         ('AT+CGNSSMODE', 'ERROR'),
+                         ('AT+CGNSSMODE?', 'ERROR'),
+
+                         # navia SIM
+                         ('AT+CGNSSMODE=?', '+CGNSSMODE: (1-4)'),
+                         ('AT+CGNSSMODE', 'OK'),
+                         ('AT+CGNSSMODE?', '+CGNSSINFO: 0'),
+
+                         # navia-2=
+                         ('AT+CGNSSMODE=?', '+CGNSSMODE: (1-4)'),
+                         ('AT+CGNSSMODE', 'OK'),
+                         ('AT+CGNSSMODE?', '+CGNSSINFO: 3'),
+                         ],
         'AT+CGPSAUTO?': ['auto-start GPS',
                         # harvester
                         ('AT+CGPSAUTO=?', 'ERROR'),
@@ -2428,7 +2501,7 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
 
         # 2=DOUBT ----------------------------------------
         # 3=UNKNOWN --------------------------------------
-        'AT+CGPS': ['start/stop GPS session=непонятно вроде нет такой чтоли???',
+        'AT+CGPS': ['start/stop GPS session=вроде нет такой чтоли???',
                     # ИЗ ДОКУМЕНТАЦИИ -----------------
                     # ('AT+CGPS=?', '+CGPSINFO: (0-255)'),
                     # ('AT+CGPS', '+CGPSINFO:3113.343286,N,12121.234064,E,250311,072809.3,44.1,0.0,0'),
@@ -2445,7 +2518,6 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
 
                     ('AT+CGPS=0', 'ERROR'),
                     ('AT+CGPS=1', 'ERROR'),
-                    # РЕАЛЬНО  -------------------------
                     ],
         # AGPS  --------------
         'AT+CGPSURL': ['AGPS server URL',
@@ -2466,6 +2538,8 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
                        ('AT+CGPSSSL', 'ERROR'),
                        ('AT+CGPSSSL?', 'ERROR'),
                        ],
+
+
         'AT+CGPSNMEA': ['NMEA sentence type',
                         # РЕАЛЬНО harvester+navia!!!---------------
                         ('AT+CGPSNMEA=?', 'ERROR'),
@@ -2484,94 +2558,48 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
                       ('AT+CGPSMD', 'ERROR'),
                       ('AT+CGPSMD?', 'ERROR'),
                       ],
-
-
-
-
-
-
-        'AT+CGPSFTM': ['START GPS test mode',       # IMPORTANT AGPS
-               # harvester
-               ('AT+CGPSFTM=?', 'ERROR'),
-               ('AT+CGPSFTM', 'ERROR'),
-               ('AT+CGPSFTM?', 'ERROR'),
-
-               # navia
-               ('AT+CGPSFTM=?', 'OK'),
-               ('AT+CGPSFTM', 'ERROR'),
-               ('AT+CGPSFTM?', '+CGPSFTM: 0'),
-
-                # включение
-               ('AT+CGPSFTM=1', '''
-                   OK
-                    +GPGSV,03,28,10,27,19,37,13,34,05,27,15,30,17,33,09,21,194,37
-                    +GBGSV
-                    +GAGSV,31,23,36,25
-                    +GPGSV,03,27,10,27,19,35,13,35,05,23,15,25,17,34,09,21,194,37
-                    +GBGSV
-                   '''),
-
-
-
-               ],
         'AT+CGPSXE': ['GPS XTRA enable',
-              # РЕАЛЬНО harvester+navia!!!---------------
+              # РЕАЛЬНО harvester+navia!! даже после вкл питания!---------------
               ('AT+CGPSXE=?', 'ERROR'),
               ('AT+CGPSXE', 'ERROR'),
               ('AT+CGPSXE?', 'ERROR'),
               ],
         'AT+CGPSXDAUTO': ['auto-download XTRA file into module',
-              # РЕАЛЬНО harvester+navia!!!---------------
+              # РЕАЛЬНО harvester+navia!!! даже после вкл питания!---------------
               ('AT+CGPSXDAUTO=?', 'ERROR'),
               ('AT+CGPSXDAUTO', 'ERROR'),
               ('AT+CGPSXDAUTO?', 'ERROR'),
               ],
         'AT+CGPSINFOCFG': ['report NMEA-0183 sentence',
-               # РЕАЛЬНО harvester+navia!!!---------------
+               # РЕАЛЬНО harvester+navia!!! даже после вкл питания!---------------
                ('AT+CGPSINFOCFG=?', 'ERROR'),
                ('AT+CGPSINFOCFG', 'ERROR'),
                ('AT+CGPSINFOCFG?', 'ERROR'),
                ],
         'AT+CGPSPMD': ['positioning mode',
-               # РЕАЛЬНО harvester+navia!!!---------------
+               # РЕАЛЬНО harvester+navia!!! даже после вкл питания!---------------
                ('AT+CGPSPMD=?', 'ERROR'),
                ('AT+CGPSPMD', 'ERROR'),
                ('AT+CGPSPMD?', 'ERROR'),
                ],
         'AT+CGPSMSB': ['based mode switch to standalone',
-               # РЕАЛЬНО harvester+navia!!!---------------
+               # РЕАЛЬНО harvester+navia!!! даже после вкл питания!---------------
                ('AT+CGPSMSB=?', 'ERROR'),
                ('AT+CGPSMSB', 'ERROR'),
                ('AT+CGPSMSB?', 'ERROR'),
                ],
         'AT+CGPSHOR': ['positioning accuracy',
-               # РЕАЛЬНО harvester+navia!!!---------------
+               # РЕАЛЬНО harvester+navia!!! даже после вкл питания!---------------
                ('AT+CGPSHOR=?', 'ERROR'),
                ('AT+CGPSHOR', 'ERROR'),
                ('AT+CGPSHOR?', 'ERROR'),
                ],
         'AT+CGPSNOTIFY': ['LCS respond positioning request',
-              # РЕАЛЬНО harvester+navia!!!---------------
+              # РЕАЛЬНО harvester+navia!!! даже после вкл питания!---------------
               ('AT+CGPSNOTIFY=?', 'ERROR'),
               ('AT+CGPSNOTIFY', 'ERROR'),
               ('AT+CGPSNOTIFY?', 'ERROR'),
               ],
-        'AT+CGNSSMODE': ['GNSS support mode=GPS, GLONASS, BEIDOU and QZSS',
-                 # harvester noSim
-                 ('AT+CGNSSMODE=?', 'ERROR'),
-                 ('AT+CGNSSMODE', 'ERROR'),
-                 ('AT+CGNSSMODE?', 'ERROR'),
-
-                # navia SIM
-                 ('AT+CGNSSMODE=?', '+CGNSSMODE: (1-4)'),
-                 ('AT+CGNSSMODE', 'OK'),
-                 ('AT+CGNSSMODE?', '+CGNSSINFO: 0'),
-
-                # navia-2=
-                 ('AT+CGNSSMODE=?', '+CGNSSMODE: (1-4)'),
-                 ('AT+CGNSSMODE', 'OK'),
-                 ('AT+CGNSSMODE?', '+CGNSSINFO: 3'),
-                 ],
     },
 
     # =========================================================================
