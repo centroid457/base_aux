@@ -25,6 +25,134 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
     # =========================================================================
     # GROUPS
     # =========================================================================
+    "--=V25TER_BASIC(V.25TER БАЗОВЫЕ/управление/настройки модемом)": {
+        # 0=DANGER+USELESS -------------------------------
+        # "A/": "[DANGER]повторить последнюю команду",
+
+        # "ATD": "dial (голосовой/данные)",
+        # "ATD><mem><n>": "dial из памяти (SM/ME/DC...)",
+        # "ATD><n>": "dial из активной памяти",
+        # "ATD><str>": "dial по имени из памяти",
+        # "ATA": "[DANGER]answer (ответ на входящий)",
+        # "ATH": "[DANGER]hang up (положить трубку)",
+        # "ATS0": "[DANGER]auto-answer (число гудков)",
+        # "+++": "[DANGER]escape из data mode в command mode",
+        # "ATO": "[DANGER]вернуться в data mode",
+        # "AT+ICF": "[DANGER]character framing (data/parity/stop)",
+        # "AT+IFC": "[DANGER]flow control (RTS/CTS)",
+        # "AT&C": "[DANGER]DCD function mode",
+        # "AT&D": "[DANGER]DTR function mode",
+        # "AT&S": "[DANGER]DSR function mode",
+        # "AT&F": "[DANGER]factory defaults=for all settings!",
+        # "ATQ": "[DANGER]result code presentation mode",
+        # "AT&W": "[DANGER]save user settings",
+        # "ATZ": "[DANGER]restore user settings",
+        # 'AT+IPR': ['[NONEUSEFULL]baud rate (temporarily)',
+        #            ('AT+IPR=?',
+        #             '+IPR: (300,600,1200,2400,4800,9600,19200,38400,57600,115200,230400,460800,921600,1842000,3686400)\nOK'),
+        #            ('AT+IPR', 'OK'),
+        #            ('AT+IPR?', '+IPR: 115200\nOK'),
+        #            ('AT+IPR=300', 'OK'),
+        #            ('AT+IPR?', '+IPR: 300\nOK'),
+        #            ('AT+IPR=600', 'OK'),
+        #            ('AT+IPR?', '+IPR: 600\nOK'),
+        #            ('AT+IPR=1200', 'OK'),
+        #            ('AT+IPR?', '+IPR: 1200\nOK'),
+        #            ('AT+IPR=2400', 'OK'),
+        #            ('AT+IPR?', '+IPR: 2400\nOK'),
+        #            ('AT+IPR=4800', 'OK'),
+        #            ('AT+IPR?', '+IPR: 4800\nOK'),
+        #            ('AT+IPR=9600', 'OK'),
+        #            ('AT+IPR?', '+IPR: 9600\nOK'),
+        #            ('AT+IPR=19200', 'OK'),
+        #            ('AT+IPR?', '+IPR: 19200\nOK'),
+        #            ('AT+IPR=38400', 'OK'),
+        #            ('AT+IPR?', '+IPR: 38400\nOK'),
+        #            ('AT+IPR=57600', 'OK'),
+        #            ('AT+IPR?', '+IPR: 57600\nOK'),
+        #            ('AT+IPR=115200', 'OK'),
+        #            ('AT+IPR?', '+IPR: 115200\nOK'),
+        #            ],
+        # 'AT+IPREX': ['[NONEUSEFULL]bbaud rate (permanently)',
+        #              ('AT+IPREX=?',
+        #               '+IPREX: (300,600,1200,2400,4800,9600,19200,38400,57600,115200,230400,460800,921600,1842000,3686400)\nOK'),
+        #              ('AT+IPREX', 'OK'),
+        #              ('AT+IPREX?', '+IPREX: 115200\nOK'),
+        #              ('AT+IPREX=300', 'OK'),
+        #              ('AT+IPREX?', '+IPREX: 300\nOK'),
+        #              ('AT+IPREX=600', 'OK'),
+        #              ('AT+IPREX?', '+IPREX: 600\nOK'),
+        #              ('AT+IPREX=1200', 'OK'),
+        #              ('AT+IPREX?', '+IPREX: 1200\nOK'),
+        #              ('AT+IPREX=2400', 'OK'),
+        #              ('AT+IPREX?', '+IPREX: 2400\nOK'),
+        #              ('AT+IPREX=4800', 'OK'),
+        #              ('AT+IPREX?', '+IPREX: 4800\nOK'),
+        #              ('AT+IPREX=9600', 'OK'),
+        #              ('AT+IPREX?', '+IPREX: 9600\nOK'),
+        #              ('AT+IPREX=19200', 'OK'),
+        #              ('AT+IPREX?', '+IPREX: 19200\nOK'),
+        #              ('AT+IPREX=38400', 'OK'),
+        #              ('AT+IPREX?', '+IPREX: 38400\nOK'),
+        #              ('AT+IPREX=57600', 'OK'),
+        #              ('AT+IPREX?', '+IPREX: 57600\nOK'),
+        #              ('AT+IPREX=115200', 'OK'),
+        #              ('AT+IPREX?', '+IPREX: 115200\nOK'),
+        #              ],
+
+        # нетиповая команда!!!
+        "-ATE": ["echo on/off, ATE0->off, ATE1->on",
+                 ('ATE=?', 'ERROR'),
+                 ('ATE', 'OK'),
+                 ('ATE?', 'ERROR'),
+                 ],
+        "-ATE0": ["echo off=its not about OK! just not repeating source command",
+                  ('ATE0=?', 'ERROR'),
+                  ('ATE0', 'OK'),
+                  ('ATE0?', 'ERROR'),
+                  ],
+        "-ATE1": ["echo on",
+                  ('ATE1=?', 'ERROR'),
+                  ('ATE1', 'OK'),
+                  ('ATE1?', 'ERROR'),
+                  ],
+        #
+        'ATV': ['result code format (numeric/verbose)',
+                # с симкой и без
+                ('ATV=?', 'ERROR'),
+                ('ATV', 'OK'),
+                ('ATV?', 'ERROR'),
+                ],
+        'ATX': ['CONNECT result code format',
+                # с симкой и без
+                ('ATX=?', 'ERROR'),
+                ('ATX', 'OK'),
+                ('ATX?', 'ERROR'),
+                ],
+        'AT&E': ['CONNECT result code format (speed)',
+                 ('AT&E=?', 'ERROR'),
+                 ('AT&E', 'ERROR'),  # без симки
+                 ('AT&E', 'OK'),  # с симкой
+                 ('AT&E?', 'ERROR'),
+                 ],
+        # 2=DOUBT ----------------------------------------
+        # 3=UNKNOWN --------------------------------------
+        'AT&V': ['display current configuration=',
+                 # AT&V=ДОЛЖЕН ПОКАЗАТЬ НАСТРОЙКИ!!!
+                 # &C: 0; &D: 2; &F: 0; E: 1; L: 0; M: 0; Q: 0; V: 1; X: 0; Z: 0; S0: 0;
+                 # S3: 13; S4: 10; S5: 8; S6: 2; S7: 50; S8: 2; S9: 6; S10: 14; S11: 95;
+                 # +FCLASS: 0; +ICF: 3,3; +IFC: 2,2; +IPR: 115200; +DR: 0; +DS: 0,0,2048,6;
+                 # +WS46: 12; +CBST: 0,0,1;
+                 # ……
+                 # OK
+                 ('AT&V=?', 'ERROR'),
+                 ('AT&V', 'ERROR'),  # без симки
+                 ('AT&V',  # с симкой
+                  '&C: 1; &D: 0; &F: 0; &W: 0; E: 0; Q: 0; V: 1; X: 1; Z: 0; S0: 0; S2: 43; S3: 13; S4: 10; S5: 8; S6: 2; S7: 1; S8: 2; S9: 6; S10: 7; S11: 63; S30: 10; +FCLASS: 0; +IFC: 0,0; +IPR: 115200; +CSCS: UCS2; +CREG: 0; +CGREG: 0; +CEREG: 0; +CGDCONT: (1,"IP","next"); +CGDSCONT: ; +CGACT: (1,0); +CGEQMIN: (1,4,0,0,0,0,2,0,"0E0","0E0",3,0,0,0,0); +CGQMIN: (1,3,4,5,1,1); +CGEREP: (2,0); +CGCLASS: "A"; +CGAUTH: (1,0); +CPBS: "SM"; +CMEE: 2; +CFUN: 1; +CMGF: 0; +CSCA: ("++79006199795",145); +CSMP: 17,167,0,0; +CSDH: 0; +CPMS: "SM",0,30,"SM",0,30,"SM",0,30;\nOK'),
+                 ('AT&V?', 'ERROR'),
+                 ],
+    },
+    # =========================================================================
     "-1=MODEM": {
         # 0=DANGER+USELESS -------------------------------
         # "AT+CPOF": "[DANGER]power off module",
@@ -38,20 +166,21 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
         # "AT+CMUX": "[DANGER]мультиплексор UART (4 виртуальных порта) # DANGER",
         # "AT+CUSBPIDSWITCH": "[DANGER]смена USB PID # DANGER (reset)",
 
-        # 'AT+CMEE': ['[USELESS] формат ошибок (+CME ERROR: numeric/verbose)',
-        #     ('AT+CMEE=?', '+CMEE: (0-2)\nOK'),
-        #     ('AT+CMEE', 'OK'),
-        #     ('AT+CMEE?', '+CMEE: 2\nOK'),
-        #     ('AT+CMEE=0', 'OK'),
-        #     ('AT+CMEE?', '+CMEE: 0\nOK'),
-        #     ('AT+CMEE=1', 'OK'),
-        #     ('AT+CMEE?', '+CMEE: 1\nOK'),
-        #     ('AT+CMEE=2', 'OK'),
-        #     ('AT+CMEE?', '+CMEE: 2\nOK'),
-        #     ],
+        # SETTINGS ----------------------------------
+        'AT+CMEE': ['формат ошибок (+CME ERROR: numeric/verbose)',
+            ('AT+CMEE=?', '+CMEE: (0-2)\nOK'),
+            ('AT+CMEE', 'OK'),
+            ('AT+CMEE?', '+CMEE: 2\nOK'),
+            ('AT+CMEE=0', 'OK'),
+            ('AT+CMEE?', '+CMEE: 0\nOK'),
+            ('AT+CMEE=1', 'OK'),
+            ('AT+CMEE?', '+CMEE: 1\nOK'),
+            ('AT+CMEE=2', 'OK'),
+            ('AT+CMEE?', '+CMEE: 2\nOK'),
+            ],
 
-        # 1=ACCURATE -------------------------------------
-        'AT': ['эхо, проверка связи',
+        # INFO -------------------------------------
+        'AT': ['эхо, проверка связи с модемом=ответ OK если связь есть',
             # без симки + с симкой
             ('AT=?', 'ERROR'),
             ('AT', 'OK'),
@@ -237,11 +366,11 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
         # 0=DANGER+USELESS -------------------------------
         # "AT+CPWD": "[DANGER]смена пароля (PIN/PUK)",
 
-        # 'AT+CSVM': ['[USELESS]voice mail subscriber number',
-        #     ('AT+CSVM=?', 'ERROR'),
-        #     ('AT+CSVM', 'ERROR'),
-        #     ('AT+CSVM?', 'ERROR'),
-        #     ],
+        '--AT+CSVM': ['[USELESS]voice mail subscriber number',
+            ('AT+CSVM=?', 'ERROR'),
+            ('AT+CSVM', 'ERROR'),
+            ('AT+CSVM?', 'ERROR'),
+            ],
 
         # 1=ACCURATE -------------------------------------
         'AT+CICCID': ['ICCID SIM-карты',
@@ -328,147 +457,45 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
     },
 
     # =========================================================================
-    "-3=V25TER_BASIC(V.25TER БАЗОВЫЕ (управление модемом))": {
-        # 0=DANGER+USELESS -------------------------------
-        # "ATE": "[???DANGER]echo on/off, ATE0->off, ATE1->on", # нетиповая команда!!!
-
-        # "A/": "[DANGER]повторить последнюю команду",
-
-        # "ATD": "dial (голосовой/данные)",
-        # "ATD><mem><n>": "dial из памяти (SM/ME/DC...)",
-        # "ATD><n>": "dial из активной памяти",
-        # "ATD><str>": "dial по имени из памяти",
-        # "ATA": "[DANGER]answer (ответ на входящий)",
-        # "ATH": "[DANGER]hang up (положить трубку)",
-        # "ATS0": "[DANGER]auto-answer (число гудков)",
-        # "+++": "[DANGER]escape из data mode в command mode",
-        # "ATO": "[DANGER]вернуться в data mode",
-        # "AT+ICF": "[DANGER]character framing (data/parity/stop)",
-        # "AT+IFC": "[DANGER]flow control (RTS/CTS)",
-        # "AT&C": "[DANGER]DCD function mode",
-        # "AT&D": "[DANGER]DTR function mode",
-        # "AT&S": "[DANGER]DSR function mode",
-        # "AT&F": "[DANGER]factory defaults=for all settings!",
-        # "ATQ": "[DANGER]result code presentation mode",
-        # "AT&W": "[DANGER]save user settings",
-        # "ATZ": "[DANGER]restore user settings",
-        # 'AT+IPR': ['[NONEUSEFULL]baud rate (temporarily)',
-        #            ('AT+IPR=?',
-        #             '+IPR: (300,600,1200,2400,4800,9600,19200,38400,57600,115200,230400,460800,921600,1842000,3686400)\nOK'),
-        #            ('AT+IPR', 'OK'),
-        #            ('AT+IPR?', '+IPR: 115200\nOK'),
-        #            ('AT+IPR=300', 'OK'),
-        #            ('AT+IPR?', '+IPR: 300\nOK'),
-        #            ('AT+IPR=600', 'OK'),
-        #            ('AT+IPR?', '+IPR: 600\nOK'),
-        #            ('AT+IPR=1200', 'OK'),
-        #            ('AT+IPR?', '+IPR: 1200\nOK'),
-        #            ('AT+IPR=2400', 'OK'),
-        #            ('AT+IPR?', '+IPR: 2400\nOK'),
-        #            ('AT+IPR=4800', 'OK'),
-        #            ('AT+IPR?', '+IPR: 4800\nOK'),
-        #            ('AT+IPR=9600', 'OK'),
-        #            ('AT+IPR?', '+IPR: 9600\nOK'),
-        #            ('AT+IPR=19200', 'OK'),
-        #            ('AT+IPR?', '+IPR: 19200\nOK'),
-        #            ('AT+IPR=38400', 'OK'),
-        #            ('AT+IPR?', '+IPR: 38400\nOK'),
-        #            ('AT+IPR=57600', 'OK'),
-        #            ('AT+IPR?', '+IPR: 57600\nOK'),
-        #            ('AT+IPR=115200', 'OK'),
-        #            ('AT+IPR?', '+IPR: 115200\nOK'),
-        #            ],
-        # 'AT+IPREX': ['[NONEUSEFULL]bbaud rate (permanently)',
-        #              ('AT+IPREX=?',
-        #               '+IPREX: (300,600,1200,2400,4800,9600,19200,38400,57600,115200,230400,460800,921600,1842000,3686400)\nOK'),
-        #              ('AT+IPREX', 'OK'),
-        #              ('AT+IPREX?', '+IPREX: 115200\nOK'),
-        #              ('AT+IPREX=300', 'OK'),
-        #              ('AT+IPREX?', '+IPREX: 300\nOK'),
-        #              ('AT+IPREX=600', 'OK'),
-        #              ('AT+IPREX?', '+IPREX: 600\nOK'),
-        #              ('AT+IPREX=1200', 'OK'),
-        #              ('AT+IPREX?', '+IPREX: 1200\nOK'),
-        #              ('AT+IPREX=2400', 'OK'),
-        #              ('AT+IPREX?', '+IPREX: 2400\nOK'),
-        #              ('AT+IPREX=4800', 'OK'),
-        #              ('AT+IPREX?', '+IPREX: 4800\nOK'),
-        #              ('AT+IPREX=9600', 'OK'),
-        #              ('AT+IPREX?', '+IPREX: 9600\nOK'),
-        #              ('AT+IPREX=19200', 'OK'),
-        #              ('AT+IPREX?', '+IPREX: 19200\nOK'),
-        #              ('AT+IPREX=38400', 'OK'),
-        #              ('AT+IPREX?', '+IPREX: 38400\nOK'),
-        #              ('AT+IPREX=57600', 'OK'),
-        #              ('AT+IPREX?', '+IPREX: 57600\nOK'),
-        #              ('AT+IPREX=115200', 'OK'),
-        #              ('AT+IPREX?', '+IPREX: 115200\nOK'),
-        #              ],
-
-        # 1=ACCURATE -------------------------------------
-        'ATV': ['result code format (numeric/verbose)',
-                # с симкой и без
-                ('ATV=?', 'ERROR'),
-                ('ATV', 'OK'),
-                ('ATV?', 'ERROR'),
-                ],
-        'ATX': ['CONNECT result code format',
-                # с симкой и без
-                ('ATX=?', 'ERROR'),
-                ('ATX', 'OK'),
-                ('ATX?', 'ERROR'),
-                ],
-        'AT&E': ['CONNECT result code format (speed)',
-                 ('AT&E=?', 'ERROR'),
-                 ('AT&E', 'ERROR'),  # без симки
-                 ('AT&E', 'OK'),  # с симкой
-                 ('AT&E?', 'ERROR'),
-                 ],
-        # 2=DOUBT ----------------------------------------
-        # 3=UNKNOWN --------------------------------------
-        'AT&V': ['display current configuration=',
-                 # AT&V=ДОЛЖЕН ПОКАЗАТЬ НАСТРОЙКИ!!!
-                 # &C: 0; &D: 2; &F: 0; E: 1; L: 0; M: 0; Q: 0; V: 1; X: 0; Z: 0; S0: 0;
-                 # S3: 13; S4: 10; S5: 8; S6: 2; S7: 50; S8: 2; S9: 6; S10: 14; S11: 95;
-                 # +FCLASS: 0; +ICF: 3,3; +IFC: 2,2; +IPR: 115200; +DR: 0; +DS: 0,0,2048,6;
-                 # +WS46: 12; +CBST: 0,0,1;
-                 # ……
-                 # OK
-                 ('AT&V=?', 'ERROR'),
-                 ('AT&V', 'ERROR'),     # без симки
-                 ('AT&V',               # с симкой
-                  '&C: 1; &D: 0; &F: 0; &W: 0; E: 0; Q: 0; V: 1; X: 1; Z: 0; S0: 0; S2: 43; S3: 13; S4: 10; S5: 8; S6: 2; S7: 1; S8: 2; S9: 6; S10: 7; S11: 63; S30: 10; +FCLASS: 0; +IFC: 0,0; +IPR: 115200; +CSCS: UCS2; +CREG: 0; +CGREG: 0; +CEREG: 0; +CGDCONT: (1,"IP","next"); +CGDSCONT: ; +CGACT: (1,0); +CGEQMIN: (1,4,0,0,0,0,2,0,"0E0","0E0",3,0,0,0,0); +CGQMIN: (1,3,4,5,1,1); +CGEREP: (2,0); +CGCLASS: "A"; +CGAUTH: (1,0); +CPBS: "SM"; +CMEE: 2; +CFUN: 1; +CMGF: 0; +CSCA: ("++79006199795",145); +CSMP: 17,167,0,0; +CSDH: 0; +CPMS: "SM",0,30,"SM",0,30,"SM",0,30;\nOK'),
-                 ('AT&V?', 'ERROR'),
-                 ],
-    },
-
-    # =========================================================================
     "-4=STATUS_CONTROL(управление состоянием)": {
         # 0=DANGER+USELESS -------------------------------
         # "AT+CPOF": "[DANGER]power off",
         # "AT+CRESET": "[DANGER]reset",
 
-        # 'AT+CFUN': ["[DANGER]уровень функциональности (0=min, 1=full, 4=offline(flight), 7=reset)",
-        #     ('AT+CFUN=?', '+CFUN: (0-1,4-8),(0-1)\nOK'),
-        #     ('AT+CFUN', 'ERROR'),
-        #     ('AT+CFUN?', '+CFUN: 1\nOK'),
-        #     ('AT+CFUN=0', '+SIMCARD: NOT AVAILABLE\n+CGEV: ME DETACH\nOK'),
-        #     ('AT+CFUN?', '+CFUN: 0\nOK'),
-        #     ('AT+CFUN=1', 'OK\n+CPIN: SIM REMOVED\nOK'),
-        #     ('AT+CFUN?', '+CFUN: 1\nOK'),
-        #     ('AT+CFUN=4', '+CGEV: ME DETACH\nOK'),
-        #     ('AT+CFUN?', '+CFUN: 4\nOK'),
-        #     ('AT+CFUN=5', 'OK'),
-        #     ('AT+CFUN?', '+CFUN: 5\nOK'),
-        #     ('AT+CFUN=6', 'OK\n+CGEV: ME DETACH'),
-        #     ('AT+CFUN?',
-        #      'cat: /dev/ttyUSB4: No such file or directory\n[1]+  Exit 1                  timeout 5.0 cat /dev/ttyUSB4'),
-        #     ('AT+CFUN=7', 'AT+CFUN?\n[1]+  Done                    timeout 5.0 cat /dev/ttyUSB4'),
-        #     ('AT+CFUN?', 'AT+CFUN=7\n[1]+  Done                    timeout 5.0 cat /dev/ttyUSB4'),
-        #     ('AT+CFUN=8', 'AT+CFUN?\n[1]+  Done                    timeout 5.0 cat /dev/ttyUSB4'),
-        #     ('AT+CFUN?', 'AT+CFUN=8\n[1]+  Done                    timeout 5.0 cat /dev/ttyUSB4'),
-        # ],
-        # "AT+CMEE": "[DANGER]error format",
+        '-AT+CFUN': ["[DANGER]уровень функциональности (0=min, 1=full, 4=offline(flight), 7=reset)",
+            ('AT+CFUN=?', '+CFUN: (0-1,4-8),(0-1)\nOK'),
+            ('AT+CFUN', 'ERROR'),
+            ('AT+CFUN?', '+CFUN: 1\nOK'),
+            ('AT+CFUN=0', '+SIMCARD: NOT AVAILABLE\n+CGEV: ME DETACH\nOK'),
+            ('AT+CFUN=0', '+SIMCARD: NOT AVAILABLE\n+CGEV: ME DETACH\n+CGEV: NW PDN DEACT 1\nOK'),  # navia
+            ('AT+CFUN?', '+CFUN: 0\nOK'),
+            ('AT+CFUN=1', 'OK\n+CPIN: SIM REMOVED\nOK'),
+            ('AT+CFUN=1', '''
+                OK
+                +CPIN: READY
+                +CGEV: EPS PDN ACT 1
+                SMS DONE
+                PB DONE'''),      # navia
+
+            ('AT+CFUN?', '+CFUN: 1\nOK'),
+            ('AT+CFUN=4', '+CGEV: ME DETACH\nOK'),
+            ('AT+CFUN=4', '''
+                +CGEV: ME DETACH
+                +CGEV: NW PDN DEACT 1
+                OK
+                '''),
+            ('AT+CFUN?', '+CFUN: 4\nOK'),
+            ('AT+CFUN=5', 'OK'),
+            ('AT+CFUN?', '+CFUN: 5\nOK'),
+            ('AT+CFUN=6', 'OK\n+CGEV: ME DETACH'),
+            ('AT+CFUN?',
+             'cat: /dev/ttyUSB4: No such file or directory\n[1]+  Exit 1                  timeout 5.0 cat /dev/ttyUSB4'),
+            ('AT+CFUN=7', 'AT+CFUN?\n[1]+  Done                    timeout 5.0 cat /dev/ttyUSB4'),
+            ('AT+CFUN?', 'AT+CFUN=7\n[1]+  Done                    timeout 5.0 cat /dev/ttyUSB4'),
+            ('AT+CFUN=8', 'AT+CFUN?\n[1]+  Done                    timeout 5.0 cat /dev/ttyUSB4'),
+            ('AT+CFUN?', 'AT+CFUN=8\n[1]+  Done                    timeout 5.0 cat /dev/ttyUSB4'),
+        ],
+        # "AT+CMEE": "error format",
         # "AT+SIMEI": "[DANGER]set IMEI",
 
         # 1=ACCURATE -------------------------------------
@@ -564,7 +591,7 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
     },
 
     # =========================================================================
-    "-5=NETWORK(СЕТЬ / РЕГИСТРАЦИЯ / ОПЕРАТОР)": {
+    "-5=GSM=NETWORK(СЕТЬ / РЕГИСТРАЦИЯ / ОПЕРАТОР)": {
         # 0=DANGER+USELESS -------------------------------
         # 'AT+COPS': ["[DANGER]operator selection (может долго висеть на =?)",
         #     ("AT+COPS?", "+COPS: 0,2,\"25020\",7\nOK"),
@@ -2499,8 +2526,6 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
                                ('AT+CGNSSPORTSWITCH?', '+CGNSSPORTSWITCH: 1,1\nOK'),
                                ],
 
-        # 2=DOUBT ----------------------------------------
-        # 3=UNKNOWN --------------------------------------
         'AT+CGPS': ['start/stop GPS session=вроде нет такой чтоли???',
                     # ИЗ ДОКУМЕНТАЦИИ -----------------
                     # ('AT+CGPS=?', '+CGPSINFO: (0-255)'),
@@ -2520,6 +2545,12 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
                     ('AT+CGPS=1', 'ERROR'),
                     ],
         # AGPS  --------------
+        'AT+CAGPS': ['AGPS transport security',
+                       # РЕАЛЬНО harvester+navia!!!---------------
+                       ('AT+CAGPS=?', 'ERROR'),
+                       ('AT+CAGPS', 'OK\n+AGPS: success.'),
+                       ('AT+CAGPS?', 'ERROR'),
+                       ],
         'AT+CGPSURL': ['AGPS server URL',
                        # ИЗ ДОКУМЕНТАЦИИ ---------------
                        # AT+CGPSURL=”123.123.123.123:8888”
@@ -2538,6 +2569,8 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
                        ('AT+CGPSSSL', 'ERROR'),
                        ('AT+CGPSSSL?', 'ERROR'),
                        ],
+
+
 
 
         'AT+CGPSNMEA': ['NMEA sentence type',
