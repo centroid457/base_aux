@@ -155,16 +155,52 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
     # =========================================================================
     "-1=MODEM": {
         # 0=DANGER+USELESS -------------------------------
-        # "AT+CPOF": "[DANGER]power off module",
 
         # "AT+CSCS": "[DANGER]выбор TE character set (IRA/GSM/UCS2/HEX)",
         # "AT+SIMEI": "[DANGER]установка IMEI (только для service)",
         # "AT+CUSBPIDSWITCH": "[DANGER]смена USB PID (перезагружает модуль!)",
         # "AT+CLCK": "[DANGER] facility lock (блокировка SIM/сети)",
-        # "AT+CRESET": "[DANGER]reset module",
         # "AT+CSCLK": "[DANGER]UART sleep control",
         # "AT+CMUX": "[DANGER]мультиплексор UART (4 виртуальных порта) # DANGER",
         # "AT+CUSBPIDSWITCH": "[DANGER]смена USB PID # DANGER (reset)",
+
+        # MAIN PWR ----------------------------------------
+        '---AT+CPOF': ['[DANGER]Power down the module=фактически перезагрузка!!!',
+                    ('AT+CPOF=?', '+CPOF: (0,1)\nOK'),
+                    ('AT+CPOF', 'OK\nPOWER DOWN'),
+                    ('AT+CPOF?', 'ERROR'),
+                    ('AT+CPOF=1', 'OK\nPOWER DOWN'),
+
+                    # NAVIA
+                    ('AT+CPOF=?', 'OK'),
+                    ('AT+CPOF', '''OK
+                    
+                    ---- Sent utf8 encoded message: "AT+CPOF\r\n" ----
+                    AT+CPOF
+                    OK
+                    +CGEV: ME DETACH
+                    *ATREADY: 1
+                    +CPIN: READY
+                    SMS DONE
+                    +CGEV: EPS PDN ACT 1
+                    PB DONE
+                    '''),
+                    ('AT+CPOF?', 'ERROR'),
+                    ('AT+CPOF=1', 'OK\nPOWER DOWN'),
+                    ],
+        '---AT+CRESET': ['[DANGER]Reset the module',
+                        ('AT+CRESET=?', 'OK'),
+                        ('AT+CRESET', 'OK'),  # ЗДЕСЬ ПЕРЕЗАГРУЗИТСЯ!!!
+                        ('AT+CRESET?', 'ERROR'),
+                        ],
+
+        # DIAGNOSTIC ----------------------------------
+        'AT': ['эхо, проверка связи с модемом=ответ OK если связь есть',
+               # без симки + с симкой
+               ('AT=?', 'ERROR'),
+               ('AT', 'OK'),
+               ('AT?', 'ERROR'),
+               ],
 
         # SETTINGS ----------------------------------
         'AT+CMEE': ['формат ошибок (+CME ERROR: numeric/verbose)',
@@ -179,13 +215,7 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
             ('AT+CMEE?', '+CMEE: 2\nOK'),
             ],
 
-        # INFO -------------------------------------
-        'AT': ['эхо, проверка связи с модемом=ответ OK если связь есть',
-            # без симки + с симкой
-            ('AT=?', 'ERROR'),
-            ('AT', 'OK'),
-            ('AT?', 'ERROR'),
-            ],
+        # ID -------------------------------------
         'ATI': ['информация о производителе/модели/ревизии/IMEI',
             # без симки + с симкой
             # HARVESTER
@@ -222,7 +252,7 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
                     ('AT+CGMR', '+CGMR: A011B02A7682M6_DS_FOTA\nOK'),
                     ('AT+CGMR?', '+CGMR: A011B02A7682M6_DS_FOTA\nOK'),
                     ],
-        'AT+CGSN': ['ID=IMEI / serial number /ProductSn',
+        'AT+CGSN': ['ID=IMEI / serial number / ProductSn',
                     # без симки + с симкой
                     ('AT+CGSN=?', 'OK'),
                     ('AT+CGSN', '865286077380516\nOK'),
@@ -234,6 +264,9 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
                    ('AT+GSN', '865286077380516\nOK'),
                    ('AT+GSN?', 'ERROR'),
                    ],
+
+
+
         'AT+CPAS': ['phone activity status',
                     # без симки + с симкой
                     ('AT+CPAS=?', '+CPAS: (0,3,4)\nOK'),
@@ -333,27 +366,26 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
                      ('AT+CAMM', '+CME ERROR: Operation not supported'),
                      ('AT+CAMM?', '+CME ERROR: unknown error'),
                      ],
-        'AT+CPUC?': ['price per unit and currency',
+        '-AT+CPUC?': ['price per unit and currency',
                      # без симки + с симкой
                      ('AT+CPUC=?', 'OK'),
                      ('AT+CPUC', 'ERROR'),
                      ('AT+CPUC?', '+CME ERROR: unknown error'),
                      ],
 
-        # 3=UNKNOWN --------------------------------------
-        'AT+CGGMM': ['model identification (SIMCom-вариант)',
+        '-AT+CGGMM': ['model identification (SIMCom-вариант)',
             # без симки + с симкой
             ('AT+CGGMM=?', 'ERROR'),
             ('AT+CGGMM', 'ERROR'),
             ('AT+CGGMM?', 'ERROR'),
             ],
-        'AT+CGGMR': ['revision identification (SIMCom-вариант)',
+        '-AT+CGGMR': ['revision identification (SIMCom-вариант)',
             # без симки + с симкой
             ('AT+CGGMR=?', 'ERROR'),
             ('AT+CGGMR', 'ERROR'),
             ('AT+CGGMR?', 'ERROR'),
             ],
-        'AT+SMEID': ['MEID (CDMA)',
+        '-AT+SMEID': ['MEID (CDMA)',
             # без симки + с симкой
             ('AT+SMEID=?', 'ERROR'),
             ('AT+SMEID', 'ERROR'),
@@ -372,56 +404,19 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
             ('AT+CSVM?', 'ERROR'),
             ],
 
-        # 1=ACCURATE -------------------------------------
+        # DIAGNOSTIC -------------------------------------
         'AT+CPIN?': ['проверка присутствия SIM=статус PIN (READY / SIM PIN / SIM PUK)',
                      ('AT+CPIN=?', 'OK'),
                      ('AT+CPIN', 'ERROR'),
                      ('AT+CPIN?', '+CME ERROR: SIM not inserted'),  # без симки
                      ('AT+CPIN?', '+CPIN: READY\nOK'),  # с симкой
                      ],
-        'AT+CICCID': ['ICCID SIM-карты',
-                      # без симки
-                      ('AT+CICCID=?', 'OK'),
-                      ('AT+CICCID', '+CME ERROR: SIM not inserted'),
-                      ('AT+CICCID?', '+CME ERROR: SIM not inserted'),
-
-                      # с симкой!!!
-                      ('AT+CICCID=?', 'OK'),
-                      ('AT+CICCID', '+ICCID: 8970147000029053642\nOK'),
-                      ('AT+CICCID?', '+CME ERROR: Operation not supported'),
-                      ],
-        'AT+CIMI': ['IMSI (IMSI SIM-карты) international mobile subscriber identity (460010222028133)',
-                    ('AT+CIMI=?', 'OK'),
-                    ('AT+CIMI', '+CME ERROR: SIM failure'),   # без симки
-                    ('AT+CIMI', '250470002905364\nOK'),       # с симкой navia
-                    ('AT+CIMI?', '+CME ERROR: Operation not supported'),
-                    ],
         'AT+SPIC': ['остаток попыток ввода PIN/PUK',
                     ('AT+SPIC=?', 'OK'),
-                    ('AT+SPIC', '+CME ERROR: SIM not inserted'),    # без симки
-                    ('AT+SPIC', '+SPIC: 3,10,3,10\nOK'),            # с симкой
+                    ('AT+SPIC', '+CME ERROR: SIM not inserted'),  # без симки
+                    ('AT+SPIC', '+SPIC: 3,10,3,10\nOK'),  # с симкой
                     ('AT+SPIC?', 'ERROR'),
                     ],
-
-        'AT+CNUM?': ['основной запрос номера (недоступен на M2M sim)',
-                     # ПРИМЕР ИЗ ДОКУМЕНТАЦИИ ------------------------
-                     # [+CNUM: <alpha>,<number>,<type>[<CR><LF>
-                     # +CNUM: <alpha>, <number>,<type> [...]]]
-
-                     # +CNUM: "","13697252277",129
-
-                     # РЕАЛЬНО НА M2M sim - harvester ------------------------
-                     # без симки
-                     ('AT+CNUM=?', 'ERROR'),
-                     ('AT+CNUM', 'ERROR'),
-                     ('AT+CNUM?', 'ERROR'),
-
-                     # с симкой!!!
-                     ('AT+CNUM=?', 'OK'),
-                     ('AT+CNUM', 'OK'),
-                     ('AT+CNUM?', '+CME ERROR: Operation not supported'),
-                     ],
-
         'AT+CPINR?': ['',
                       # no sim
                       ('AT+CPINR=?', '+CPINR: (0-3),(0-3),(0-10),(0-10)\nOK'),
@@ -473,21 +468,64 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
                       ('AT+CPINR=9', 'ERROR'),
                       ('AT+CPINR?', '+CPINR:3,3,10,10\nOK'),
                       ],
-        # 3=UNKNOWN --------------------------------------
-        'AT+CIMIM': ['IMSI (второй симки?) (USIM)',
-                     # с симкой и без!
-                     ('AT+CIMIM=?', 'ERROR'),
-                     ('AT+CIMIM', 'ERROR'),
-                     ('AT+CIMIM?', 'ERROR'),
+        # ID -------------------------------------
+        'AT+CNUM?': ['основной запрос номера (недоступен на M2M sim)',
+                     # ПРИМЕР ИЗ ДОКУМЕНТАЦИИ ------------------------
+                     # [+CNUM: <alpha>,<number>,<type>[<CR><LF>
+                     # +CNUM: <alpha>, <number>,<type> [...]]]
+
+                     # +CNUM: "","13697252277",129
+
+                     # РЕАЛЬНО НА M2M sim - harvester ------------------------
+                     # без симки
+                     ('AT+CNUM=?', 'ERROR'),
+                     ('AT+CNUM', 'ERROR'),
+                     ('AT+CNUM?', 'ERROR'),
+
+                     # с симкой!!! +navia
+                     ('AT+CNUM=?', 'OK'),
+                     ('AT+CNUM', 'OK'),
+                     ('AT+CNUM?', '+CME ERROR: Operation not supported'),
                      ],
+        'AT+CICCID': ['ICCID SIM-карты',
+                      # без симки
+                      ('AT+CICCID=?', 'OK'),
+                      ('AT+CICCID', '+CME ERROR: SIM not inserted'),
+                      ('AT+CICCID?', '+CME ERROR: SIM not inserted'),
+
+                      # с симкой!!!
+                      ('AT+CICCID=?', 'OK'),
+                      ('AT+CICCID', '+ICCID: 8970147000029053642\nOK'),
+                      ('AT+CICCID?', '+CME ERROR: Operation not supported'),
+                      ],
+        'AT+CIMI': ['IMSI (IMSI SIM-карты) international mobile subscriber identity (460010222028133)',
+                    ('AT+CIMI=?', 'OK'),
+                    ('AT+CIMI', '+CME ERROR: SIM failure'),   # без симки
+                    ('AT+CIMI', '250470002905364\nOK'),       # с симкой navia
+                    ('AT+CIMI?', '+CME ERROR: Operation not supported'),
+                    ],
+        '---AT+CIMIM': ['IMSI (второй симки?) (USIM)',
+                        # с симкой и без!
+                        ('AT+CIMIM=?', 'ERROR'),
+                        ('AT+CIMIM', 'ERROR'),
+                        ('AT+CIMIM?', 'ERROR'),
+                        ],
+        '--AT+CEID': ['Read EID from eSIM card',
+                    # ДИПСИК
+                    ('AT+CEID=?', 'OK'),
+                    ('AT+CEID', '+EID:3506000000000000025000000764040\nOK'),
+                    ('AT+CEID?', 'ERROR'),
+
+                    # NAVIA
+                    ('AT+CEID=?', 'ERROR'),
+                    ('AT+CEID', 'ERROR'),
+                    ('AT+CEID?', 'ERROR'),
+                    ],
     },
 
     # =========================================================================
     "-4=GSM=STATUS_CONTROL(управление состоянием)": {
         # 0=DANGER+USELESS -------------------------------
-        # "AT+CPOF": "[DANGER]power off",
-        # "AT+CRESET": "[DANGER]reset",
-
         '-AT+CFUN': ["[DANGER]уровень функциональности (0=min, 1=full, 4=offline(flight), 7=reset)",
             ('AT+CFUN=?', '+CFUN: (0-1,4-8),(0-1)\nOK'),
             ('AT+CFUN', 'ERROR'),
@@ -522,7 +560,12 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
             ('AT+CFUN?', 'AT+CFUN=8\n[1]+  Done                    timeout 5.0 cat /dev/ttyUSB4'),
         ],
         # "AT+CMEE": "error format",
-        # "AT+SIMEI": "[DANGER]set IMEI",
+        '--AT+SIMEI': ['[DANGER]Set IMEI for the module',
+                     ('AT+SIMEI=?', 'OK'),
+                     ('AT+SIMEI', 'ERROR'),
+                     ('AT+SIMEI?', '+SIMEI: 357396012183175\nOK'),
+                     ('AT+SIMEI=357396012183175', 'OK'),
+                     ],
 
         # 1=ACCURATE -------------------------------------
         'AT+CSQ': ['signal quality (RSSI, BER) разные значения не нужны! это строго чтение, а не запись! чем больше тем лучше! 99=неизвестно',
@@ -616,7 +659,7 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
                     ],
 
         # 3=UNKNOWN --------------------------------------
-        'AT+CSVM': ['voice mail number',
+        '---AT+CSVM': ['voice mail number',
                     # без и с симкой
                     ('AT+CSVM=?', 'ERROR'),
                     ('AT+CSVM', 'ERROR'),
@@ -2271,6 +2314,181 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
     },
 
     # =========================================================================
+    "-INTERNET_SERVICE=(TCP/IP стек модуля)": {
+        # 0=DANGER+USELESS -------------------------------
+        # "AT+CSOCKSETPN": ["[DANGER]set active PDP context profile",
+        #                 ('AT+CSOCKSETPN=?', '+CSOCKSETPN: 1,(1,6)'),
+        #                 ('AT+CSOCKSETPN', 'ERROR'),
+        #                 ('AT+CSOCKSETPN?', '+CSOCKSETPN: 1,1'),
+        #               ],
+        # "AT+CHTPUPDATE": "[DANGER]update time via HTP",
+        # "AT+CNTP": "[DANGER]update time via NTP",
+
+        # PING -------------------------------------------
+        "AT+CPING": ["""ping address
+            ПАРАМЕТРЫ
+                "8.8.8.8" — адрес
+                1 — тип (IPv4)
+                4 — число пакетов (1–100)
+                64 — размер (4–188 байт)
+                1000 — интервал (мс)
+                10000 — таймаут (мс)
+                255 — TTL
+            """,
+                 # navia
+                 ('AT+CPING=?', '+CPING: IP address,(1,2),(1-5),(4-188),(1000-10000),(10000-100000),(16-255)'),
+                 ('AT+CPING', 'ERROR'),
+                 ('AT+CPING?', 'ERROR'),
+
+                # ping-1=IP
+                 ('AT+CPING="8.8.8.8",1,1,64,1000,10000,255', '''
+                     +CPING: 1,8.8.8.8,92,160,119   ### строка реального пинга
+                     +CPING: 3,1,1,0,160,160,160    ### итоговый результат
+                     
+                     пинг с ошибками
+                     ---- Sent utf8 encoded message: "AT+CPING=\"8.8.8.8\",1,1,64,1000,10000,255\r\n" ----
+                    AT+CPING="8.8.8.8",1,1,64,1000,10000,255
+                    OK
+                    +CPING: 2
+                    +CPING: 3,1,0,1,0,0,0
+                    ---- Sent utf8 encoded message: "AT+CPING=\"8.8.8.8\",1,3,64,1000,10000,255\r\n" ----
+                    AT+CPING="8.8.8.8",1,3,64,1000,10000,255
+                    OK
+                    +CPING: 2
+                    +CPING: 2
+                    +CPING: 2
+                    +CPING: 3,3,0,3,0,0,0
+                     '''),
+                 # ping-2=NAME
+                 ('AT+CPING="www.google.com",1,1,64,1000,10000,255', '''
+                
+                     пинг с ошибками
+                    ---- Sent utf8 encoded message: "AT+CPING=\"www.google.com\",1,1,64,1000,10000,255\r\n" ----
+                    AT+CPING="www.google.com",1,1,64,1000,10000,255
+                    OK
+                    
+                    +CPING: 3,0,0,0,0,0,0
+                    ---- Sent utf8 encoded message: "AT+CPING=\"www.google.com\",1,3,64,1000,10000,255\r\n" ----
+                    AT+CPING="www.google.com",1,3,64,1000,10000,255
+                    OK
+                    
+                    +CPING: 3,0,0,0,0,0,0
+                    ---- Sent utf8 encoded message: "AT+CPING=\"www.google.com\",1,1,64,1000,10000,255\r\n" ----
+                    AT+CPING="www.google.com",1,1,64,1000,10000,255
+                    OK
+                    
+                    +CPING: 3,0,0,0,0,0,0
+                    ---- Sent utf8 encoded message: "AT+CPING=\"ya.ru\",1,1,64,1000,10000,255\r\n" ----
+                    AT+CPING="ya.ru",1,1,64,1000,10000,255
+                    OK
+                    
+                    +CPING: 3,0,0,0,0,0,0
+                     '''),
+                     ],
+        "AT+CPINGSTOP": ["stop ping=если пинг запущен и идет долго=НЕ РАБОТАЕТ!!! даже при запущенном ping!",
+                         # navia - пинг не запущен
+                         ('AT+CPINGSTOP=?', 'ERROR'),
+                         ('AT+CPINGSTOP', 'ERROR'),
+                         ('AT+CPINGSTOP?', 'ERROR'),
+                         ],
+
+        #  -------------------------------------
+        'AT+CTCPKA?': ['TCP heartbeat',
+                       # no +sim +navia
+                       ('AT+CTCPKA=?', 'OK'),
+                       ('AT+CTCPKA', 'ERROR'),
+                       ('AT+CTCPKA?', '+CTCPKA: 0,120,10,10\nOK'),
+                       ],
+        # 2 ----------------------------------------
+        # 3 --------------------------------------
+        'AT+CDNSCFG?': ['DNS settings',
+                        # NAVIA
+                        ('AT+CDNSCFG=?', '+CDNSCFG: ("Primary DNS"),("Secondary DNS"),type'),
+                        ('AT+CDNSCFG', 'ERROR'),
+                        ('AT+CDNSCFG?', '''
+                            Primary IPv4 DNS: 100.77.8.8,Secondary IPv4 DNS: 100.77.4.4
+                            Primary IPv6 DNS: ::,Secondary IPv6 DNS: ::
+                        '''),
+                        ],
+        'AT+CIPDNSSET': ['DNS query parameters',
+                         # no +sim +navia
+                         ('AT+CIPDNSSET=?', 'ERROR'),
+                         ('AT+CIPDNSSET', 'ERROR'),
+                         ('AT+CIPDNSSET?', 'ERROR'),
+                         ],
+        'AT+CDNSGIP': ['query IP by domain name',
+                       # no +sim +navia
+                       ('AT+CDNSGIP=?', 'OK'),
+                       ('AT+CDNSGIP', 'ERROR'),
+                       ('AT+CDNSGIP?', 'ERROR'),
+                       ],
+        'AT+CDNSGHNAME': ['query domain name by IP',
+                          # no +sim +navia
+                          ('AT+CDNSGHNAME=?', 'ERROR'),
+                          ('AT+CDNSGHNAME', 'ERROR'),
+                          ('AT+CDNSGHNAME?', 'ERROR'),
+                          ],
+        'AT+CTCPFIN': ['TCP FIN config',
+                       # no +sim
+                       ('AT+CTCPFIN=?', 'ERROR'),
+                       ('AT+CTCPFIN', 'ERROR'),
+                       ('AT+CTCPFIN?', 'ERROR'),
+                       ],
+
+        'AT+CTEUTP': ['unknown TCP packet echo',
+                      # no +sim
+                      ('AT+CTEUTP=?', 'ERROR'),
+                      ('AT+CTEUTP', 'ERROR'),
+                      ('AT+CTEUTP?', 'ERROR'),
+                      ],
+        'AT+CUPURE': ['UDP port unreachable ICMP echo=везде Error даже с ',
+                      # no +sim
+                      ('AT+CUPURE=?', 'ERROR'),
+                      ('AT+CUPURE', 'ERROR'),
+                      ('AT+CUPURE?', 'ERROR'),
+                      ],
+        'AT+CINICMPALLOW': ['ICMP filter',
+                            # no +sim
+                            ('AT+CINICMPALLOW=?', 'ERROR'),
+                            ('AT+CINICMPALLOW', 'ERROR'),
+                            ('AT+CINICMPALLOW?', 'ERROR'),
+                            ],
+        'AT+CDNSSRV': ['DNS server IP',
+                       # no +sim
+                       ('AT+CDNSSRV=?', 'ERROR'),
+                       ('AT+CDNSSRV', 'ERROR'),
+                       ('AT+CDNSSRV?', 'ERROR'),
+                       ],
+        'AT+CHTPSERV': ['HTP server info',
+                        # no +sim
+                        ('AT+CHTPSERV=?',
+                         '+CHTPSERV: "ADD","HOST",(1-65535),(0-1)[,"PROXY",(1-65535)]\n+CHTPSERV: "DEL",(0-15)\nOK'),
+                        ('AT+CHTPSERV', 'ERROR'),
+                        ('AT+CHTPSERV?', 'OK'),
+                        ('AT+CHTPSERV=0', 'ERROR'),
+                        ('AT+CHTPSERV?', 'OK'),
+                        ('AT+CHTPSERV=1', 'ERROR'),
+                        ('AT+CHTPSERV?', 'OK'),
+                        ('AT+CHTPSERV=2', 'ERROR'),
+                        ('AT+CHTPSERV?', 'OK'),
+                        ('AT+CHTPSERV=3', 'ERROR'),
+                        ('AT+CHTPSERV?', 'OK'),
+                        ('AT+CHTPSERV=4', 'ERROR'),
+                        ('AT+CHTPSERV?', 'OK'),
+                        ('AT+CHTPSERV=5', 'ERROR'),
+                        ('AT+CHTPSERV?', 'OK'),
+                        ('AT+CHTPSERV=6', 'ERROR'),
+                        ('AT+CHTPSERV?', 'OK'),
+                        ('AT+CHTPSERV=7', 'ERROR'),
+                        ('AT+CHTPSERV?', 'OK'),
+                        ('AT+CHTPSERV=8', 'ERROR'),
+                        ('AT+CHTPSERV?', 'OK'),
+                        ('AT+CHTPSERV=9', 'ERROR'),
+                        ('AT+CHTPSERV?', 'OK'),
+                        ],
+    },
+
+    # =========================================================================
     "-SAT_STK=SIM APPLICATION TOOLKIT": {
         # 0=DANGER+USELESS -------------------------------
         # 1=ACCURATE -------------------------------------
@@ -2341,106 +2559,6 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
                      ('AT+FSMEM', '+FSMEM: C:(720896,438272)\nOK'),
                      ('AT+FSMEM?', 'ERROR'),
                      ],
-    },
-
-    # =========================================================================
-    "-INTERNET_SERVICE=(TCP/IP стек модуля)": {
-        # 0=DANGER+USELESS -------------------------------
-        # "AT+CSOCKSETPN": ["[DANGER]set active PDP context profile",
-        #                 ('AT+CSOCKSETPN=?', '+CSOCKSETPN: 1,(1,6)'),
-        #                 ('AT+CSOCKSETPN', 'ERROR'),
-        #                 ('AT+CSOCKSETPN?', '+CSOCKSETPN: 1,1'),
-        #               ],
-        # "AT+CPING": "[DANGER]ping destination",
-        # "AT+CPINGSTOP": "[DANGER]stop ping",
-        # "AT+CHTPUPDATE": "[DANGER]update time via HTP",
-        # "AT+CNTP": "[DANGER]update time via NTP",
-
-        # 1=ACCURATE -------------------------------------
-        'AT+CTCPKA?': ['TCP heartbeat',
-                       # no +sim
-                       ('AT+CTCPKA=?', 'OK'),
-                       ('AT+CTCPKA', 'ERROR'),
-                       ('AT+CTCPKA?', '+CTCPKA: 0,120,10,10\nOK'),
-                       ],
-        # 2=DOUBT ----------------------------------------
-        # 3=UNKNOWN --------------------------------------
-        'AT+CIPDNSSET': ['DNS query parameters',
-                         # no +sim
-                         ('AT+CIPDNSSET=?', 'ERROR'),
-                         ('AT+CIPDNSSET', 'ERROR'),
-                         ('AT+CIPDNSSET?', 'ERROR'),
-                         ],
-        'AT+CDNSGIP': ['query IP by domain name',
-                       # no +sim
-                       ('AT+CDNSGIP=?', 'OK'),
-                       ('AT+CDNSGIP', 'ERROR'),
-                       ('AT+CDNSGIP?', 'ERROR'),
-                       ],
-        'AT+CDNSGHNAME': ['query domain name by IP',
-                          # no +sim
-                          ('AT+CDNSGHNAME=?', 'ERROR'),
-                          ('AT+CDNSGHNAME', 'ERROR'),
-                          ('AT+CDNSGHNAME?', 'ERROR'),
-                          ],
-        'AT+CTCPFIN': ['TCP FIN config',
-                       # no +sim
-                       ('AT+CTCPFIN=?', 'ERROR'),
-                       ('AT+CTCPFIN', 'ERROR'),
-                       ('AT+CTCPFIN?', 'ERROR'),
-                       ],
-
-        'AT+CTEUTP': ['unknown TCP packet echo',
-                      # no +sim
-                      ('AT+CTEUTP=?', 'ERROR'),
-                      ('AT+CTEUTP', 'ERROR'),
-                      ('AT+CTEUTP?', 'ERROR'),
-                      ],
-        'AT+CUPURE': ['UDP port unreachable ICMP echo=везде Error даже с ',
-                      # no +sim
-                      ('AT+CUPURE=?', 'ERROR'),
-                      ('AT+CUPURE', 'ERROR'),
-                      ('AT+CUPURE?', 'ERROR'),
-                      ],
-        'AT+CINICMPALLOW': ['ICMP filter',
-                            # no +sim
-                            ('AT+CINICMPALLOW=?', 'ERROR'),
-                            ('AT+CINICMPALLOW', 'ERROR'),
-                            ('AT+CINICMPALLOW?', 'ERROR'),
-                            ],
-        'AT+CDNSSRV': ['DNS server IP',
-                       # no +sim
-                       ('AT+CDNSSRV=?', 'ERROR'),
-                       ('AT+CDNSSRV', 'ERROR'),
-                       ('AT+CDNSSRV?', 'ERROR'),
-                       ],
-        'AT+CHTPSERV': ['HTP server info',
-                        # no +sim
-                        ('AT+CHTPSERV=?',
-                         '+CHTPSERV: "ADD","HOST",(1-65535),(0-1)[,"PROXY",(1-65535)]\n+CHTPSERV: "DEL",(0-15)\nOK'),
-                        ('AT+CHTPSERV', 'ERROR'),
-                        ('AT+CHTPSERV?', 'OK'),
-                        ('AT+CHTPSERV=0', 'ERROR'),
-                        ('AT+CHTPSERV?', 'OK'),
-                        ('AT+CHTPSERV=1', 'ERROR'),
-                        ('AT+CHTPSERV?', 'OK'),
-                        ('AT+CHTPSERV=2', 'ERROR'),
-                        ('AT+CHTPSERV?', 'OK'),
-                        ('AT+CHTPSERV=3', 'ERROR'),
-                        ('AT+CHTPSERV?', 'OK'),
-                        ('AT+CHTPSERV=4', 'ERROR'),
-                        ('AT+CHTPSERV?', 'OK'),
-                        ('AT+CHTPSERV=5', 'ERROR'),
-                        ('AT+CHTPSERV?', 'OK'),
-                        ('AT+CHTPSERV=6', 'ERROR'),
-                        ('AT+CHTPSERV?', 'OK'),
-                        ('AT+CHTPSERV=7', 'ERROR'),
-                        ('AT+CHTPSERV?', 'OK'),
-                        ('AT+CHTPSERV=8', 'ERROR'),
-                        ('AT+CHTPSERV?', 'OK'),
-                        ('AT+CHTPSERV=9', 'ERROR'),
-                        ('AT+CHTPSERV?', 'OK'),
-                        ],
     },
 
     # =========================================================================
@@ -3320,36 +3438,6 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
                          ('AT+BTSPPSEND', 'ERROR'),
                          ('AT+BTSPPSEND?', 'ERROR'),
                          ('AT+BTSPPSEND="00310032"', 'OK\n+BTSPPSEND: 1'),
-                         ],
-    },
-    # =========================================================================
-    "---22=OTHER_NEW(A76XX)": {
-        'AT+SIMEI': ['[DANGER]Set IMEI for the module',
-                     ('AT+SIMEI=?', 'OK'),
-                     ('AT+SIMEI', 'ERROR'),
-                     ('AT+SIMEI?', '+SIMEI: 357396012183175\nOK'),
-                     ('AT+SIMEI=357396012183175', 'OK'),
-                     ],
-        'AT+CPOF': ['[DANGER]Power down the module',
-                    ('AT+CPOF=?', '+CPOF: (0,1)\nOK'),
-                    ('AT+CPOF', 'OK\nPOWER DOWN'),
-                    ('AT+CPOF?', 'ERROR'),
-                    ('AT+CPOF=1', 'OK\nPOWER DOWN'),
-                    ],
-        'AT+CRESET': ['[DANGER]Reset the module',
-                      ('AT+CRESET=?', 'OK'),
-                      ('AT+CRESET', 'OK'),
-                      ('AT+CRESET?', 'ERROR'),
-                      ],
-        'AT+CEID': ['Read EID from eSIM card',
-                    ('AT+CEID=?', 'OK'),
-                    ('AT+CEID', '+EID:3506000000000000025000000764040\nOK'),
-                    ('AT+CEID?', 'ERROR'),
-                    ],
-        'AT+CGNSSPROD': ['Get GNSS Production Info',
-                         ('AT+CGNSSPROD=?', 'OK'),
-                         ('AT+CGNSSPROD', 'PRODUCT: UC6228CI,G1L1E1,N/A,R3.4.21.0Build16211\nOK'),
-                         ('AT+CGNSSPROD?', 'ERROR'),
                          ],
     },
     # =========================================================================
