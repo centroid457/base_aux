@@ -362,7 +362,7 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
     },
 
     # =========================================================================
-    "-2=SIM": {
+    "-2=GSM-1=SIM": {
         # 0=DANGER+USELESS -------------------------------
         # "AT+CPWD": "[DANGER]смена пароля (PIN/PUK)",
 
@@ -373,6 +373,12 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
             ],
 
         # 1=ACCURATE -------------------------------------
+        'AT+CPIN?': ['проверка присутствия SIM=статус PIN (READY / SIM PIN / SIM PUK)',
+                     ('AT+CPIN=?', 'OK'),
+                     ('AT+CPIN', 'ERROR'),
+                     ('AT+CPIN?', '+CME ERROR: SIM not inserted'),  # без симки
+                     ('AT+CPIN?', '+CPIN: READY\nOK'),  # с симкой
+                     ],
         'AT+CICCID': ['ICCID SIM-карты',
                       # без симки
                       ('AT+CICCID=?', 'OK'),
@@ -387,7 +393,7 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
         'AT+CIMI': ['IMSI (IMSI SIM-карты) international mobile subscriber identity (460010222028133)',
                     ('AT+CIMI=?', 'OK'),
                     ('AT+CIMI', '+CME ERROR: SIM failure'),   # без симки
-                    ('AT+CIMI', '250470002905364\nOK'),       # с симкой
+                    ('AT+CIMI', '250470002905364\nOK'),       # с симкой navia
                     ('AT+CIMI?', '+CME ERROR: Operation not supported'),
                     ],
         'AT+SPIC': ['остаток попыток ввода PIN/PUK',
@@ -396,12 +402,7 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
                     ('AT+SPIC', '+SPIC: 3,10,3,10\nOK'),            # с симкой
                     ('AT+SPIC?', 'ERROR'),
                     ],
-        'AT+CPIN?': ['статус PIN (READY / SIM PIN / SIM PUK)',
-                     ('AT+CPIN=?', 'OK'),
-                     ('AT+CPIN', 'ERROR'),
-                     ('AT+CPIN?', '+CME ERROR: SIM not inserted'),   # без симки
-                     ('AT+CPIN?', '+CPIN: READY\nOK'),               # с симкой
-                     ],
+
         'AT+CNUM?': ['основной запрос номера (недоступен на M2M sim)',
                      # ПРИМЕР ИЗ ДОКУМЕНТАЦИИ ------------------------
                      # [+CNUM: <alpha>,<number>,<type>[<CR><LF>
@@ -420,11 +421,12 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
                      ('AT+CNUM', 'OK'),
                      ('AT+CNUM?', '+CME ERROR: Operation not supported'),
                      ],
-        'AT+CPINR?': ['остаток попыток PIN (3GPP-вариант)',
+
+        'AT+CPINR?': ['',
+                      # no sim
                       ('AT+CPINR=?', '+CPINR: (0-3),(0-3),(0-10),(0-10)\nOK'),
                       ('AT+CPINR', '+CME ERROR: Operation not supported'),
-                      ('AT+CPINR?', '+CME ERROR: SIM not inserted'),    # без симки!!! - везде!
-                      ('AT+CPINR?', '+CPINR:3,3,10,10\nOK'),            # с симкой - и дальше везде!!!
+                      ('AT+CPINR?', '+CME ERROR: SIM not inserted'),
                       ('AT+CPINR=0', 'ERROR'),
                       ('AT+CPINR?', '+CME ERROR: SIM not inserted'),
                       ('AT+CPINR=1', 'ERROR'),
@@ -445,8 +447,32 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
                       ('AT+CPINR?', '+CME ERROR: SIM not inserted'),
                       ('AT+CPINR=9', 'ERROR'),
                       ('AT+CPINR?', '+CME ERROR: SIM not inserted'),
+
+                      # sim
+                      ('AT+CPINR=?', '+CPINR: (0-3),(0-3),(0-10),(0-10)\nOK'),
+                      ('AT+CPINR', '+CME ERROR: Operation not supported'),
+                      ('AT+CPINR?', '+CPINR:3,3,10,10\nOK'),
+                      ('AT+CPINR=0', 'ERROR'),
+                      ('AT+CPINR?', '+CPINR:3,3,10,10\nOK'),
+                      ('AT+CPINR=1', 'ERROR'),
+                      ('AT+CPINR?', '+CPINR:3,3,10,10\nOK'),
+                      ('AT+CPINR=2', 'ERROR'),
+                      ('AT+CPINR?', '+CPINR:3,3,10,10\nOK'),
+                      ('AT+CPINR=3', 'ERROR'),
+                      ('AT+CPINR?', '+CPINR:3,3,10,10\nOK'),
+                      ('AT+CPINR=4', 'ERROR'),
+                      ('AT+CPINR?', '+CPINR:3,3,10,10\nOK'),
+                      ('AT+CPINR=5', 'ERROR'),
+                      ('AT+CPINR?', '+CPINR:3,3,10,10\nOK'),
+                      ('AT+CPINR=6', 'ERROR'),
+                      ('AT+CPINR?', '+CPINR:3,3,10,10\nOK'),
+                      ('AT+CPINR=7', 'ERROR'),
+                      ('AT+CPINR?', '+CPINR:3,3,10,10\nOK'),
+                      ('AT+CPINR=8', 'ERROR'),
+                      ('AT+CPINR?', '+CPINR:3,3,10,10\nOK'),
+                      ('AT+CPINR=9', 'ERROR'),
+                      ('AT+CPINR?', '+CPINR:3,3,10,10\nOK'),
                       ],
-        # 2=DOUBT ----------------------------------------
         # 3=UNKNOWN --------------------------------------
         'AT+CIMIM': ['IMSI (второй симки?) (USIM)',
                      # с симкой и без!
@@ -457,7 +483,7 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
     },
 
     # =========================================================================
-    "-4=STATUS_CONTROL(управление состоянием)": {
+    "-4=GSM=STATUS_CONTROL(управление состоянием)": {
         # 0=DANGER+USELESS -------------------------------
         # "AT+CPOF": "[DANGER]power off",
         # "AT+CRESET": "[DANGER]reset",
@@ -499,11 +525,19 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
         # "AT+SIMEI": "[DANGER]set IMEI",
 
         # 1=ACCURATE -------------------------------------
-        'AT+CSQ': ['signal quality (RSSI, BER) разные значения не нужны! это строго чтение, а не запись! поэтому ошибка на запись!!!',
+        'AT+CSQ': ['signal quality (RSSI, BER) разные значения не нужны! это строго чтение, а не запись! чем больше тем лучше! 99=неизвестно',
                    ('AT+CSQ=?', '+CSQ: (0-31,99),(0-7,99)\nOK'),
+                   ('AT+CSQ', '+CSQ: 12,99\nOK'),   # БЕЗ АНТЕННЫ!!! с симкой
+                   ('AT+CSQ', '+CSQ: 18,99\nOK'),   # момент включения антенны-1
+                   ('AT+CSQ', '+CSQ: 19,99\nOK'),   # момент включения антенны-2
+                   ('AT+CSQ', '+CSQ: 21,99\nOK'),   # момент включения антенны-3
+                   ('AT+CSQ', '+CSQ: 20,99\nOK'),   # момент включения антенны-4
+                   ('AT+CSQ', '+CSQ: 21,99\nOK'),   # момент включения антенны-5
+
                    ('AT+CSQ', '+CSQ: 23,0\nOK'),    # без симки
                    ('AT+CSQ', '+CSQ: 25,0\nOK'),    # с симкой
                    ('AT+CSQ', '+CSQ: 28,99\nOK'),   # с симкой
+
                    ('AT+CSQ?', 'ERROR'),
                    ('AT+CSQ=0', 'ERROR'),
                    ('AT+CSQ?', 'ERROR'),
@@ -591,15 +625,8 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
     },
 
     # =========================================================================
-    "-5=GSM=NETWORK(СЕТЬ / РЕГИСТРАЦИЯ / ОПЕРАТОР)": {
+    "-5=GSM-2=NETWORK(СЕТЬ/РЕГИСТРАЦИЯ/ОПЕРАТОР)": {
         # 0=DANGER+USELESS -------------------------------
-        # 'AT+COPS': ["[DANGER]operator selection (может долго висеть на =?)",
-        #     ("AT+COPS?", "+COPS: 0,2,\"25020\",7\nOK"),
-
-        #     ('AT+COPS=?', ''),
-        #     ('AT+COPS', ''),
-        #     ('AT+COPS?', ''),
-        # ],
         # "AT+CLCK": "[DANGER]facility lock (network)",
         # "AT+CPWD": "[DANGER]change password",
         # "AT+CCUG": "[DANGER]closed user group",
@@ -679,8 +706,9 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
         #              ('AT+CNAOP=Siminn', 'ERROR'),
         #              ('AT+CNAOP?', 'ERROR'),
         #              ],
-        # 1=ACCURATE -------------------------------------
-        'AT+CREG?': ['network registration (CS), =0>disable, =1>регистрация',
+
+        # РЕГИСТРАЦИЯ В СЕТЯХ -------------------------------------
+        'AT+CREG?': ['GSM=network registration (CS), =0>disable, =1>регистрация в домашней сети успешна! после изменения необходимо время!',
                      # без симки
                      ('AT+CREG=?', '+CREG: (0-2)\nOK'),
                      ('AT+CREG', 'OK'),
@@ -702,8 +730,31 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
                      ('AT+CREG?', '+CREG: 1,1\nOK'),
                      ('AT+CREG=2', 'OK'),
                      ('AT+CREG?', '+CREG: 2,1,0321,000008B1\nOK'),
+                     ('AT+CREG?', '+CREG: 2,1,0B3D,0BD1591A\nOK'),  # navia
+
+                     # после изменения нужно выждать время!
+                     # ---- Sent utf8 encoded message: "AT+CREG=2\r\n" ----
+                     # AT+CREG=2
+                     # OK
+                     # ---- Sent utf8 encoded message: "AT+CREG\r\n" ----
+                     # AT+CREG
+                     # OK
+                     # ---- Sent utf8 encoded message: "AT+CREG?\r\n" ----
+                     # AT+CREG?
+                     # +CREG: 0,1
+                     #
+                     # OK
+                     # ---- Sent utf8 encoded message: "AT+CREG=2\r\n" ----
+                     # AT+CREG=2
+                     # OK
+                     # ---- Sent utf8 encoded message: "AT+CREG?\r\n" ----
+                     # AT+CREG?
+                     # +CREG: 2,1,0B3D,0BD1591A
+                     #
+                     # OK
+
                      ],
-        'AT+CGREG?': ['GPRS registration (PS)',
+        'AT+CGREG?': ['GPRS=registration (PS)=1 registered, также нужно ждать время после изменения!',
                       # без симки
                       ('AT+CGREG=?', '+CGREG: (0-2)\nOK'),
                       ('AT+CGREG', 'OK'),
@@ -723,10 +774,11 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
                       ('AT+CGREG?', '+CGREG: 0,1\nOK'),
                       ('AT+CGREG=1', 'OK'),
                       ('AT+CGREG?', '+CGREG: 1,1\nOK'),
-                      ('AT+CGREG=2', 'OK'),
+                      ('AT+CGREG=2', 'OK'),     # после изменения также ждать требуется!
                       ('AT+CGREG?', '+CGREG: 2,1,"0321","000008b1"\nOK'),
+                      ('AT+CGREG?', '+CGREG: 2,1,0B3D,0BD1591A\nOK'),   # navia
                       ],
-        'AT+CEREG?': ['EPS registration (LTE)',
+        'AT+CEREG?': ['EPS (LTE/4G) registration=',
                       # без симки и с
                       ('AT+CEREG=?', '+CEREG: (0-2)\nOK'),
                       ('AT+CEREG', 'OK'),
@@ -735,9 +787,28 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
                       ('AT+CEREG?', '+CEREG: 0,0\nOK'),
                       ('AT+CEREG=1', 'OK'),
                       ('AT+CEREG?', '+CEREG: 1,0\nOK'),
-                      ('AT+CEREG=2', 'OK'),
+                      ('AT+CEREG=2', 'OK'),    # после изменения вроде ждать требуется - но хуже тоо что пока не вернешь в 0 - будет слать постоянно отчет один и тот же!
                       ('AT+CEREG?', '+CEREG: 2,0,0000,00000000\nOK'),
+                      ('AT+CEREG?', '+CEREG: 1,0B3D,0BC24B66,7\nOK'),
                       ],
+
+        # -------------------------------------------
+        '-AT+COPS?': ["[DANGER=БЛОК на 80секунд на запросе параметров =?]operator selection",
+             # NAVIA!
+
+            ("AT+COPS=?",   # [DANGER] запрос блокирует на 80сек!!! ответ одной строкой без разноса!
+             '+COPS: (2,"Next B","Next B","25099",7),(1,"Next MF","Next MF","25002",0),(1,"Next B","Next B","25099",0),(1,"Next M","Next M","25001",0),(1,"Next M","Next M","25001",7),(1,"Next T","Next T","25020",7),(1,"Next MF","Next MF","25002",7),(1,"YOTA","YOTA","25011",7),,(0,1,2,3,4),(0,1,2)'),
+            ('AT+COPS', 'ERROR'),
+            ("AT+COPS?", "+COPS: 0,2,\"25099\",7\nOK"),
+
+            ("AT+COPS?", "+COPS: 0,2,\"25020\",7\nOK"), # хз
+
+            # наверное без симки???? хз!
+            ('AT+COPS=?', ''),
+            ('AT+COPS', ''),
+            ('AT+COPS?', ''),
+        ],
+        # -------------------------------------------
         'AT+CUSD?': ['USSD',
                      # без симки и с
                      ('AT+CUSD=?', '+CUSD: (0-2)\nOK'),
@@ -772,11 +843,12 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
                      ('AT+CSSN=1', 'OK'),
                      ('AT+CSSN?', '+CSSN: 1,0\nOK'),
                      ],
-        'AT+CPSI?': ['UE system information',
+        'AT+CPSI?': ['UE system information=ВЫШКА СОТОВАЯ',
                      ('AT+CPSI=?', 'OK'),
                      ('AT+CPSI', 'ERROR'),
                      ('AT+CPSI?', '+CPSI: NO SERVICE,Online\nOK'),  # без симки
                      ('AT+CPSI?', '+CPSI: GSM,Online,250-01,0x321,2225,874 DCS 1800,47,0,29-61\nOK'),   # с симкой
+                     ('AT+CPSI?', '+CPSI: LTE,Online,250-99,0xB3D,198269305,464,EUTRAN-BAND1,525,4,0,0,33,43,-7\nOK'),   # Navia
                      ],
         'AT+CTZU?': ['automatic time zone update, 1=set AUTO, 0=disable',
                      # без симки и с
@@ -920,11 +992,14 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
                      ('AT+CIREG?', '+CME ERROR: 4'),
                      ],
         # 3=UNKNOWN --------------------------------------
-        'AT+CSMOD': ['show network system mode',
-                     # без симки и с
+        'AT+CSMOD': ['show network system mode, 8 = LTE, 7 = HSPA, 1 = GSM. Первое число = включён ли автоотчёт',
+                     # без симки и с, даже на navia с включенным питанием!!!
                      ('AT+CSMOD=?', 'ERROR'),
                      ('AT+CSMOD', 'ERROR'),
                      ('AT+CSMOD?', 'ERROR'),
+
+                     # из доков
+                     ('AT+CSMOD?', '+CSMOD: 0,8'),
                      ],
 
         'AT+CIMS': ['IMS status (может быть не поддержано)',
@@ -992,10 +1067,22 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
                           ('AT+CASSISTLOC', 'ERROR'),
                           ('AT+CASSISTLOC?', 'ERROR'),
                           ],
-    },
 
+        'AT+SIGNS': ['Query the antenna RSRP RSRQ RSSI',
+                     ('AT+SIGNS=?', '+SIGNS:\nOK'),
+                     ('AT+SIGNS',
+                      '+RSRP0:-93\n+RSRP1:-112\n+RSRQ0:-7\n+RSRQ1:-8\n+RSSI0:-48\n+RSSI1:-67\n+TXPOWER:24\n+MAXTXPOWER:23\nOK'),
+                     ('AT+SIGNS?',
+                      '+RSRP0:-93\n+RSRP1:-112\n+RSRQ0:-7\n+RSRQ1:-8\n+RSSI0:-48\n+RSSI1:-67\n+TXPOWER:24\n+MAXTXPOWER:23\nOK'),
+
+                     # navia с питанием
+                     ('AT+SIGNS=?', 'ERROR'),
+                     ('AT+SIGNS', 'ERROR'),
+                     ('AT+SIGNS?', 'ERROR'),
+                     ],
+    },
     # =========================================================================
-    "-HARDWARE(питание, ADC, GPIO, I2C)": {
+    "-HARDWARE(питание/ADC/GPIO/I2C)": {
         # 0=DANGER+USELESS -------------------------------
         # "AT+CMTE": "[DANGER]temperature control / shutdown",
         # "AT+CDELTA": "[DANGER]go to recovery mode",
@@ -1745,16 +1832,35 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
 
     # =========================================================================
     "-9=GPRS/PDP": {
-        # 0=DANGER+USELESS -------------------------------
-        # 1=ACCURATE -------------------------------------
-        # 2=DOUBT ----------------------------------------
-        # 3=UNKNOWN --------------------------------------
-
-        # "AT+CGACT": "[DANGER]PDP context activate/deactivate",
-        # "AT+CGDCONT": "[DANGER]define PDP context (APN, type)",
         # "AT+CGDSCONT": "[DANGER]define secondary PDP context",
         # "AT+CGDATA": "[DANGER]enter data state (PPP)",
 
+        # 1=ВКЛЮЧЕНИЕ/АКТИВАЦИЯ -------------------
+        "AT+CGACT?": ["[DANGER]PDP context activate/deactivate",
+                     ('AT+CGACT=?', '+CGREG: (0-2)\nOK'),
+
+                    # navia
+                     ('AT+CGACT=?', 'AT+CGACT=?\nOK'),
+                     ('AT+CGACT', 'ERROR'),
+                     ('AT+CGACT?', '+CGACT: 1,1\nOK'),
+                     ],
+
+        # 2=INFO -------------------------------------
+        "AT+CGDCONT": ["[DANGER]define PDP context (APN, type)=список всех APN профилей в модеме",
+                       # хз!
+                       ('AT+CGDCONT=?', '+CGREG: (0-2)\nOK'),
+                       ('AT+CGDCONT', 'OK'),
+                       ('AT+CGDCONT?', '+CGREG: 0,0\nOK'),
+
+                       # NAVIA
+                       ('AT+CGDCONT=?', '''
+                        +CGDCONT: (1-15),"IP",,,(0-2),(0-1),(0-1),(0-2)
+                        +CGDCONT: (1-15),"IPV6",,,(0-2),(0-1),(0-1),(0-2)
+                        +CGDCONT: (1-15),"IPV4V6",,,(0-2),(0-1),(0-1),(0-2)
+                       '''),
+                       ('AT+CGDCONT', 'OK'),
+                       ('AT+CGDCONT?', '+CGDCONT: 1,"IP","simsim.MNC047.MCC250.GPRS","10.4.12.216",0,0,,,,'),
+                       ],
         'AT+CGREG': ['GPRS registration status',
                      # no sim
                      ('AT+CGREG=?', '+CGREG: (0-2)\nOK'),
@@ -2068,6 +2174,12 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
                        ('AT+CGPADDR?', 'ERROR'),
                        ('AT+CGPADDR=1', '+CGPADDR: 1,0.0.0.0\nOK'),
                        ('AT+CGPADDR?', 'ERROR'),
+
+                       # NAVIA
+                       ('AT+CGPADDR=?', '+CGPADDR: (1)\nOK'),
+                       ('AT+CGPADDR', '+CGPADDR: 1,10.4.12.216\nOK'),
+                       ('AT+CGPADDR?', 'ERROR'),
+                       ('AT+CGPADDR=1', '+CGPADDR: 1,10.4.12.216\nOK'),
                        ],
         'AT+CGCLASS': ['GPRS mobile station class',
                        # без симки и с
@@ -2124,6 +2236,29 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
                          # без симки и с
                          ('AT+CGCONTRDP=?', 'OK'),
                          ('AT+CGCONTRDP', 'OK'),
+                         ('AT+CGCONTRDP?',
+                          '+CGCONTRDP: (<p_cid>), (<bearer_id>),(<apn>),(<source_addr and subnet_mask>),(<gw_addr>), (<DNS_prim_addr>), (<DNS_sec_addr>), (<P-CSCF_prim_addr>), (<P-CSCF_sec_addr>),(<IM_CN_Signalling_Flag>)r\nOK'),
+                         ('AT+CGCONTRDP=?', 'OK'),
+                         ('AT+CGCONTRDP', 'OK'),
+                         ('AT+CGCONTRDP?',
+                          '+CGCONTRDP: (<p_cid>), (<bearer_id>),(<apn>),(<source_addr and subnet_mask>),(<gw_addr>), (<DNS_prim_addr>), (<DNS_sec_addr>), (<P-CSCF_prim_addr>), (<P-CSCF_sec_addr>),(<IM_CN_Signalling_Flag>)r\nOK'),
+
+                          # no sim
+                          ('AT+CGCONTRDP=?', 'OK'),
+                          ('AT+CGCONTRDP', 'OK'),
+                          ('AT+CGCONTRDP?',
+                           '+CGCONTRDP: (<p_cid>), (<bearer_id>),(<apn>),(<source_addr and subnet_mask>),(<gw_addr>), (<DNS_prim_addr>), (<DNS_sec_addr>), (<P-CSCF_prim_addr>), (<P-CSCF_sec_addr>),(<IM_CN_Signalling_Flag>)r\nOK'),
+
+                          # sim
+                          ('AT+CGCONTRDP=?', '+CGCONTRDP: 1\nOK'),
+                          ('AT+CGCONTRDP',
+                           '+CGCONTRDP: 1,5,"next.MNC047.MCC250.GPRS","10.5.58.143","","100.77.4.4","100.77.8.8","","",0,01400\nOK'),
+                          ('AT+CGCONTRDP?',
+                           '+CGCONTRDP: (<p_cid>), (<bearer_id>),(<apn>),(<source_addr and subnet_mask>),(<gw_addr>), (<DNS_prim_addr>), (<DNS_sec_addr>), (<P-CSCF_prim_addr>), (<P-CSCF_sec_addr>),(<IM_CN_Signalling_Flag>)r\nOK'),
+
+                          # NAVIA
+                         ('AT+CGCONTRDP=?', '+CGCONTRDP: 1\nOK'),
+                         ('AT+CGCONTRDP', '+CGCONTRDP: 1,5,"simsim.MNC047.MCC250.GPRS","10.4.12.216","","100.77.8.8","100.77.4.4","","",0,01400'),
                          ('AT+CGCONTRDP?',
                           '+CGCONTRDP: (<p_cid>), (<bearer_id>),(<apn>),(<source_addr and subnet_mask>),(<gw_addr>), (<DNS_prim_addr>), (<DNS_sec_addr>), (<P-CSCF_prim_addr>), (<P-CSCF_sec_addr>),(<IM_CN_Signalling_Flag>)r\nOK'),
                          ],
@@ -2732,72 +2867,31 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
                     ('AT+CESQ?', '+CME ERROR: unknown error'),
                     ('AT+CESQ=9', '+CME ERROR: unknown error'),
                     ('AT+CESQ?', '+CME ERROR: unknown error'),
+
+                    # NAVIA
+                    # 1=значения постоянно меняются! -------------------------
+                    # ---- Sent utf8 encoded message: "AT+CESQ\r\n" ----
+                    # AT+CESQ
+                    # +CESQ: 40,99,255,255,3,37
+                    # ---- Sent utf8 encoded message: "AT+CESQ\r\n" ----
+                    # AT+CESQ
+                    # +CESQ: 40,99,255,255,3,37
+                    # ---- Sent utf8 encoded message: "AT+CESQ\r\n" ----
+                    # AT+CESQ
+                    # +CESQ: 40,99,255,255,0,10
+                    # ---- Sent utf8 encoded message: "AT+CESQ\r\n" ----
+                    # AT+CESQ
+                    # +CESQ: 40,99,255,255,0,10
+                    # ---- Sent utf8 encoded message: "AT+CESQ\r\n" ----
+                    # AT+CESQ
+                    # +CESQ: 41,99,255,255,12,38
+                    # ---- Sent utf8 encoded message: "AT+CESQ\r\n" ----
+                    # AT+CESQ
+                    # +CESQ: 41,99,255,255,12,38
+                    # 2=все остальные установки дают пустоту!!! -------------
+                    ('AT+CESQ=*', '+CME ERROR: unknown error'),
                     ],
-        'AT+CPINR?': ['PIN retries',
-                      # no sim
-                      ('AT+CPINR=?', '+CPINR: (0-3),(0-3),(0-10),(0-10)\nOK'),
-                      ('AT+CPINR', '+CME ERROR: Operation not supported'),
-                      ('AT+CPINR?', '+CME ERROR: SIM not inserted'),
-                      ('AT+CPINR=0', 'ERROR'),
-                      ('AT+CPINR?', '+CME ERROR: SIM not inserted'),
-                      ('AT+CPINR=1', 'ERROR'),
-                      ('AT+CPINR?', '+CME ERROR: SIM not inserted'),
-                      ('AT+CPINR=2', 'ERROR'),
-                      ('AT+CPINR?', '+CME ERROR: SIM not inserted'),
-                      ('AT+CPINR=3', 'ERROR'),
-                      ('AT+CPINR?', '+CME ERROR: SIM not inserted'),
-                      ('AT+CPINR=4', 'ERROR'),
-                      ('AT+CPINR?', '+CME ERROR: SIM not inserted'),
-                      ('AT+CPINR=5', 'ERROR'),
-                      ('AT+CPINR?', '+CME ERROR: SIM not inserted'),
-                      ('AT+CPINR=6', 'ERROR'),
-                      ('AT+CPINR?', '+CME ERROR: SIM not inserted'),
-                      ('AT+CPINR=7', 'ERROR'),
-                      ('AT+CPINR?', '+CME ERROR: SIM not inserted'),
-                      ('AT+CPINR=8', 'ERROR'),
-                      ('AT+CPINR?', '+CME ERROR: SIM not inserted'),
-                      ('AT+CPINR=9', 'ERROR'),
-                      ('AT+CPINR?', '+CME ERROR: SIM not inserted'),
 
-                      # sim
-                    ('AT+CPINR=?', '+CPINR: (0-3),(0-3),(0-10),(0-10)\nOK'),
-                    ('AT+CPINR', '+CME ERROR: Operation not supported'),
-                    ('AT+CPINR?', '+CPINR:3,3,10,10\nOK'),
-                    ('AT+CPINR=0', 'ERROR'),
-                    ('AT+CPINR?', '+CPINR:3,3,10,10\nOK'),
-                    ('AT+CPINR=1', 'ERROR'),
-                    ('AT+CPINR?', '+CPINR:3,3,10,10\nOK'),
-                    ('AT+CPINR=2', 'ERROR'),
-                    ('AT+CPINR?', '+CPINR:3,3,10,10\nOK'),
-                    ('AT+CPINR=3', 'ERROR'),
-                    ('AT+CPINR?', '+CPINR:3,3,10,10\nOK'),
-                    ('AT+CPINR=4', 'ERROR'),
-                    ('AT+CPINR?', '+CPINR:3,3,10,10\nOK'),
-                    ('AT+CPINR=5', 'ERROR'),
-                    ('AT+CPINR?', '+CPINR:3,3,10,10\nOK'),
-                    ('AT+CPINR=6', 'ERROR'),
-                    ('AT+CPINR?', '+CPINR:3,3,10,10\nOK'),
-                    ('AT+CPINR=7', 'ERROR'),
-                    ('AT+CPINR?', '+CPINR:3,3,10,10\nOK'),
-                    ('AT+CPINR=8', 'ERROR'),
-                    ('AT+CPINR?', '+CPINR:3,3,10,10\nOK'),
-                    ('AT+CPINR=9', 'ERROR'),
-                    ('AT+CPINR?', '+CPINR:3,3,10,10\nOK'),
-                      ],
-        'AT+CGCONTRDP?': ['PDP context dynamic params',
-                          # no sim
-                          ('AT+CGCONTRDP=?', 'OK'),
-                          ('AT+CGCONTRDP', 'OK'),
-                          ('AT+CGCONTRDP?',
-                           '+CGCONTRDP: (<p_cid>), (<bearer_id>),(<apn>),(<source_addr and subnet_mask>),(<gw_addr>), (<DNS_prim_addr>), (<DNS_sec_addr>), (<P-CSCF_prim_addr>), (<P-CSCF_sec_addr>),(<IM_CN_Signalling_Flag>)r\nOK'),
-
-                          # sim
-                          ('AT+CGCONTRDP=?', '+CGCONTRDP: 1\nOK'),
-                          ('AT+CGCONTRDP',
-                           '+CGCONTRDP: 1,5,"next.MNC047.MCC250.GPRS","10.5.58.143","","100.77.4.4","100.77.8.8","","",0,01400\nOK'),
-                          ('AT+CGCONTRDP?',
-                           '+CGCONTRDP: (<p_cid>), (<bearer_id>),(<apn>),(<source_addr and subnet_mask>),(<gw_addr>), (<DNS_prim_addr>), (<DNS_sec_addr>), (<P-CSCF_prim_addr>), (<P-CSCF_sec_addr>),(<IM_CN_Signalling_Flag>)r\nOK'),
-                          ],
         # 2=DOUBT ----------------------------------------
         # 3=UNKNOWN --------------------------------------
         'AT*CNTI': ['vendor: cell info (может отсутствовать)',
@@ -3230,15 +3324,6 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
     },
     # =========================================================================
     "---22=OTHER_NEW(A76XX)": {
-        # 0=DANGER+USELESS -------------------------------
-        # 1=ACCURATE -------------------------------------
-        'AT+SIGNS': ['Query the antenna RSRP RSRQ RSSI',
-                     ('AT+SIGNS=?', '+SIGNS:\nOK'),
-                     ('AT+SIGNS',
-                      '+RSRP0:-93\n+RSRP1:-112\n+RSRQ0:-7\n+RSRQ1:-8\n+RSSI0:-48\n+RSSI1:-67\n+TXPOWER:24\n+MAXTXPOWER:23\nOK'),
-                     ('AT+SIGNS?',
-                      '+RSRP0:-93\n+RSRP1:-112\n+RSRQ0:-7\n+RSRQ1:-8\n+RSSI0:-48\n+RSSI1:-67\n+TXPOWER:24\n+MAXTXPOWER:23\nOK'),
-                     ],
         'AT+SIMEI': ['[DANGER]Set IMEI for the module',
                      ('AT+SIMEI=?', 'OK'),
                      ('AT+SIMEI', 'ERROR'),
@@ -3256,11 +3341,6 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
                       ('AT+CRESET', 'OK'),
                       ('AT+CRESET?', 'ERROR'),
                       ],
-        'AT+CPINR': ['PIN retries (A76XX версия)',
-                     ('AT+CPINR=?', '+CPINR: (0-3),(0-3),(0-10),(0-10)\nOK'),
-                     ('AT+CPINR', '+CME ERROR: Operation not supported'),
-                     ('AT+CPINR?', '+CPINR:3,3,10,10\nOK'),
-                     ],
         'AT+CEID': ['Read EID from eSIM card',
                     ('AT+CEID=?', 'OK'),
                     ('AT+CEID', '+EID:3506000000000000025000000764040\nOK'),
@@ -3272,6 +3352,29 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
                          ('AT+CGNSSPROD?', 'ERROR'),
                          ],
     },
+    # =========================================================================
+    # =========================================================================
+    # =========================================================================
+    # =========================================================================
+    # СЦЕНАРИИ РАБОТЫ
+    "---check-1=GSM CHANNEL": [
+        ("AT+CPIN?", ""),   # lambda r: "READY" in r)
+        ("AT+CICCID", ""),   # lambda r: "+ICCID:" in r)
+
+        ("Signal", "AT+CSQ", lambda r: int(r.split(",")[0].split(":")[1]) > 10),
+        ("CS-reg", "AT+CREG?", lambda r: ",1" in r or ",5" in r),
+        ("PS-reg", "AT+CGREG?", lambda r: ",1" in r or ",5" in r),
+        ("LTE-reg", "AT+CEREG?", lambda r: ",1" in r or ",5" in r),
+        ("APN", "AT+CGDCONT?", lambda r: "+CGDCONT: 1" in r),
+        ("PDP act", "AT+CGACT?", lambda r: "+CGACT: 1,1" in r),
+        ("IP", "AT+CGPADDR", lambda r: "0.0.0.0" not in r),
+        ("DNS cfg", "AT+CDNSCFG?", lambda r: "Primary IPv4 DNS:" in r and "::" not in r.split("Secondary")[0]),
+        ("DNS query", 'AT+CDNSGIP="www.google.com"', lambda r: "+CDNSGIP: 1," in r),
+        ("Ping IP", 'AT+CPING="8.8.8.8",1,4,64,1000,10000,255',
+         lambda r: "+CPING: 3,4,4,0" in r),
+        ("Ping DNS", 'AT+CPING="www.google.com",1,4,64,1000,10000,255',
+         lambda r: "+CPING: 3,4,4,0" in r),
+    ]
 }
 
 
