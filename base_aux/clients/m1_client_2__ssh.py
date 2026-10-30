@@ -23,6 +23,9 @@ class ClientSsh(ClientBase):
     # SETTINGS ------------------------------------------------
     PORT: int = 22
 
+    TIMEOUT_READ_INITIAL = 2
+    TIMEOUT_READ_CONTINUE = 2
+
     # INIT =============================================================================================================
     def __init__(
             self,
@@ -129,20 +132,9 @@ class ClientSsh(ClientBase):
 
             return True
         except Exception as e:
-            print(f"SSH connection error to {self.ADDRESS}: {e}")
+            print(f"SSH connection error to {self.ADDRESS}:{e}")
             # закрываем всё, что могло открыться
-            try:
-                if self._channel:
-                    self._channel.close()
-            except:
-                pass
-            try:
-                if self._ssh_client:
-                    self._ssh_client.close()
-            except:
-                pass
-            self._channel = None
-            self._ssh_client = None
+            self.disconnect()
             return False
 
     def disconnect(self) -> None:
@@ -156,6 +148,8 @@ class ClientSsh(ClientBase):
                 self._ssh_client.close()
         except:
             pass
+        self._channel = None
+        self._ssh_client = None
 
     def check__connected(self) -> bool:
         try:

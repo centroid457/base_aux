@@ -35,8 +35,8 @@ def pytest_addoption(parser):
         nargs="?",
         const=IOT_DEFAULT,
 
-        # default=None,         # default=OTHER
-        default=IOT_DEFAULT,    # default=THIS
+        default=None,         # default=OTHER
+        # default=IOT_DEFAULT,    # default=THIS
     )
     parser.addoption(
         '--ssh',

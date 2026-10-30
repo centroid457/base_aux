@@ -25,6 +25,9 @@ class ClientSerial(ClientBase):
     # SETTINGS ------------------------------------------------
     BAUDRATE: int = 9600  # 115200
 
+    TIMEOUT_READ_INITIAL = 2
+    TIMEOUT_READ_CONTINUE = 2
+
     # INIT =============================================================================================================
     def __init__(
             self,

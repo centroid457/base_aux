@@ -181,6 +181,10 @@ class Harvest:
 
     def login_try(self) -> bool:
         """
+        NOTE
+        ЭТО НУЖНО ТОЛЬКО ДЛЯ SERIAL!!!
+        для SSH/RSSH все и так соединяется с авторизацией!!!
+
         harvest05 login:
         ---- Sent utf8 encoded message: "root\r\n" ----
         root

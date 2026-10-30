@@ -95,7 +95,7 @@ class Test_01__Detection:
         GOAL
         test success working cmds
         """
-        hostname_value = harvest.cmd_timeout__write_read__payload('hostname')
+        hostname_value = harvest.cmd_timeout__write_read__payload('hostname', timeout_continue=3)
         assert hostname_value.startswith("harvest"), "hostname не соответствует требуемому"
         assert "command not found" in harvest.cmd_timeout__write_read__payload('hello123')
 
@@ -1274,8 +1274,8 @@ class Test_41__GSM:
         """Разрешение DNS и доступность внешнего ресурса (ya.ru)."""
         ping_ok = harvest.cmd_timeout__check_executed_success(
             f"ping -I {self.INTERFACE_NAME} -c 1 -W 2 ya.ru",
-            timeout=4,
-            timeout_continue=4,
+            timeout=5,
+            timeout_continue=5,
         )
         assert ping_ok, f"ya.ru НЕОПРЕДЕЛИЛСЯ/недоступен через {self.INTERFACE_NAME} (проверьте DNS/интернет)"
 
