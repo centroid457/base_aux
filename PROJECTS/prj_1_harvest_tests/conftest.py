@@ -918,7 +918,10 @@ def wf__link_connected(harvest) -> bool:
 # ======================================================================================================================
 @pytest.fixture(scope="session")
 def ultrasonic_mac__any(harvest) -> str | None:
-    """Находит MAC-адрес UltraSonic датчика."""
+    """
+    GOAL
+    Находит УВЕРЕННО MAC-адрес любого (первого найденного) UltraSonic датчика - по имени!
+    """
     script = "scr__bt_find.py"
     assert harvest.file_name__push(script), "скрипт не отправился"
     output = harvest.cmd_timeout__write_read__payload(
@@ -940,7 +943,10 @@ def ultrasonic_mac__any(harvest) -> str | None:
 
 @pytest.fixture(scope="session")
 def sql_settings(harvest) -> dict[str, str]:
-    """Находит MAC-адрес UltraSonic датчика."""
+    """
+    GOAL
+    получение данных всех настроек из устройства.
+    """
     return harvest.sql_settings__get_all()
 
 

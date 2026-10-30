@@ -2937,6 +2937,7 @@ A02901810001203000E2806894000050035FD77070430A430A3000E2806894000050035FD7707010
             self,
             timeout: float = 20,
             timeout_continue: float = 4,
+            # find_name: str | None = None,     # try found first dev by name!
             **r_kwargs,
     ) -> dict[str, dict[str, str | int | None]] | NoReturn:  # {mac: {name, rssi}}
         """
@@ -2987,7 +2988,7 @@ A02901810001203000E2806894000050035FD77070430A430A3000E2806894000050035FD7707010
         root@harvest05:~#
         """
         output = self.cmd_timeout__write_read__payload(
-            "bluetoothctl -- scan on",
+            f"bluetoothctl --timeout {timeout} scan on",
             timeout=timeout,
             timeout_continue=timeout_continue or timeout,
             **r_kwargs,
@@ -3135,6 +3136,7 @@ A02901810001203000E2806894000050035FD77070430A430A3000E2806894000050035FD7707010
 
         result: dict[str, bool | str | Any | None] = {
             "mac": mac,
+            "found": False,
             "random": None,  # random/public
             "name": None,
             "alias": None,
@@ -3152,6 +3154,11 @@ A02901810001203000E2806894000050035FD77070430A430A3000E2806894000050035FD7707010
         # Флаг для сбора ManufacturerData Value (многострочное поле)
         collecting_manufacturer_value = False
         manufacturer_value_parts = []
+
+        if "not available" in output:
+            return result
+
+        result["found"] = True
 
         for line in output.splitlines():
             line = line.strip()
