@@ -29,15 +29,15 @@ class ClientSsh(ClientBase):
     # INIT =============================================================================================================
     def __init__(
             self,
-            # MULTITON KEY ID ------------
-            address: str,
-
-            # SSH SETTINGS --------------
+            # SSH --------------------------
+            address: str,   # MULTITON KEY ID
+            port: int = None,
             username: str = None,
             password: str = None,
-            port: int = None,
+
             timeout_read_initial: Optional[float] = None,
             timeout_read_continue: Optional[float] = None,
+
             eol__send: bytes = None,
             encoding: str = None,
 
@@ -204,6 +204,45 @@ class ClientSsh(ClientBase):
         time.sleep(0.2)
 
 
+# ======================================================================================================================
+# ======================================================================================================================
+# ======================================================================================================================
+class ClientRssh(ClientSsh):
+    def __init__(
+            self,
+
+            # REVERSE ----------------------
+            vpn_address: str = None,
+            vpn_port: int = None,
+            vpn_username: str = None,
+            vpn_password: str = None,
+
+            iot_address: str = None,
+            iot_port: int = None,
+            iot_username: str = None,
+            iot_password: str = None,
+
+            # DIRECT ------------------------
+            **kwargs,
+    ):
+
+        super().__init__(
+            address=vpn_address,  # MULTITON KEY ID
+            port=None,
+            username=None,
+            password=None,
+            **kwargs
+            )
+
+    def connect(self) -> bool:
+        pass
+
+    def disconnect(self) -> None:
+        pass
+
+
+# ======================================================================================================================
+# ======================================================================================================================
 # ======================================================================================================================
 import pytest
 
