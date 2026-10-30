@@ -174,9 +174,21 @@ class ClientManager_Serial:
     # ------------------------------------------------------------------------------------------------------------------
     @staticmethod
     def check__address_could_open(address: str) -> bool:
+        # # FIX: не используем ClientSerial (multiton вернёт занятый объект),
+        # # открываем голый Serial, закрываем. Существующий клиент не трогаем.
+        # from serial import Serial, SerialException
+        # try:
+        #     s = Serial(port=address, timeout=0.5)
+        #     s.close()
+        #     return True
+        # except (SerialException, Exception):
+        #     return False
+
         try:
             obj = ClientSerial(address, _raise_if_occupied=False)
             print(1, obj)
+            if obj.check__connected():
+                return True
             result = obj.connect()
             print(2, obj)
             obj.disconnect()

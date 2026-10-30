@@ -12,8 +12,8 @@ from base_aux.clients.m1_client_2__ssh import ClientSsh
 
 
 # ======================================================================================================================
-IOT_DEFAULT = "harvest05"   # default=R/SSH
-# IOT_DEFAULT = None          # default=SERIAL
+# IOT_DEFAULT = "harvest05"   # default=R/SSH
+IOT_DEFAULT = None          # default=SERIAL
 
 
 # ======================================================================================================================

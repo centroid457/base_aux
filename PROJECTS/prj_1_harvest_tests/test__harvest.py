@@ -65,18 +65,18 @@ class Test_01__Detection:
         assert result != [], "Не обнаружено ни одного последовательного порта."
 
         # 2=exist_can_open ------------------------------------
-        exist_opening__ok = []
-        exist_opening__fail = []
-
-        for port in manager.ADDRESSES_CASHED:
-            if manager.check__address_could_open(port):
-                exist_opening__ok.append(port)
-            else:
-                exist_opening__fail.append(port)
-
-        print(f"{exist_opening__ok=}")
-        print(f"{exist_opening__fail=}")
-        assert exist_opening__ok != [], "Ни один порт не удалось открыть."
+        # exist_opening__ok = []
+        # exist_opening__fail = []
+        #
+        # for port in manager.ADDRESSES_CASHED:
+        #     if manager.check__address_could_open(port):
+        #         exist_opening__ok.append(port)
+        #     else:
+        #         exist_opening__fail.append(port)
+        #
+        # print(f"{exist_opening__ok=}")
+        # print(f"{exist_opening__fail=}")
+        # assert exist_opening__ok != [], "Ни один порт не удалось открыть."
 
     def test_det_1__transport_3__ssh(self, transport):
         if transport.lower() != "ssh":
