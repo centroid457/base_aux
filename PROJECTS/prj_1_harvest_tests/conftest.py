@@ -12,7 +12,8 @@ from base_aux.clients.m1_client_2__ssh import ClientSsh
 
 
 # ======================================================================================================================
-SSH_HOST = "harvest05"
+IOT_DEFAULT = "harvest05"   # default=R/SSH
+# IOT_DEFAULT = None          # default=SERIAL
 
 
 # ======================================================================================================================
@@ -29,15 +30,22 @@ def pytest_addoption(parser):
     )
 
     parser.addoption(
+        '--rssh',       # PREFERRED
+        action="store",
+        nargs="?",
+        const=IOT_DEFAULT,
+
+        # default=None,         # default=OTHER
+        default=IOT_DEFAULT,    # default=THIS
+    )
+    parser.addoption(
         '--ssh',
         action="store",
         nargs="?",
-        const=SSH_HOST,
+        const=IOT_DEFAULT,  # если не указывать само значение - типа флаг
 
-        default=None,       # default=SERIAL
-        # default=SSH_HOST,     # default=SSH
-
-        help="SSH-хост: без значения → harvest05",
+        # default=None,          # default=OTHER
+        default=IOT_DEFAULT,     # default=THIS
     )
 
 
@@ -134,8 +142,15 @@ def option__pre_skip(pytestconfig) -> bool:
 
 
 @pytest.fixture(scope="session")
-def option__ssh_address(pytestconfig) -> str | None:
-    result = pytestconfig.getoption("--ssh", default=None)
+def option__iot_address(pytestconfig) -> str | None:
+    """
+    GOAL
+    selected iot name (or ip - try not use ip!)
+        harvest10   -preferred!!!
+    """
+    result = pytestconfig.getoption("--rssh", default=None)
+    if not result:
+        result = pytestconfig.getoption("--ssh", default=None)
     return result
 
 
@@ -233,13 +248,19 @@ def _make_dev_3__ssh(address: str) -> Harvest | None:
     return device
 
 
+def _make_dev_4__rssh(address: str) -> Harvest | None:
+    raise NotImplementedError()
+
+
 # ----------------------------------------------------------------------------------------------------------------------
 @pytest.fixture(scope="session")
-def transport(request, option__ssh_address) -> str:
+def transport(request, option__iot_address) -> str:
     if socket.gethostname().startswith("harvest"):
         result = "direct"
     else:
-        if option__ssh_address:
+        if request.config.getoption("--rssh", default=None):
+            result = "rssh"
+        elif request.config.getoption("--ssh", default=None):
             result = "ssh"
         else:
             result = "serial"
@@ -251,7 +272,7 @@ def transport(request, option__ssh_address) -> str:
 
 # ======================================================================================================================
 @pytest.fixture(scope="session", autouse=True)
-def harvest(request, transport, option__ssh_address, option__pre_skip) -> Harvest:
+def harvest(request, transport, option__iot_address, option__pre_skip) -> Harvest:
     """
     Возвращает авторизованный Harvest-клиент.
 
@@ -267,7 +288,9 @@ def harvest(request, transport, option__ssh_address, option__pre_skip) -> Harves
     if transport == "direct":   # если local hostname - совпал!
         device = _make_dev_1__direct()
     elif transport == "ssh":    # если строго указан
-        device = _make_dev_3__ssh(option__ssh_address)
+        device = _make_dev_3__ssh(option__iot_address)
+    elif transport == "rssh":  # если строго указан
+        device = _make_dev_4__rssh(option__iot_address)
     else:   # в остальных случаях!
         device = _make_dev_2__serial()
 
