@@ -1238,6 +1238,7 @@ PING 8.8.8.8 (8.8.8.8) from 192.168.0.100 usb0: 56(84) bytes of data.
 root@harvest05:~#
         """
         return self.cmd_timeout__check_executed_success(
+            # "ping -c 1 -W 1 ya.ru",
             "ping -c 1 -W 1 8.8.8.8",
             timeout=3,
             timeout_continue=2,
