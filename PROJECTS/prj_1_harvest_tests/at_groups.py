@@ -3467,7 +3467,6 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
     # =========================================================================
     # =========================================================================
     # =========================================================================
-    # =========================================================================
     # СЦЕНАРИИ РАБОТЫ
     "---check-1=GSM CHANNEL": [
         ("AT+CPIN?", ""),   # lambda r: "READY" in r)
@@ -3486,7 +3485,22 @@ AT_GROUPS: dict[str, dict[str, str | list[str, tuple[str, str]]]] = {
          lambda r: "+CPING: 3,4,4,0" in r),
         ("Ping DNS", 'AT+CPING="www.google.com",1,4,64,1000,10000,255',
          lambda r: "+CPING: 3,4,4,0" in r),
-    ]
+    ],
+    "---check-2=AGPS": [
+        ("AT+CVAUXS=0", "GNSS antenna set passive"),
+        ("AT+CGNSSPWR=1,1", "GNSS PWR_ON"),
+        ("AT+CGNSSMODE=4", "3=GPS+BDS, 4=GLONASS"),
+
+        ("AT+CGNSSPORTSWITCH=1,1", "TEST ENABLE"),
+        ("AT+CGNSSTST=1", "TEST ON"),
+        ("AT+CGNSSTST=0", "TEST OFF"),
+
+        ('AT+CPING="8.8.8.8",1,4,64,1000,10000,255', "Internet check"),
+        ('AT+CAGPS', 'включить AGPS=wait success!!!'),
+
+        ('AT+CGPSINFO', 'get 1'),
+        ('AT+CGNSSINFO', 'get 2'),
+    ],
 }
 
 
