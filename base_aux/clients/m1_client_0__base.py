@@ -40,7 +40,7 @@ class ClientBase(ABC):
     __address: str
     __occupied: str | None | Any = None
 
-    # need NONE NOT 0!!! if wait always!!
+    # need NONE NOT 0!!! if wait always!! -  это все переопределено!!!!
     TIMEOUT_READ_INITIAL: float = 0.5  # время ожидания первого байта # 0.2 is too short!!! dont touch! in case of reading char by char 0.5 is the best!!! 0.3 is not enough!!!
     timeout_read_initial: float
     TIMEOUT_READ_CONTINUE: float = 0.1  # пауза между чтениями после появления данных
