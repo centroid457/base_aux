@@ -23,8 +23,8 @@ def pytest_addoption(parser):
     parser.addoption(
         '--pre_skip',
 
-        # action="store_false",     # def=TRUE
-        action="store_true",        # def=FALSE
+        action="store_false",     # def=TRUE
+        # action="store_true",        # def=FALSE
 
         help="не делать подготовку блока (проверка и установка утилит+загрузка скриптов, это долго идет)",
     )
