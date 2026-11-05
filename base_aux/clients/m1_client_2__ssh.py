@@ -2,7 +2,8 @@ import time
 from typing import *
 import paramiko
 
-from base_aux.aux_eq.m4_eq_valid1_base import Base_EqValid
+# from base_aux.aux_eq.m4_eq_valid1_base import Base_EqValid
+from base_aux.aux_eq.m4_eq_valid3_derivatives import *
 from base_aux.clients.m1_client_0__base import ClientBase
 
 
@@ -202,69 +203,6 @@ class ClientSsh(ClientBase):
         """Send the Ctrl+C character (0x03)."""
         self.write_bytes(b'\x03', eol=b"")
         time.sleep(0.2)
-
-
-# ======================================================================================================================
-# ======================================================================================================================
-# ======================================================================================================================
-class ClientRssh(ClientSsh):
-    def __init__(
-            self,
-
-            # REVERSE -----------------------
-            vpn_address: str = "45.90.218.212",
-            vpn_port: int = 22,
-            vpn_username: str = "tunec",
-            vpn_password: str = None,
-
-            # DIRECT ------------------------
-            **kwargs,
-    ):
-        super().__init__(
-            address=vpn_address,  # MULTITON KEY ID
-            port=vpn_port,
-            username=vpn_username,
-            password=vpn_password,
-
-            **kwargs
-            )
-
-    def connect(self) -> bool:
-        # just a Monkey! -----
-        address = "harvest05"
-
-        # WORK ---------------
-        result = super().connect()
-        if not result:
-            return False
-
-        # validate server - may be not used
-        result = self.write_read_text("hostname", timeout_start=2, timeout_continue=2)
-        if f"firstbyte" not in result:
-            print()
-            return False
-
-
-        try:
-            address_number = address[-2:]
-            int(address_number)     # just expect exception if wrong value -> exit
-        except:
-            return False
-
-        request = f"ssh root@localhost -p 220{address_number}"
-        result = self.write_read_text(request, timeout_start=8, timeout_continue=2)
-        # TODO: FINISH
-        # TODO: FINISH
-        # TODO: FINISH
-        # TODO: FINISH
-        # TODO: FINISH
-        # TODO: FINISH
-        # TODO: FINISH
-        # TODO: FINISH
-        return result
-
-    def disconnect(self) -> None:
-        pass
 
 
 # ======================================================================================================================

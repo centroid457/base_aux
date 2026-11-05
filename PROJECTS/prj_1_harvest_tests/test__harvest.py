@@ -82,6 +82,10 @@ class Test_01__Detection:
         if transport.lower() != "ssh":
             pytest.skip(f"{transport=} != ssh!")
 
+    def test_det_1__transport_4__rssh(self, transport):
+        if transport.lower() != "rssh":
+            pytest.skip(f"{transport=} != rssh!")
+
     # ------------------------------------------------------------------------------------------------------------------
     def test_det_2__dev_0__detection(self, harvest):
         """

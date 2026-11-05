@@ -12,8 +12,8 @@ from base_aux.clients.m1_client_2__ssh import ClientSsh
 
 
 # ======================================================================================================================
-# IOT_DEFAULT = "harvest05"   # default=R/SSH
-IOT_DEFAULT = None          # default=SERIAL
+IOT_DEFAULT = "harvest14"   # default=R/SSH
+# IOT_DEFAULT = None          # default=SERIAL
 
 
 # ======================================================================================================================
@@ -35,8 +35,8 @@ def pytest_addoption(parser):
         nargs="?",
         const=IOT_DEFAULT,
 
-        default=None,         # default=OTHER
-        # default=IOT_DEFAULT,    # default=THIS
+        # default=None,         # default=OTHER
+        default=IOT_DEFAULT,    # default=THIS
     )
     parser.addoption(
         '--ssh',
@@ -189,6 +189,7 @@ def _make_dev_2__serial() -> Harvest | None:
     for conn in ClientManager_Serial().make__not_occupied(can_open=True, baudrate=115200):
         print(f"try {conn=}")
         with conn:
+
             dev_new = Harvest(conn)
             if dev_new.validate_conn():
                 dev_id = dev_new.get_hostname_and_occupy()
@@ -249,7 +250,58 @@ def _make_dev_3__ssh(address: str) -> Harvest | None:
 
 
 def _make_dev_4__rssh(address: str) -> Harvest | None:
-    raise NotImplementedError()
+    vds_address: str = "45.90.218.212"
+    vds_port: int = 22
+    vds_username: str = "tunec"
+    vds_password: str = "werSD#$-1"
+
+    try:
+        conn = ClientSsh(
+            address=vds_address,  # MULTITON KEY ID
+            port=vds_port,
+            username=vds_username,
+            password=vds_password,
+            _raise_if_occupied=False,
+        )
+    except Exception as exc:
+        print(f"[RSSH] {exc!r}")
+        return
+
+    if not conn.connect():
+        print(f"нет связи с сервисом VDS RSSH {vds_address=}")
+        return
+
+    # validate server - may be not used
+    # result = self.write_read_text("hostname", timeout_start=2, timeout_continue=2)
+    # if f"firstbyte" not in result:
+    #     print(f"сервер VDS не валидирован - соединение не к тому сервису")
+    #     return False
+
+    try:
+        address_number = address[-2:]
+        int(address_number)     # just expect exception if wrong value -> exit
+    except:
+        print(f"неверный адрес {address=}")
+        return
+
+    request = f"ssh root@localhost -p 220{address_number}"
+    response = conn.write_read_text(request, timeout_start=20, timeout_continue=20, stop_line=EqValid_ContainStrIc("password"))
+    if 'password' not in response:
+        print(f"нет связи с устройством {address=}")
+        return
+
+    response = conn.write_read_text('1', timeout_start=10, timeout_continue=10, stop_line=EqValid_ContainStrIc(address, "password"))
+    if 'password' in response:
+        print(f"пароль не верен {address=}")
+        return
+
+    device = Harvest(conn)
+    if not device.validate_conn():
+        print(f"[SSH] соединение не валидировано {address=}")
+        return
+
+    device.get_hostname_and_occupy()
+    return device
 
 
 # ----------------------------------------------------------------------------------------------------------------------

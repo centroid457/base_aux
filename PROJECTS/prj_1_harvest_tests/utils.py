@@ -123,7 +123,7 @@ class Harvest:
         "AT+GCAP",
     ]
 
-    COMPILE_EOF__STR = re.compile(r".+@.+:.*#\s*")
+    COMPILE__RESPONCE_LINE__STR = re.compile(r".+@.+:.*#\s*")  # GOOD!!! dont use harvestXX here!!!
 
     def __init__(self, conn: ClientBase):
         """
@@ -182,7 +182,7 @@ class Harvest:
     def login_try(self) -> bool:
         """
         NOTE
-        ЭТО НУЖНО ТОЛЬКО ДЛЯ SERIAL!!!
+        ЭТО НУЖНО ТОЛЬКО ДЛЯ SERIAL!!! +RSSH
         для SSH/RSSH все и так соединяется с авторизацией!!!
 
         harvest05 login:
@@ -221,8 +221,8 @@ class Harvest:
         return False
 
     def login_check(self) -> bool:
-        data = self.cmd_timeout__write_read_text(cmd="hostname")
-        result = bool(self.COMPILE_EOF__STR.search(data))
+        data = self.cmd_timeout__write_read_text(cmd="hostname")    # any cmd!!!
+        result = bool(self.COMPILE__RESPONCE_LINE__STR.search(data))
         return result
 
     def get_hostname_and_occupy(self) -> str:
@@ -432,7 +432,7 @@ PASSED
             lines = lines[1:]
 
         # 2=EOF -------------------------
-        while lines and (self.COMPILE_EOF__STR.match(lines[-1]) or lines[-1].strip() == ''):
+        while lines and (self.COMPILE__RESPONCE_LINE__STR.match(lines[-1]) or lines[-1].strip() == ''):
             lines = lines[:-1]
 
         # =======FILTERS - OLD
@@ -1164,13 +1164,15 @@ PASSED
         return result
 
     # ------------------------------------------------------------------------------------------------------------------
-    def apt_install(self, module: str, timeout_continue: float = 5, **wr_kwargs) -> bool:
+    def apt_install(self, module: str, timeout_continue: float = 30, **wr_kwargs) -> bool:
         """
         if need DELETE
             sudo apt remove picocom
         """
-        result = self.cmd_timeout__check_executed_success(f"apt install -y {module}", timeout_continue=timeout_continue,
-                                                          **wr_kwargs)
+        result = self.cmd_timeout__check_executed_success(
+            f"apt install -y {module}",
+            timeout_continue=timeout_continue,
+            **wr_kwargs)
         return result
 
     def check__has_internet(self) -> bool:
