@@ -4,8 +4,12 @@ import re
 from base_aux.clients.m2_manager_1__serial import ClientManager_Serial
 from base_aux.aux_eq.m4_eq_valid3_derivatives import *
 
+from base_aux.versions.m3_derivatives import Version_Python
+
 
 # ======================================================================================================================
+assert Version_Python() >= "3.12"
+
 manager = ClientManager_Serial()
 
 

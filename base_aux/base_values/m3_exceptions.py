@@ -67,7 +67,7 @@ _std = [
     ProcessLookupError,
     RuntimeError,
     FutureWarning,
-    ExceptionGroup,
+    ExceptionGroup,   # appear only on python 3.11!
     BlockingIOError,
 
     # REAL VALUE = NOT AN EXCEPTION!!!

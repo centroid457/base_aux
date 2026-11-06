@@ -8,7 +8,7 @@ from base_aux.aux_attr.m3_ga1_prefix_1_inst import NestGa_Prefix_RaiseIf
 
 
 # =====================================================================================================================
-def _explore_other():
+def _explore_other_variants():
     # EXPLORE VARIANTS ----------------------------------------------
     # 1=PACKAGING.version ---------
     from packaging import version

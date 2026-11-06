@@ -6,20 +6,27 @@ class Test__ReqCheckVersion_Python:
     # -----------------------------------------------------------------------------------------------------------------
     def test__cmp_str(self):
         assert Version_Python("1.2rc2.3").check_eq("1.02rc2.3") is True
-        assert Version_Python("1.2rc2.3").check_eq("1.2rc2.33") is False
-
+        assert Version_Python("1.2rc2.3") == "1.02rc2.3"
         assert Version_Python("1.2rc2.3").check_ne("1.02rc2.3") is False
+
+        assert Version_Python("1.2rc2.3").check_eq("1.2rc2.33") is False
+        assert Version_Python("1.2rc2.3") != "1.2rc2.33"
         assert Version_Python("1.2rc2.3").check_ne("1.2rc2.33") is True
 
         assert Version_Python("1.2").check_le("1.2rc2.3") is True
-        assert Version_Python("1.2").check_lt("1.2rc2.3") is True
-
+        assert Version_Python("1.2") <= "1.2rc2.3"
         assert Version_Python("1.2").check_ge("1.2rc2.3") is False
+
+        assert Version_Python("1.2").check_lt("1.2rc2.3") is True
+        assert Version_Python("1.2") < "1.2rc2.3"
         assert Version_Python("1.2").check_gt("1.2rc2.3") is False
 
     def test__py(self):
         assert Version_Python().check_eq("1.02rc2.3") is False
+        assert Version_Python() != "1.02rc2.3"
+
         assert Version_Python().check_gt("1.02rc2.3") is True
+        assert Version_Python() > "1.02rc2.3"
 
     def test__raise(self):
         # IF -----------------
