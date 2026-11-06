@@ -278,7 +278,8 @@ def _make_dev_4__rssh(address: str) -> Harvest | None:
     with WithPrintWaiting(f"rssh.connect iot {address=}"):
         request = f"ssh root@localhost -p 220{address_number}"
         # FIXME: use always correct terminal STOP LINE PROMPT!!!!
-        response = conn.write_read_text(request, timeout_start=60, timeout_continue=2, stop_line=EqValid_ContainStrIc("password", "Connection refused"))
+        # FIXME: add STOP WORD!!!
+        response = conn.write_read_text(request, timeout_start=60, timeout_continue=60, stop_line=EqValid_ContainStrIc("password", "Connection refused"))
         if 'password' not in response or "Connection refused" in response:
             print(f"нет связи с устройством {address=}")
             return
