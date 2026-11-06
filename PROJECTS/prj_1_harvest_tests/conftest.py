@@ -254,8 +254,10 @@ def _make_dev_4__rssh(address: str) -> Harvest | None:
         print(f"[RSSH] {exc!r}")
         return
 
+    print("-"*100)
+    print(f"[RSSH] {vds_address=} connect() ...WAIT...")
     if not conn.connect():
-        print(f"нет связи с сервисом VDS RSSH {vds_address=}")
+        print(f"[RSSH]нет связи с сервисом VDS {vds_address=}")
         return
 
     # validate server - may be not used
@@ -268,23 +270,25 @@ def _make_dev_4__rssh(address: str) -> Harvest | None:
         address_number = address[-2:]
         int(address_number)     # just expect exception if wrong value -> exit
     except:
-        print(f"неверный адрес {address=}")
+        print(f"[RSSH]неверный адрес {address=}")
         return
 
+    print("-"*100)
+    print(f"[RSSH] IOT {address=} connect() ...WAIT...")
     request = f"ssh root@localhost -p 220{address_number}"
-    response = conn.write_read_text(request, timeout_start=20, timeout_continue=20, stop_line=EqValid_ContainStrIc("password"))
+    response = conn.write_read_text(request, timeout_start=60, timeout_continue=60, stop_line=EqValid_ContainStrIc("password"))
     if 'password' not in response:
         print(f"нет связи с устройством {address=}")
         return
 
     response = conn.write_read_text('1', timeout_start=10, timeout_continue=10, stop_line=EqValid_ContainStrIc(address, "password"))
     if 'password' in response:
-        print(f"пароль не верен {address=}")
+        print(f"[RSSH] IOT пароль не верен {address=}")
         return
 
     device = Harvest(conn)
     if not device.validate_conn():
-        print(f"[SSH] соединение не валидировано {address=}")
+        print(f"[RSSH] IOT соединение не валидировано {address=}")
         return
 
     device.get_hostname_and_occupy()
