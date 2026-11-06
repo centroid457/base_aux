@@ -10,6 +10,7 @@ from base_aux.clients.m2_manager_1__serial import ClientManager_Serial, ClientSe
 from base_aux.aux_eq.m4_eq_valid3_derivatives import *
 
 from base_aux.clients.m1_client_2__ssh import ClientSsh
+from base_aux.loggers.m3_with_print_waiting import WithPrintWaiting
 
 
 # ======================================================================================================================
@@ -223,9 +224,10 @@ def _make_dev_3__ssh(address: str) -> Harvest | None:
         print(f"[SSH] {exc!r}")
         return
 
-    if not conn.connect():
-        print(f"[SSH] не удалось подключиться {address=}")
-        return
+    with WithPrintWaiting(f"ssh.connect {address=}"):
+        if not conn.connect():
+            print(f"[SSH] не удалось подключиться {address=}")
+            return
 
     device = Harvest(conn)
     if not device.validate_conn():
@@ -255,10 +257,10 @@ def _make_dev_4__rssh(address: str) -> Harvest | None:
         return
 
     print("-"*100)
-    print(f"[RSSH] {vds_address=} connect() ...WAIT...")
-    if not conn.connect():
-        print(f"[RSSH]нет связи с сервисом VDS {vds_address=}")
-        return
+    with WithPrintWaiting(f"rssh.connect vds {vds_address=}"):
+        if not conn.connect():
+            print(f"[RSSH]нет связи с сервисом VDS {vds_address=}")
+            return
 
     # validate server - may be not used
     # result = self.write_read_text("hostname", timeout_start=2, timeout_continue=2)
@@ -273,13 +275,12 @@ def _make_dev_4__rssh(address: str) -> Harvest | None:
         print(f"[RSSH]неверный адрес {address=}")
         return
 
-    print("-"*100)
-    print(f"[RSSH] IOT {address=} connect() ...WAIT...")
-    request = f"ssh root@localhost -p 220{address_number}"
-    response = conn.write_read_text(request, timeout_start=60, timeout_continue=60, stop_line=EqValid_ContainStrIc("password"))
-    if 'password' not in response:
-        print(f"нет связи с устройством {address=}")
-        return
+    with WithPrintWaiting(f"rssh.connect iot {address=}"):
+        request = f"ssh root@localhost -p 220{address_number}"
+        response = conn.write_read_text(request, timeout_start=60, timeout_continue=60, stop_line=EqValid_ContainStrIc("password"))
+        if 'password' not in response:
+            print(f"нет связи с устройством {address=}")
+            return
 
     response = conn.write_read_text('1', timeout_start=10, timeout_continue=10, stop_line=EqValid_ContainStrIc(address, "password"))
     if 'password' in response:
