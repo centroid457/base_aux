@@ -3,6 +3,7 @@ import socket
 from datetime import datetime
 import pytest
 
+from .settings_default import *
 from .utils import *
 
 from base_aux.clients.m2_manager_1__serial import ClientManager_Serial, ClientSerial
@@ -12,40 +13,26 @@ from base_aux.clients.m1_client_2__ssh import ClientSsh
 
 
 # ======================================================================================================================
-IOT_DEFAULT = "harvest14"   # default=R/SSH
-# IOT_DEFAULT = None          # default=SERIAL
-
-
-# ======================================================================================================================
 # 1=HOOKS
 # ----------------------------------------------------------------------------------------------------------------------
 def pytest_addoption(parser):
     parser.addoption(
         '--pre_skip',
-
-        action="store_false",     # def=TRUE
-        # action="store_true",        # def=FALSE
-
+        action="store_false" if PRE_SKIP else "store_true",
         help="не делать подготовку блока (проверка и установка утилит+загрузка скриптов, это долго идет)",
     )
 
     parser.addoption(
-        '--rssh',       # PREFERRED
+        '--rssh',
         action="store",
         nargs="?",
-        const=IOT_DEFAULT,
-
-        # default=None,         # default=OTHER
-        default=IOT_DEFAULT,    # default=THIS
+        default=ADDRESS if TRANSPORT == "rssh" else None,
     )
     parser.addoption(
         '--ssh',
         action="store",
         nargs="?",
-        const=IOT_DEFAULT,  # если не указывать само значение - типа флаг
-
-        # default=None,          # default=OTHER
-        default=IOT_DEFAULT,     # default=THIS
+        default=ADDRESS if TRANSPORT == "ssh" else None,   # если атрибут не указан, то используется это значение
     )
 
 
