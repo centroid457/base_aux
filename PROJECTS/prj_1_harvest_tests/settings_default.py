@@ -2,7 +2,7 @@
 # TRANSPORT = "ssh"
 TRANSPORT = "rssh"
 
-ADDRESS = "harvest05"
+ADDRESS = "harvest07"
 
 # SKIP or INSTALL ALL MODULES/UTILES on iot
 PRE_SKIP = True

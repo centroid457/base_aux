@@ -159,6 +159,7 @@ class Test_02__PreInstall:
         self.pkg__check_installed_or_install(harvest, internet_access, "picocom")
 
     def test_pre_2__sqlite3(self, harvest, internet_access):
+        # FIXME: reuse over python! not direct terminal!!!
         self.pkg__check_installed_or_install(harvest, internet_access, "sqlite3")
 
     def test_pre_3__python(self, harvest, internet_access):
